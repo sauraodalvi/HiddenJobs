@@ -15,32 +15,55 @@ export function useSearchFilters() {
 
     // State values derived from URL
     const filters = useMemo(() => {
-        const customRole = getParam('custom', '');
+        const isCustomRole = searchParams.has('custom');
+        const customRole = searchParams.get('custom') ?? '';
+
         return {
             role: getParam('role', 'Product Manager'),
             customRole: customRole,
-            isCustomRole: !!customRole,
+            isCustomRole: isCustomRole,
             location: getParam('location', 'remote'),
             specificLocation: getParam('specificLocation', ''),
             exclude: getParam('exclude', ''),
+            include: getParam('include', ''),
+            experience: getParam('experience', ''),
+            country: getParam('country', ''),
             time: getParam('time', '30'),
+            from: getParam('from', ''),
+            to: getParam('to', ''),
+            exactTitle: getParam('exact', 'false') === 'true',
+            excludeLocation: getParam('excludeLocation', ''),
+            // New Power User filters
+            company: getParam('company', ''),
+            salaryMin: getParam('salaryMin', ''),
+            salaryMax: getParam('salaryMax', ''),
+            englishOnly: getParam('englishOnly', 'false') === 'true',
         };
     }, [searchParams]);
 
-    const updateFilter = useCallback((key: string, value: string) => {
+    const updateFilter = useCallback((key: string, value: string | null) => {
         const params = new URLSearchParams(searchParams.toString());
-        if (value) {
+
+        if (value !== null && value !== undefined) {
             params.set(key, value);
         } else {
             params.delete(key);
         }
 
-        // Special handling for role modes
-        if (key === 'custom' && value) {
-            // If setting custom role, clear preset role to avoid confusion (or keep it as fallback?)
-            // Actually, spec says: isCustomRole check.
-            // If we set 'custom', isCustomRole becomes true.
-        }
+        router.replace(`?${params.toString()}`, { scroll: false });
+    }, [searchParams, router]);
+
+    // Batch update helper to avoid race conditions
+    const updateFilters = useCallback((updates: Record<string, string | null>) => {
+        const params = new URLSearchParams(searchParams.toString());
+
+        Object.entries(updates).forEach(([key, value]) => {
+            if (value !== null && value !== undefined) {
+                params.set(key, value);
+            } else {
+                params.delete(key);
+            }
+        });
 
         router.replace(`?${params.toString()}`, { scroll: false });
     }, [searchParams, router]);
@@ -49,18 +72,20 @@ export function useSearchFilters() {
     const dorkComponents = useMemo(() => buildDorkComponents(filters), [filters]);
 
     const generateLinks = useCallback((isPro: boolean = false) => {
-        const tabLimit = isPro ? 12 : 8;
-        const atsToOpen = ATS_PLATFORMS.slice(0, tabLimit);
-
-        return atsToOpen.map(ats => {
+        return ATS_PLATFORMS.map((ats, idx) => {
+            // Logic: If Pro is ON, nothing is locked. If Pro is OFF, only idx 0 (Greenhouse) is unlocked.
+            const isLocked = !isPro && idx > 0;
             const query = assembleDork(ats.domain, dorkComponents);
             return {
                 name: ats.name,
                 domain: ats.domain,
                 query,
+                locked: isLocked,
                 googleUrl: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
                 duckduckgoUrl: `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
                 bingUrl: `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
+                braveUrl: `https://search.brave.com/search?q=${encodeURIComponent(query)}`,
+                yahooUrl: `https://search.yahoo.com/search?p=${encodeURIComponent(query)}`,
                 directUrl: `https://${ats.domain}`
             };
         });
@@ -69,6 +94,7 @@ export function useSearchFilters() {
     return {
         filters,
         updateFilter,
+        updateFilters,
         preview: dorkComponents.preview,
         generateLinks
     };

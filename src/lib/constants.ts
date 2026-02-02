@@ -4,7 +4,7 @@ export const ATS_PLATFORMS = [
   { name: 'Lever', domain: 'jobs.lever.co', isPro: false },
   { name: 'Workday', domain: 'myworkdayjobs.com', isPro: false },
   { name: 'SmartRecruiters', domain: 'jobs.smartrecruiters.com', isPro: false },
-  { name: 'BambooHR', domain: 'bamboohr.com/jobs', isPro: false },
+  { name: 'BambooHR', domain: 'bamboohr.com', isPro: false },
   { name: 'JazzHR', domain: 'applytojob.com', isPro: false },
   { name: 'Breezy HR', domain: 'breezy.hr', isPro: false },
   { name: 'iCIMS', domain: 'icims.com', isPro: false },
@@ -20,6 +20,7 @@ export const ROLE_PRESETS: Record<string, string> = {
   'Product Analyst': 'Product Analyst OR "Associate Product Manager" OR "APM"',
   'Product Designer': 'Product Designer OR "UX Engineer" OR "Start-up Designer"',
   'Product Owner': 'Product Owner OR "PO" OR "Technical Product Manager"',
+  'Associate Product Manager': '("Associate Product Manager" OR "APM" OR "Junior Product Manager")',
   'Product Marketing Manager': 'Product Marketing Manager OR "PMM" OR "Growth Marketer"',
 
   // Design
@@ -111,4 +112,38 @@ export const ROLE_PRESETS: Record<string, string> = {
   'Sales Intern': '"Sales Intern" OR "SDR Intern"',
   'HR Intern': '"HR Intern" OR "Recruiting Intern"',
   'Finance Intern': '"Finance Intern" OR "Accounting Intern"',
+};
+
+export const SENIORITY_MAPPINGS: Record<string, string[]> = {
+  'senior': ['sr', 'snr', 'lead', 'experienced'],
+  'sr': ['senior', 'snr', 'lead', 'experienced'],
+  'junior': ['jr', 'jnr', 'entry', 'associate', 'intern'],
+  'jr': ['junior', 'jnr', 'entry', 'associate', 'intern'],
+  'lead': ['senior', 'principal', 'manager', 'head'],
+  'principal': ['staff', 'lead', 'architect'],
+  'staff': ['principal', 'lead'],
+  'manager': ['lead', 'head', 'director', 'vp'],
+  'director': ['head', 'vp', 'chief'],
+};
+
+export const COUNTRY_MAPPINGS: Record<string, string> = {
+  'uk': '"United Kingdom" OR "UK" OR "London"',
+  'united kingdom': '"United Kingdom" OR "UK" OR "London"',
+  'gb': '"United Kingdom" OR "UK" OR "London"',
+  'canada': '"Canada" OR "CA" OR "Toronto" OR "Vancouver" OR "Montreal"',
+  'ca': '"Canada" OR "CA" OR "Toronto" OR "Vancouver" OR "Montreal"',
+  'germany': '"Germany" OR "Deutschland" OR "Berlin" OR "Munich"',
+  'de': '"Germany" OR "Deutschland" OR "Berlin" OR "Munich"',
+  'france': '"France" OR "Paris"',
+  'fr': '"France" OR "Paris"',
+  'australia': '"Australia" OR "Sydney" OR "Melbourne"',
+  'au': '"Australia" OR "Sydney" OR "Melbourne"',
+  'india': '"India" OR "Bangalore" OR "Bengaluru" OR "Delhi" OR "Mumbai"',
+  'in': '"India" OR "Bangalore" OR "Bengaluru" OR "Delhi" OR "Mumbai"',
+  'remote': '"Remote" OR "Work From Home" OR "Anywhere"', // Fallback if needed
+};
+
+export const ENGLISH_KEYWORDS = {
+  include: '("English speaking" OR "English fluent" OR "Work in English")',
+  exclude: '-"German" -"French" -"Spanish" -"Dutch" -"Italian" -"Portuguese" -"Chinese" -"Japanese" -"Russian" -"Arabic"'
 };
