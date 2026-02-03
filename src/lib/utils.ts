@@ -282,17 +282,25 @@ export const buildDorkComponents = ({
 export const assembleDork = (domain: string, components: DorkComponents) => {
     const { roleQuery, keywordsQuery, excludeQuery, timeQuery } = components;
 
-    // Order matters for Google Dorks:
-    // site:domain KEYWORDS ... EXCLUSIONS ... TIME
+    // strict: site:domain (QUERY)
+    // We wrap everything else in parentheses if complex, but usually just ensuring "site:" is first is enough.
+    // The issue you saw ("Substack", "Medium") happens when the query parser gets confused by loose ORs.
 
-    // Optimization: Add intitle: for the role? 
-    // Usually "intitle:" is too restrictive for some ATS that put "Job Application for..." in title.
-    // But it's very high signal. For now, we stick to body search for max recall.
+    // Strategy:
+    // 1. site:domain
+    // 2. (Role) 
+    // 3. (Keywords)
+    // 4. Exclusions
+    // 5. Time
+
+    const queryParts = [
+        roleQuery,
+        keywordsQuery
+    ].filter(Boolean).join(' ');
 
     const parts = [
         `site:${domain}`,
-        roleQuery,
-        keywordsQuery,
+        `(${queryParts})`, // Wrap the positive constraints to bind them tightly
         excludeQuery,
         timeQuery
     ].filter(Boolean);

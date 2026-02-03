@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Greenhouse Job Application</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Apply for Senior Product Manager</h1>
+
+    <form id="application_form">
+        <div class="field">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name">
+        </div>
+
+        <div class="field">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name">
+        </div>
+
+        <div class="field">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email">
+        </div>
+
+        <div class="field">
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" name="phone">
+        </div>
+
+        <div class="field">
+            <label for="job_application_answers_attributes_0_text_value">LinkedIn Profile</label>
+            <input type="text" name="job_application[answers_attributes][0][text_value]"
+                id="job_application_answers_attributes_0_text_value">
+        </div>
+
+        <div class="field">
+            <label for="source">How did you hear about us?</label>
+            <select id="source" name="source">
+                <option value="">Please select...</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="glassdoor">Glassdoor</option>
+                <option value="friend">Friend</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Why do you want to work here?</label>
+            <textarea id="cover_letter" name="cover_letter" rows="5"></textarea>
+        </div>
+
+        <button type="submit">Submit Application</button>
+    </form>
+
+</body>
+
+</html>

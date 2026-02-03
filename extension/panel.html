@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>HiddenApply Ghost 👻</h1>
+      <span class="badge">V1.0</span>
+    </header>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="apply">Apply</div>
+      <div class="tab" data-tab="settings">Settings</div>
+    </div>
+
+    <main>
+      <!-- SETTINGS TAB -->
+      <div id="settings-view" class="hidden">
+        <div class="card">
+          <label>Gemini API Key</label>
+          <input type="password" id="api-key" placeholder="AIzaSy..." />
+          <p class="text-xs">Stored locally in your browser. Never shared.</p>
+        </div>
+
+        <div class="card">
+          <label>Master Resume (Text)</label>
+          <textarea id="resume-text" rows="15" placeholder="Paste your full resume text here. Include skills, experience, and bio..."></textarea>
+          <button id="save-settings">Save Configuration</button>
+        </div>
+      </div>
+
+      <!-- APPLY TAB -->
+      <div id="apply-view">
+        <div class="card">
+          <label>Status</label>
+          <div class="status-row">
+            <span>Current Page</span>
+            <span id="page-status" style="font-weight:bold; color:orange">Scanning...</span>
+          </div>
+          <div class="status-row">
+            <span>Inputs Found</span>
+            <span id="field-count">0</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <button id="scan-btn" class="secondary mb-4">🔄 Re-Scan Page</button>
+          
+          <button id="fill-btn" disabled>
+            ✨ Auto-Fill with Gemini
+          </button>
+          <p class="text-xs mt-2" style="text-align: center;">Uses your resume data to intelligently fill fields.</p>
+        </div>
+
+        <div id="ai-logs" class="card hidden">
+          <label>AI Reasoning</label>
+          <div id="log-content" class="text-xs" style="font-family: monospace; white-space: pre-wrap;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="panel.js"></script>
+</body>
+</html>

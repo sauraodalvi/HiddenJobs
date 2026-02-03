@@ -1,0 +1,47 @@
+{
+    "manifest_version": 3,
+    "name": "HiddenApply Ghost - AI Form Filler",
+    "version": "1.0",
+    "description": "The AI Sidecar for HiddenApply. Automatically fills job applications on Greenhouse, Lever, and Ashby using Gemini.",
+    "permissions": [
+        "sidePanel",
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://generativelanguage.googleapis.com/*",
+        "*://boards.greenhouse.io/*",
+        "*://jobs.lever.co/*",
+        "*://*.ashbyhq.com/*",
+        "*://*.myworkdayjobs.com/*",
+        "*://jobs.smartrecruiters.com/*",
+        "*://*.bamboohr.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "side_panel": {
+        "default_path": "panel.html"
+    },
+    "action": {
+        "default_title": "Open HiddenApply Ghost",
+        "default_icon": "icon.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://boards.greenhouse.io/*",
+                "*://jobs.lever.co/*",
+                "*://*.ashbyhq.com/*",
+                "*://*.myworkdayjobs.com/*",
+                "*://jobs.smartrecruiters.com/*",
+                "*://*.bamboohr.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ]
+}
