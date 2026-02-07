@@ -20,8 +20,40 @@ export function getSeoMetadata(platformSlug: string, roleSlug: string, locationS
     };
 }
 
+export function getLocationSeoMetadata(locationSlug: string) {
+    const location = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
+    if (!location) return null;
+
+    return {
+        title: `Hidden Jobs in ${location.label} | Open Tech Roles | HiddenJobs`,
+        description: `Explore unlisted tech jobs in ${location.label}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${location.label} and avoid the LinkedIn noise.`,
+        location
+    };
+}
+
+export function getRoleSeoMetadata(roleSlug: string) {
+    const role = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
+    if (!role) return null;
+
+    return {
+        title: `${role.label} Hidden Jobs | Unlisted ${role.label} Roles | HiddenJobs`,
+        description: `Find unlisted ${role.label} positions across top ATS platforms. Bypass job boards and apply directly to companies hiring for ${role.label} roles.`,
+        role
+    };
+}
+
+export function getPlatformSeoMetadata(platformSlug: string) {
+    const platform = DIRECTORY_PLATFORMS.find(p => p.slug === platformSlug);
+    if (!platform) return null;
+
+    return {
+        title: `${platform.label} Job Directory | Search all ${platform.label} Jobs | HiddenJobs`,
+        description: `Search the entire ${platform.label} applicant tracking system for hidden jobs. Find direct links to ${platform.label} job boards for the hottest tech companies.`,
+        platform
+    };
+}
+
 export function generateSeoDork(platformDomain: string, roleLabel: string, locationLabel: string) {
-    // Generate a default dork for SEO pages
     const components = buildDorkComponents({
         role: roleLabel,
         customRole: '',

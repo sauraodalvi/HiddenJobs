@@ -16,9 +16,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 1,
     }));
 
-    // Dynamic Job Directory Pages
-    const jobRoutes: MetadataRoute.Sitemap = [];
+    // Aggregation Hubs
+    const hubs: MetadataRoute.Sitemap = [];
 
+    // Location Hubs
+    DIRECTORY_LOCATIONS.forEach(loc => {
+        hubs.push({
+            url: `${baseUrl}/jobs/location/${loc.slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+        });
+    });
+
+    // Role Hubs
+    DIRECTORY_ROLES.forEach(role => {
+        hubs.push({
+            url: `${baseUrl}/jobs/role/${role.slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+        });
+    });
+
+    // Platform Hubs
+    DIRECTORY_PLATFORMS.forEach(platform => {
+        hubs.push({
+            url: `${baseUrl}/jobs/platform/${platform.slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+        });
+    });
+
+    // Deep Dynamic Job Pages
+    const jobRoutes: MetadataRoute.Sitemap = [];
     DIRECTORY_PLATFORMS.forEach(platform => {
         DIRECTORY_ROLES.slice(0, 10).forEach(role => {
             DIRECTORY_LOCATIONS.forEach(location => {
@@ -32,5 +64,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
         });
     });
 
-    return [...routes, ...jobRoutes];
+    return [...routes, ...hubs, ...jobRoutes];
 }
