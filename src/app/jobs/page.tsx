@@ -8,12 +8,14 @@ export const metadata = {
     description: 'Browse hidden jobs by platform, role, and location. Explore unlisted opportunities on Greenhouse, Lever, and Ashby.',
 };
 
+import { Footer } from '@/components/layout/Footer';
+
 export default function JobsDirectoryIndex() {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
             <Header />
 
-            <main className="max-w-5xl mx-auto px-6 py-20">
+            <main className="max-w-5xl mx-auto px-6 py-20 pb-32">
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-6">
                         Explore <span className="text-primary">Hidden Job</span> Directories
@@ -105,6 +107,7 @@ export default function JobsDirectoryIndex() {
                     <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 blur-[120px] -mr-48 -mt-48" />
                 </div>
             </main>
+            <Footer />
         </div>
     );
 }

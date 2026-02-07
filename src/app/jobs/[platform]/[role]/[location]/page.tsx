@@ -5,6 +5,7 @@ import { getSeoMetadata, generateSeoDork } from '@/lib/seo-utils';
 import { Header } from '@/components/layout/Header';
 import { ExternalLink, Search, Globe, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { Footer } from '@/components/layout/Footer';
 
 interface PageProps {
     params: Promise<{
@@ -17,8 +18,6 @@ interface PageProps {
 export async function generateStaticParams() {
     const params = [];
 
-    // For now, let's limit the pre-generated pages to avoid huge build times 
-    // we can add more as we grow.
     for (const platform of DIRECTORY_PLATFORMS) {
         for (const role of DIRECTORY_ROLES.slice(0, 5)) { // Top 5 roles
             for (const location of DIRECTORY_LOCATIONS.slice(0, 3)) { // Top 3 locations
@@ -64,7 +63,7 @@ export default async function JobDirectoryPage({ params }: PageProps) {
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
             <Header />
 
-            <main className="max-w-4xl mx-auto px-6 py-20">
+            <main className="max-w-4xl mx-auto px-6 py-20 pb-32">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center space-x-2 text-sm text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2">
                     <Link href="/" className="hover:text-primary transition-colors">Home</Link>
@@ -163,6 +162,7 @@ export default async function JobDirectoryPage({ params }: PageProps) {
                     </div>
                 </section>
             </main>
+            <Footer />
         </div>
     );
 }
