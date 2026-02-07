@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   keywords: ["hidden job market", "ATS search", "Greenhouse jobs", "Lever jobs", "remote tech jobs", "job wrapper", "bypass linkedin", "unlisted jobs"],
   authors: [{ name: "HiddenApply Team" }],
   creator: "HiddenApply",
+  icons: {
+    icon: '/icon',
+    apple: '/apple-icon',
+  },
   metadataBase: new URL("https://hiddenjobs.netlify.app"),
   openGraph: {
     type: "website",
