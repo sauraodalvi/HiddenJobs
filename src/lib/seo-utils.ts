@@ -62,6 +62,7 @@ export function generateSeoDork(platformDomain: string, roleLabel: string, locat
         specificLocation: locationLabel.toLowerCase() === 'remote' ? '' : locationLabel,
         exclude: '',
         time: '30', // Last 30 days for SEO relevance
+        exactTitle: true,
     });
 
     return assembleDork(platformDomain, components);

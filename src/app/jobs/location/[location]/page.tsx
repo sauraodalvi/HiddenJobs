@@ -103,7 +103,7 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
                             <h2 className="text-2xl font-bold dark:text-white">Popular Roles in {location.label}</h2>
                         </div>
                         <div className="grid gap-4">
-                            {DIRECTORY_ROLES.slice(0, 8).map(role => (
+                            {DIRECTORY_ROLES.slice(0, 15).map(role => (
                                 <Link
                                     key={role.slug}
                                     href={`/jobs/greenhouse/${role.slug}/${locationSlug}`}

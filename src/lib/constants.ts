@@ -150,17 +150,67 @@ export const ENGLISH_KEYWORDS = {
 
 // SEO Directory Constants
 export const DIRECTORY_ROLES = [
+  // --- Engineering ---
   { slug: 'software-engineer', label: 'Software Engineer' },
+  { slug: 'senior-software-engineer', label: 'Senior Software Engineer' },
+  { slug: 'staff-software-engineer', label: 'Staff Software Engineer' },
+  { slug: 'principal-software-engineer', label: 'Principal Software Engineer' },
+  { slug: 'engineering-manager', label: 'Engineering Manager' },
+  { slug: 'director-of-engineering', label: 'Director of Engineering' },
+  { slug: 'software-engineer-intern', label: 'Software Engineer Intern' },
+
+  // Frontend/Mobile
   { slug: 'frontend-engineer', label: 'Frontend Engineer' },
+  { slug: 'senior-frontend-engineer', label: 'Senior Frontend Engineer' },
+  { slug: 'ios-engineer', label: 'iOS Engineer' },
+  { slug: 'android-engineer', label: 'Android Engineer' },
+  { slug: 'mobile-engineer', label: 'Mobile Engineer' },
+
+  // Backend/Infra
   { slug: 'backend-engineer', label: 'Backend Engineer' },
+  { slug: 'senior-backend-engineer', label: 'Senior Backend Engineer' },
   { slug: 'full-stack-engineer', label: 'Full Stack Engineer' },
   { slug: 'devops-engineer', label: 'DevOps Engineer' },
+  { slug: 'site-reliability-engineer', label: 'Site Reliability Engineer' },
+  { slug: 'security-engineer', label: 'Security Engineer' },
+
+  // Data/AI
+  { slug: 'data-engineer', label: 'Data Engineer' },
   { slug: 'machine-learning-engineer', label: 'Machine Learning Engineer' },
-  { slug: 'product-manager', label: 'Product Manager' },
-  { slug: 'product-designer', label: 'Product Designer' },
+  { slug: 'ai-engineer', label: 'AI Engineer' },
   { slug: 'data-scientist', label: 'Data Scientist' },
+  { slug: 'senior-data-scientist', label: 'Senior Data Scientist' },
+
+  // --- Product & Design ---
+  { slug: 'product-manager', label: 'Product Manager' },
+  { slug: 'senior-product-manager', label: 'Senior Product Manager' },
+  { slug: 'staff-product-manager', label: 'Staff Product Manager' },
+  { slug: 'technical-product-manager', label: 'Technical Product Manager' },
+  { slug: 'associate-product-manager', label: 'Associate Product Manager' },
+  { slug: 'product-manager-intern', label: 'Product Manager Intern' },
+  { slug: 'product-operations-manager', label: 'Product Operations Manager' },
+  { slug: 'director-of-product', label: 'Director of Product' },
+
+  { slug: 'product-designer', label: 'Product Designer' },
+  { slug: 'senior-product-designer', label: 'Senior Product Designer' },
+  { slug: 'ux-designer', label: 'UX Designer' },
+  { slug: 'ux-researcher', label: 'UX Researcher' },
+  { slug: 'design-manager', label: 'Design Manager' },
+
+  // --- Data & Marketing ---
   { slug: 'data-analyst', label: 'Data Analyst' },
   { slug: 'growth-marketer', label: 'Growth Marketer' },
+  { slug: 'product-marketing-manager', label: 'Product Marketing Manager' },
+  { slug: 'content-strategist', label: 'Content Strategist' },
+  { slug: 'seo-specialist', label: 'SEO Specialist' },
+
+  // --- Ops & Sales ---
+  { slug: 'account-executive', label: 'Account Executive' },
+  { slug: 'sales-development-representative', label: 'Sales Development Representative' },
+  { slug: 'customer-success-manager', label: 'Customer Success Manager' },
+  { slug: 'operations-manager', label: 'Operations Manager' },
+  { slug: 'business-operations', label: 'Business Operations' },
+  { slug: 'revenue-operations', label: 'Revenue Operations' },
 ];
 
 export const DIRECTORY_LOCATIONS = [

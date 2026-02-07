@@ -92,6 +92,65 @@ export default function JobsDirectoryIndex() {
                     </div>
                 </div>
 
+                {/* Secondary Grid for Levels and Specializations */}
+                <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-12">
+                    {/* Internships & Early Career */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 bg-orange-50 dark:bg-orange-900/30 rounded-xl flex items-center justify-center text-orange-600">
+                                <Search className="w-5 h-5" />
+                            </div>
+                            <h2 className="text-xl font-bold dark:text-white">Internships & Specializations</h2>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {DIRECTORY_ROLES.filter(r =>
+                                r.slug.includes('intern') ||
+                                r.slug.includes('associate') ||
+                                r.slug.includes('ios') ||
+                                r.slug.includes('android') ||
+                                r.slug.includes('security')
+                            ).map(role => (
+                                <Link
+                                    key={role.slug}
+                                    href={`/jobs/role/${role.slug}`}
+                                    className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
+                                >
+                                    <span className="font-semibold text-sm text-slate-700 dark:text-slate-200">{role.label}</span>
+                                    <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Senior & Executive Leadership */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600">
+                                <Briefcase className="w-5 h-5" />
+                            </div>
+                            <h2 className="text-xl font-bold dark:text-white">Senior & Leadership</h2>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {DIRECTORY_ROLES.filter(r =>
+                                r.slug.includes('senior') ||
+                                r.slug.includes('staff') ||
+                                r.slug.includes('manager') ||
+                                r.slug.includes('director') ||
+                                r.slug.includes('principal')
+                            ).slice(0, 12).map(role => (
+                                <Link
+                                    key={role.slug}
+                                    href={`/jobs/role/${role.slug}`}
+                                    className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
+                                >
+                                    <span className="font-semibold text-sm text-slate-700 dark:text-slate-200">{role.label}</span>
+                                    <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
                 {/* SEO Text Block */}
                 <div className="mt-32 p-12 rounded-3xl bg-slate-900 text-white relative overflow-hidden">
                     <div className="relative z-10 max-w-2xl">

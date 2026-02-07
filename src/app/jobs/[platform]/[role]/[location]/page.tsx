@@ -19,8 +19,8 @@ export async function generateStaticParams() {
     const params = [];
 
     for (const platform of DIRECTORY_PLATFORMS) {
-        for (const role of DIRECTORY_ROLES.slice(0, 5)) { // Top 5 roles
-            for (const location of DIRECTORY_LOCATIONS.slice(0, 3)) { // Top 3 locations
+        for (const role of DIRECTORY_ROLES.slice(0, 15)) { // Top 15 roles
+            for (const location of DIRECTORY_LOCATIONS.slice(0, 5)) { // Top 5 locations
                 params.push({
                     platform: platform.slug,
                     role: role.slug,

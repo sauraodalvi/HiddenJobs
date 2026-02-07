@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Deep Dynamic Job Pages
     const jobRoutes: MetadataRoute.Sitemap = [];
     DIRECTORY_PLATFORMS.forEach(platform => {
-        DIRECTORY_ROLES.slice(0, 10).forEach(role => {
+        DIRECTORY_ROLES.forEach(role => {
             DIRECTORY_LOCATIONS.forEach(location => {
                 jobRoutes.push({
                     url: `${baseUrl}/jobs/${platform.slug}/${role.slug}/${location.slug}`,
