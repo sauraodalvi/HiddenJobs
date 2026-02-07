@@ -1,6 +1,10 @@
 import { MetadataRoute } from 'next';
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
 
+// Force static generation for better reliability on Netlify
+export const dynamic = 'force-static';
+export const revalidate = 86400; // 24 hours
+
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = 'https://hiddenjobs.netlify.app';
 

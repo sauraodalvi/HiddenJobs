@@ -55,8 +55,8 @@ export function ProGate({
                         {description}
                     </p>
 
-                    <Link href="/pricing">
-                        <button className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 hover:opacity-90 transition-opacity shadow-xl">
+                    <Link href="/pricing" className="w-full">
+                        <button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-xl">
                             <Sparkles className="w-3 h-3" />
                             Upgrade to Pro
                         </button>

@@ -14,12 +14,16 @@ export function FilterSection() {
     const { isPro, isLimitReached, searchesLeft, incrementSearch } = useProFeatures();
     const router = useRouter();
 
-    // Local state for deferred updates
+    // Local state for deferred updates (Now including dropdowns)
+    const [localRole, setLocalRole] = useState(filters.role);
+    const [localIsCustomRole, setLocalIsCustomRole] = useState(filters.isCustomRole);
     const [localCustomRole, setLocalCustomRole] = useState(filters.customRole);
+    const [localLocation, setLocalLocation] = useState(filters.location);
     const [localSpecific, setLocalSpecific] = useState(filters.specificLocation);
     const [localExclude, setLocalExclude] = useState(filters.exclude);
     const [localInclude, setLocalInclude] = useState(filters.include);
     const [localExperience, setLocalExperience] = useState(filters.experience);
+    const [localTime, setLocalTime] = useState(filters.time);
     const [localCountry, setLocalCountry] = useState(filters.country);
     const [localExactTitle, setLocalExactTitle] = useState(filters.exactTitle || false);
     const [localExcludeLocation, setLocalExcludeLocation] = useState(filters.excludeLocation);
@@ -32,13 +36,18 @@ export function FilterSection() {
 
     const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
-    // Sync local state when filters change externally
+    // Sync local state ONLY once on mount if URL has params, 
+    // but avoid aggressive sync to prevent overwriting user input.
     useEffect(() => {
+        setLocalRole(filters.role);
+        setLocalIsCustomRole(filters.isCustomRole);
         setLocalCustomRole(filters.customRole);
+        setLocalLocation(filters.location);
         setLocalSpecific(filters.specificLocation);
         setLocalExclude(filters.exclude);
         setLocalInclude(filters.include);
         setLocalExperience(filters.experience);
+        setLocalTime(filters.time);
         setLocalCountry(filters.country);
         setLocalExactTitle(filters.exactTitle);
         setLocalExcludeLocation(filters.excludeLocation);
@@ -46,7 +55,7 @@ export function FilterSection() {
         setLocalSalaryMin(filters.salaryMin);
         setLocalSalaryMax(filters.salaryMax);
         setLocalEnglishOnly(filters.englishOnly);
-    }, [filters]);
+    }, [filters.role, filters.isCustomRole]); // Only sync when core role changes (deep links)
 
     const roleOptions = Object.keys(ROLE_PRESETS);
 
@@ -62,23 +71,37 @@ export function FilterSection() {
             return;
         }
 
-        const updates: Record<string, string | null> = {};
+        const updates: Record<string, string | null> = {
+            role: localRole,
+            location: localLocation,
+            time: localTime,
+        };
 
-        // Always capture currently typed values
-        if (localCustomRole !== filters.customRole) updates['custom'] = localCustomRole || null;
-        if (localSpecific !== filters.specificLocation) updates['specificLocation'] = localSpecific || null;
-        if (localExclude !== filters.exclude) updates['exclude'] = localExclude || null;
-        if (localInclude !== filters.include) updates['include'] = localInclude || null;
-        if (localExperience !== filters.experience) updates['experience'] = localExperience || null;
-        if (localCountry !== filters.country) updates['country'] = localCountry || null;
-        if (localExactTitle !== filters.exactTitle) updates['exact'] = localExactTitle ? 'true' : 'false';
-        if (localExcludeLocation !== filters.excludeLocation) updates['excludeLocation'] = localExcludeLocation || null;
+        // Custom Role Logic
+        if (localIsCustomRole) {
+            updates['custom'] = localCustomRole || '';
+        } else {
+            updates['custom'] = null;
+        }
 
-        // Power features
-        if (localCompany !== filters.company) updates['company'] = localCompany || null;
-        if (localSalaryMin !== filters.salaryMin) updates['salaryMin'] = localSalaryMin || null;
-        if (localSalaryMax !== filters.salaryMax) updates['salaryMax'] = localSalaryMax || null;
-        if (localEnglishOnly !== filters.englishOnly) updates['englishOnly'] = localEnglishOnly ? 'true' : 'false';
+        // Location Logic
+        if (localLocation === 'specific') {
+            updates['specificLocation'] = localSpecific || null;
+        } else {
+            updates['specificLocation'] = null;
+        }
+
+        // Apply all other local values to URL
+        updates['exclude'] = localExclude || null;
+        updates['include'] = localInclude || null;
+        updates['experience'] = localExperience || null;
+        updates['country'] = localCountry || null;
+        updates['exact'] = localExactTitle ? 'true' : 'false';
+        updates['excludeLocation'] = localExcludeLocation || null;
+        updates['company'] = localCompany || null;
+        updates['salaryMin'] = localSalaryMin || null;
+        updates['salaryMax'] = localSalaryMax || null;
+        updates['englishOnly'] = localEnglishOnly ? 'true' : 'false';
 
         incrementSearch();
         updateFilters(updates);
@@ -92,21 +115,39 @@ export function FilterSection() {
     return (
         <div className="max-w-4xl mx-auto relative z-10 -mt-8">
 
+            {/* Seniority Quick Toggles */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
+                {['intern', 'junior', 'senior', 'staff', 'manager'].map((level) => (
+                    <button
+                        key={level}
+                        onClick={() => setLocalExperience(localExperience === level ? '' : level)}
+                        className={cn(
+                            "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border shadow-sm active:scale-95",
+                            localExperience === level
+                                ? "bg-primary border-primary text-white shadow-primary/20"
+                                : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-primary"
+                        )}
+                    >
+                        {level}
+                    </button>
+                ))}
+            </div>
+
             {/* Search Island */}
             <div className={cn(containerClass, mobileStackClass)}>
 
                 {/* Role Input Section (40% width on Desktop) */}
                 <div className="flex-[2] relative">
                     <Terminal className={iconClass} />
-                    {!filters.isCustomRole ? (
+                    {!localIsCustomRole ? (
                         <div className="relative">
                             <select
-                                value={filters.role}
+                                value={localRole}
                                 onChange={(e) => {
                                     if (e.target.value === 'custom_trigger') {
-                                        updateFilters({ custom: '', role: filters.role });
+                                        setLocalIsCustomRole(true);
                                     } else {
-                                        updateFilters({ role: e.target.value, custom: null });
+                                        setLocalRole(e.target.value);
                                     }
                                 }}
                                 className="w-full pl-12 pr-10 py-3 bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white font-mono text-sm cursor-pointer truncate"
@@ -132,11 +173,11 @@ export function FilterSection() {
                             <button
                                 onClick={() => {
                                     setLocalCustomRole('');
-                                    updateFilters({ custom: null });
+                                    setLocalIsCustomRole(false);
                                 }}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-primary z-10"
                             >
-                                Clear
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
                     )}
@@ -149,11 +190,11 @@ export function FilterSection() {
                 {/* Location Input Section (30% width) */}
                 <div className="flex-1 relative">
                     <MapPin className={iconClass} />
-                    {filters.location !== 'specific' ? (
+                    {localLocation !== 'specific' ? (
                         <div className="relative">
                             <select
-                                value={filters.location}
-                                onChange={(e) => updateFilters({ location: e.target.value })}
+                                value={localLocation}
+                                onChange={(e) => setLocalLocation(e.target.value)}
                                 className="w-full pl-12 pr-10 py-3 bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white font-mono text-sm cursor-pointer"
                             >
                                 <option value="remote" className="text-slate-900">Remote Only</option>
@@ -174,10 +215,10 @@ export function FilterSection() {
                                 autoFocus
                             />
                             <button
-                                onClick={() => updateFilters({ location: 'remote', specificLocation: null })}
+                                onClick={() => setLocalLocation('remote')}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-primary z-10"
                             >
-                                Clear
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
                     )}
@@ -191,8 +232,8 @@ export function FilterSection() {
                     <div className="relative">
                         <Clock className={iconClass} />
                         <select
-                            value={filters.time}
-                            onChange={(e) => updateFilters({ time: e.target.value })}
+                            value={localTime}
+                            onChange={(e) => setLocalTime(e.target.value)}
                             className="w-full pl-12 pr-8 py-3 bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white font-mono text-sm cursor-pointer"
                         >
                             <option value="0.5" className="text-slate-900">Past 12 hours</option>
@@ -205,7 +246,7 @@ export function FilterSection() {
                     </div>
 
                     {/* Custom Range Inputs Overlay */}
-                    {filters.time === 'custom' && (
+                    {localTime === 'custom' && (
                         <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark rounded-xl shadow-xl z-50 flex flex-col gap-2 animate-in fade-in slide-in-from-top-2">
                             <div className="flex items-center justify-between text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
                                 <span>Date Range</span>
@@ -236,11 +277,11 @@ export function FilterSection() {
                 </div>
 
                 {/* Launch Button */}
-                <div className="flex flex-col items-center gap-2">
+                <div className="w-full md:w-auto flex flex-col items-stretch md:items-center gap-2">
                     <button
                         onClick={handleGo}
                         className={cn(
-                            "min-w-[3.5rem] md:px-8 py-3 rounded-xl font-black md:text-lg transition-all flex items-center justify-center space-x-2 group whitespace-nowrap shadow-lg active:scale-[0.98]",
+                            "w-full md:min-w-[7rem] md:px-8 py-3 rounded-xl font-black md:text-lg transition-all flex items-center justify-center space-x-2 group whitespace-nowrap shadow-lg active:scale-[0.98]",
                             isLimitReached
                                 ? "bg-slate-300 dark:bg-slate-700 cursor-not-allowed text-slate-500"
                                 : "bg-primary hover:bg-blue-600 text-white hover:shadow-blue-500/25"
@@ -251,7 +292,7 @@ export function FilterSection() {
                         {!isLimitReached && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                     </button>
                     {!isPro && !isLimitReached && (
-                        <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                        <span className="w-full text-center text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                             {searchesLeft} free {searchesLeft === 1 ? 'search' : 'searches'} left
                         </span>
                     )}
