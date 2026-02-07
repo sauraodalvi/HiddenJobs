@@ -1,9 +1,11 @@
 
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import JsonLd from "@/components/seo/JsonLd";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
@@ -17,11 +19,11 @@ export const metadata: Metadata = {
   keywords: ["hidden job market", "ATS search", "Greenhouse jobs", "Lever jobs", "remote tech jobs", "job wrapper", "bypass linkedin", "unlisted jobs"],
   authors: [{ name: "HiddenApply Team" }],
   creator: "HiddenApply",
-  metadataBase: new URL("https://hiddenapply.com"),
+  metadataBase: new URL("https://hiddenjobs.netlify.app"),
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://hiddenapply.com",
+    url: "https://hiddenjobs.netlify.app",
     title: "HiddenApply | Find the 60% of Jobs Not on LinkedIn",
     description: "Search 50k+ live unlisted roles directly on Greenhouse, Lever, and Ashby. Stop competing with 1000+ applicants on LinkedIn.",
     siteName: "HiddenApply",
@@ -60,18 +62,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${jetbrains.variable} font-sans`} suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <JsonLd />
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.variable} ${jetbrains.variable} font-sans`} suppressHydrationWarning>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <JsonLd />
+          </ThemeProvider>
+
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

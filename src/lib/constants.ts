@@ -1,17 +1,17 @@
 
 export const ATS_PLATFORMS = [
-  { name: 'Greenhouse', domain: 'boards.greenhouse.io', isPro: false },
-  { name: 'Lever', domain: 'jobs.lever.co', isPro: false },
-  { name: 'Workday', domain: 'myworkdayjobs.com', isPro: false },
-  { name: 'SmartRecruiters', domain: 'jobs.smartrecruiters.com', isPro: false },
-  { name: 'BambooHR', domain: 'bamboohr.com', isPro: false },
-  { name: 'JazzHR', domain: 'applytojob.com', isPro: false },
-  { name: 'Breezy HR', domain: 'breezy.hr', isPro: false },
-  { name: 'iCIMS', domain: 'icims.com', isPro: false },
-  { name: 'Jobvite', domain: 'jobs.jobvite.com', isPro: true },
-  { name: 'Recruiterbox', domain: 'recruiterbox.com', isPro: true },
-  { name: 'Ashby', domain: 'ashbyhq.com', isPro: true },
-  { name: 'Workable', domain: 'apply.workable.com', isPro: true },
+  { name: 'Greenhouse', domain: 'boards.greenhouse.io', logoDomain: 'greenhouse.io', isPro: false },
+  { name: 'Lever', domain: 'jobs.lever.co', logoDomain: 'lever.co', isPro: false },
+  { name: 'Workday', domain: 'myworkdayjobs.com', logoDomain: 'workday.com', isPro: false },
+  { name: 'SmartRecruiters', domain: 'jobs.smartrecruiters.com', logoDomain: 'smartrecruiters.com', isPro: false },
+  { name: 'BambooHR', domain: 'bamboohr.com', logoDomain: 'bamboohr.com', isPro: false },
+  { name: 'JazzHR', domain: 'applytojob.com', logoDomain: 'jazzhr.com', isPro: false },
+  { name: 'Breezy HR', domain: 'breezy.hr', logoDomain: 'breezy.hr', isPro: false },
+  { name: 'iCIMS', domain: 'icims.com', logoDomain: 'icims.com', isPro: false },
+  { name: 'Jobvite', domain: 'jobs.jobvite.com', logoDomain: 'jobvite.com', isPro: false },
+  { name: 'Recruiterbox', domain: 'recruiterbox.com', logoDomain: 'recruiterbox.com', isPro: false },
+  { name: 'Ashby', domain: 'ashbyhq.com', logoDomain: 'ashbyhq.com', isPro: false },
+  { name: 'Workable', domain: 'apply.workable.com', logoDomain: 'workable.com', isPro: false },
 ];
 
 export const ROLE_PRESETS: Record<string, string> = {

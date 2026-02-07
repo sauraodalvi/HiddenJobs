@@ -1,19 +1,15 @@
-
 "use client";
 
 import { useSearchFilters } from "@/hooks/use-search";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { ExternalLink, Copy, Check, Search, AlertTriangle, Loader2, X, Maximize2, ChevronLeft, Lock, RefreshCw, Sparkles } from "lucide-react";
+import { ExternalLink, Copy, Check, Search, AlertTriangle, Loader2, X, Maximize2, ChevronLeft, Lock, RefreshCw, Sparkles, Globe, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export function ResultsSection() {
     const { generateLinks, filters } = useSearchFilters();
 
-    // Real logic simulation: Are we in Pro mode? 
-    // Usually this comes from a Clerk session or DB, but for this demo let's allow a toggle.
-    const [isPro, setIsPro] = useState(false); // Default to false to show locking behavior
-
-    const links = useMemo(() => generateLinks(isPro), [generateLinks, isPro]);
+    const links = useMemo(() => generateLinks(), [generateLinks]);
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
     const [activeLink, setActiveLink] = useState<any>(links[0]);
     const [activeEngine, setActiveEngine] = useState<'google' | 'ddg' | 'bing' | 'brave' | 'yahoo'>('ddg');
@@ -56,7 +52,6 @@ export function ResultsSection() {
     };
 
     const switchLink = (link: any) => {
-        if (link.locked) return;
         setActiveLink(link);
     };
 
@@ -86,24 +81,6 @@ export function ResultsSection() {
     return (
         <section id="results-section" className="max-w-7xl mx-auto px-6 py-12 relative">
 
-            {/* Premium Control */}
-            <div className="absolute top-0 right-6 flex items-center gap-2">
-                <div className="flex items-center space-x-2 bg-slate-100/80 dark:bg-slate-800/80 backdrop-blur-sm p-1 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                    <button
-                        onClick={() => setIsPro(!isPro)}
-                        className={cn(
-                            "flex items-center gap-1.5 text-[10px] font-black px-4 py-1.5 rounded-lg transition-all",
-                            isPro
-                                ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-orange-500/20"
-                                : "text-slate-500 hover:text-slate-700"
-                        )}
-                    >
-                        <Sparkles className={cn("w-3 h-3", isPro && "animate-pulse")} />
-                        {isPro ? 'PRO UNLOCKED' : 'GO PRO'}
-                    </button>
-                </div>
-            </div>
-
             {/* Main Content Area */}
             <div className={cn(
                 "transition-all duration-500 ease-in-out flex flex-col",
@@ -124,24 +101,22 @@ export function ResultsSection() {
                             key={link.name}
                             onClick={() => switchLink(link)}
                             className={cn(
-                                "flex items-center space-x-3 p-2 pr-4 rounded-xl border transition-all min-w-[200px] snap-start relative overflow-hidden shrink-0",
-                                link.locked
-                                    ? "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 opacity-60 cursor-pointer hover:bg-slate-100 ring-1 ring-inset ring-slate-900/5"
-                                    : "cursor-pointer",
-                                !link.locked && activeLink?.name === link.name
+                                "flex items-center space-x-3 p-3 pr-5 rounded-xl border transition-all min-w-[220px] snap-start relative overflow-hidden shrink-0 cursor-pointer",
+                                activeLink?.name === link.name
                                     ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xl scale-[1.02]"
-                                    : !link.locked && "bg-white dark:bg-surface-dark border-slate-200 dark:border-border-dark hover:border-primary/50 text-slate-600 dark:text-slate-400"
+                                    : "bg-white dark:bg-surface-dark border-slate-200 dark:border-border-dark hover:border-primary/50 text-slate-600 dark:text-slate-400"
                             )}
                         >
                             {/* Logo */}
-                            <div className="w-8 h-8 rounded-lg bg-white p-1 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 relative group-hover:border-primary/30 transition-colors">
+                            <div className="w-9 h-9 rounded-lg bg-white p-1 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 relative group-hover:border-primary/30 transition-colors shadow-sm">
                                 <img
-                                    src={`https://logo.clearbit.com/${link.domain.split('.').slice(-2).join('.')}`}
+                                    src={`https://logo.clearbit.com/${link.logoDomain || link.domain.split('.').slice(-2).join('.')}`}
                                     alt={link.name}
                                     className="w-full h-full object-contain"
                                     loading="lazy"
                                     onError={(e) => {
                                         const target = e.currentTarget;
+                                        target.parentElement!.classList.add('bg-slate-50');
                                         target.style.display = 'none';
                                         const parent = target.parentElement;
                                         if (parent && !parent.querySelector('.fallback-initial')) {
@@ -156,31 +131,28 @@ export function ResultsSection() {
 
                             <div className="flex flex-col items-start text-left flex-1 min-w-0">
                                 <div className="flex items-center gap-1.5 w-full">
-                                    <span className="text-xs font-bold leading-none truncate">{link.name}</span>
-                                    {link.locked && <Lock className="w-2.5 h-2.5 text-amber-500" />}
+                                    <span className="text-sm font-bold leading-none truncate">{link.name}</span>
                                 </div>
                                 <span className="text-[10px] opacity-70 mt-1 font-mono leading-none">
-                                    {link.locked ? 'Unlock with Pro' : `View latest postings`}
+                                    View latest postings
                                 </span>
                             </div>
 
                             {/* Status Icon */}
-                            {!link.locked && (
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        copyQuery(link.query, idx);
-                                    }}
-                                    className="p-1.5 hover:bg-white/20 rounded-md transition-colors"
-                                    title="Copy Query"
-                                >
-                                    {copiedIndex === idx ? (
-                                        <Check className="w-3 h-3 text-green-400" />
-                                    ) : (
-                                        <Copy className="w-3 h-3 text-current opacity-70" />
-                                    )}
-                                </button>
-                            )}
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    copyQuery(link.query, idx);
+                                }}
+                                className="p-1.5 hover:bg-white/20 rounded-md transition-colors"
+                                title="Copy Query"
+                            >
+                                {copiedIndex === idx ? (
+                                    <Check className="w-3.5 h-3.5 text-green-400" />
+                                ) : (
+                                    <Copy className="w-3.5 h-3.5 text-current opacity-70" />
+                                )}
+                            </button>
                         </div>
                     ))}
                 </div>
@@ -194,23 +166,22 @@ export function ResultsSection() {
                     <div className="px-4 py-3 border-b border-slate-200 dark:border-border-dark flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur sticky top-0 z-10 shrink-0">
 
                         {/* Left: Engine Tabs */}
-                        <div className="flex items-center space-x-4">
-                            <div className="flex bg-slate-200 dark:bg-slate-800 rounded-lg p-1 space-x-1 shrink-0 shadow-inner overflow-x-auto custom-scrollbar max-w-[200px] sm:max-w-none">
-                                {['ddg', 'bing', 'brave', 'yahoo', 'google'].map((engine) => (
-                                    <button
-                                        key={engine}
-                                        onClick={() => setActiveEngine(engine as any)}
-                                        className={cn(
-                                            "px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded-md transition-all uppercase tracking-wider whitespace-nowrap",
-                                            activeEngine === engine
-                                                ? "bg-white dark:bg-slate-700 shadow-md text-slate-900 dark:text-white scale-105"
-                                                : "text-slate-500 hover:text-slate-700"
-                                        )}
-                                    >
-                                        {engine === 'ddg' ? 'DuckDuckGo' : engine === 'bing' ? 'Bing' : engine === 'brave' ? 'Brave' : engine === 'yahoo' ? 'Yahoo' : 'Google'}
-                                    </button>
-                                ))}
-                            </div>
+                        <div className="flex items-center bg-slate-200 dark:bg-slate-800 rounded-lg p-1 space-x-1 shrink-0 shadow-inner overflow-x-auto custom-scrollbar max-w-[250px] sm:max-w-none">
+                            {['google', 'ddg', 'bing', 'brave', 'yahoo'].map((engine) => (
+                                <button
+                                    key={engine}
+                                    onClick={() => setActiveEngine(engine as any)}
+                                    className={cn(
+                                        "px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded-md transition-all uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5",
+                                        activeEngine === engine
+                                            ? "bg-white dark:bg-slate-700 shadow-md text-slate-900 dark:text-white scale-105"
+                                            : "text-slate-500 hover:text-slate-700"
+                                    )}
+                                >
+                                    <Globe className="w-3 h-3" />
+                                    {engine === 'ddg' ? 'DuckDuckGo' : engine.charAt(0).toUpperCase() + engine.slice(1)}
+                                </button>
+                            ))}
                         </div>
 
                         {/* Center: Open External Fallback */}
@@ -222,7 +193,8 @@ export function ResultsSection() {
                                 className="text-[10px] font-bold text-slate-400 hover:text-primary transition-colors flex items-center gap-1.5 uppercase tracking-tight"
                             >
                                 <ExternalLink className="w-3 h-3" />
-                                <span>Iframe Blocked? Open in New Tab</span>
+                                <span className="hidden sm:inline">Iframe Blocked? Open in New Tab</span>
+                                <span className="sm:hidden">Open External</span>
                             </a>
                         </div>
 
@@ -239,63 +211,60 @@ export function ResultsSection() {
                             >
                                 <RefreshCw className="w-4 h-4" />
                             </button>
-
-
-
                             <button
                                 onClick={toggleFullScreen}
-                                className={cn(
-                                    "flex items-center px-5 py-2.5 rounded-xl font-black text-xs transition-all shadow-lg active:scale-95 group",
-                                    isFullScreen
-                                        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
-                                        : "bg-primary text-white hover:bg-blue-600 hover:shadow-blue-500/25"
-                                )}
+                                className="p-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                                title={isFullScreen ? "Exit Focus Mode" : "Focus Mode"}
                             >
-                                {isFullScreen ? (
-                                    <>
-                                        <X className="w-4 h-4 mr-2" />
-                                        <span>Exit</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Maximize2 className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                                        <span>Focus Mode</span>
-                                    </>
-                                )}
+                                {isFullScreen ? <X className="w-5 h-5" /> : <Maximize2 className="w-4 h-4" />}
                             </button>
                         </div>
                     </div>
 
-                    {/* Iframe Content */}
-                    <div className="flex-1 bg-slate-100 dark:bg-black/50 relative">
-                        {activeLink?.locked ? (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-white/90 dark:bg-slate-900/90 backdrop-blur-md z-20">
-                                <div className="w-16 h-16 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center mb-6">
-                                    <Lock className="w-8 h-8 text-amber-600" />
-                                </div>
-                                <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2 decoration-primary decoration-4 underline-offset-4">Premium Job Source</h3>
-                                <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-8">
-                                    Ashby, Jobvite, and specialized ATS platforms are only available to
-                                    <span className="text-primary font-bold"> HiddenApply Pro</span> members.
-                                </p>
-                                <button
-                                    onClick={() => alert("Upgrade Modal would open here!")}
-                                    className="bg-primary text-white px-8 py-3 rounded-xl font-bold shadow-xl shadow-blue-500/20 hover:scale-105 transition-transform"
-                                >
-                                    Upgrade to Unveil
-                                </button>
-                            </div>
-                        ) : (
+                    {/* Iframe View */}
+                    <div className="flex-1 w-full bg-slate-50 dark:bg-slate-900 relative">
+                        {activeLink ? (
                             <iframe
-                                key={`${activeLink?.name}-${activeEngine}`}
+                                key={`${activeLink.name}-${activeEngine}`} // Force re-render on switch
                                 src={getEmbedUrl()}
-                                className="w-full h-full border-none bg-white"
-                                title="Search Results"
-                                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                                className="w-full h-full border-none"
+                                title="Search Results Viewer"
                             />
+                        ) : (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 p-8 text-center">
+                                <Search className="w-12 h-12 mb-4 opacity-20" />
+                                <p className="text-sm font-medium">Select an ATS platform above to view postings</p>
+                            </div>
                         )}
+
+                        {/* Security Warning Overlay (Visible only briefly) */}
+                        <div className="absolute bottom-4 right-4 max-w-xs bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl pointer-events-none animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-1000 fill-mode-both">
+                            <div className="flex items-start gap-3">
+                                <Shield className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                                <p className="text-[10px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                                    Secure Iframe. Some results may be blocked by search engine security policies. Use the "Open External" link if needed.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                {/* Footer Metrics */}
+                {!isFullScreen && (
+                    <div className="mt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 font-mono uppercase tracking-widest gap-4">
+                        <div className="flex items-center gap-4">
+                            <span className="flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                indexing 50,000+ jobs
+                            </span>
+                            <span className="opacity-30">|</span>
+                            <span>last update: moments ago</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span>search latency: ~0.4s</span>
+                        </div>
+                    </div>
+                )}
             </div>
         </section>
     );

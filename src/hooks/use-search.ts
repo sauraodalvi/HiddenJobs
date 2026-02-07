@@ -71,16 +71,14 @@ export function useSearchFilters() {
     // Derived logic
     const dorkComponents = useMemo(() => buildDorkComponents(filters), [filters]);
 
-    const generateLinks = useCallback((isPro: boolean = false) => {
-        return ATS_PLATFORMS.map((ats, idx) => {
-            // Logic: If Pro is ON, nothing is locked. If Pro is OFF, only idx 0 (Greenhouse) is unlocked.
-            const isLocked = !isPro && idx > 0;
+    const generateLinks = useCallback(() => {
+        return ATS_PLATFORMS.map((ats) => {
             const query = assembleDork(ats.domain, dorkComponents);
             return {
                 name: ats.name,
                 domain: ats.domain,
                 query,
-                locked: isLocked,
+                locked: false,
                 googleUrl: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
                 duckduckgoUrl: `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
                 bingUrl: `https://www.bing.com/search?q=${encodeURIComponent(query)}`,

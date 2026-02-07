@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+  <meta charset="UTF-8">
   <link rel="stylesheet" href="panel.css">
 </head>
+
 <body>
   <div class="container">
     <header>
@@ -20,13 +23,76 @@
       <div id="settings-view" class="hidden">
         <div class="card">
           <label>Gemini API Key</label>
-          <input type="password" id="api-key" placeholder="AIzaSy..." />
+          <input type="password" id="api-key" placeholder="AIzaSy..." value="AIzaSyA2BtbB4EgFGKs3qyk4ELrN1tK5K91cXeI" />
           <p class="text-xs">Stored locally in your browser. Never shared.</p>
         </div>
 
         <div class="card">
+          <label>Your Name:</label>
+          <input type="text" id="user-name" placeholder="John Doe" class="input-field mb-2">
+
+          <label>Current Salary (Annual):</label>
+          <input type="text" id="user-salary" placeholder="e.g. 15,00,000 or 15 LPA" class="input-field mb-2">
+
           <label>Master Resume (Text)</label>
-          <textarea id="resume-text" rows="15" placeholder="Paste your full resume text here. Include skills, experience, and bio..."></textarea>
+          <textarea id="resume-text" rows="15" placeholder="Paste your full resume text here...">SAURAO DALVI
+Pune, India | +91-8007027849 | sauraodalvi97@gmail.com | LinkedIn | Portfolio
+SUMMARY
+Product Manager specializing in AI-powered B2B SaaS and HealthTech products. Excel at Product Discovery, user research, rapid
+prototyping (Figma + AI tools like Lovable, Bolt, Emergent, Windsurf, Antigravity), Agile delivery, and data-driven intelligent features
+to boost adoption, revenue ($2K+ MRR/lab impact), and operational efficiency across India, UK, Middle East. Passionate about
+translating AI capabilities into scalable, user-centric solutions with cross-functional teams.
+SKILLS
+• AI & Data Tools: SQL, Tableau, Power BI, Claude/ChatGPT/Grok (prompting), Lovable/Emergent/Bolt/Antigravity/Curosr/Windsurf
+(vibe coding), n8n/Make/Zapier (automation)
+• Core PM Tools: Figma, Whimsical, Jira, Softr, Airtable, Microsoft Office
+• Processes: Product Discovery, User Research, Rapid Prototyping, A/B Testing, Agile Sprints, PRDs, Feature Prioritization, Go-toMarket Strategy
+PROFESSIONAL EXPERIENCE
+CrelioHealth (B2B SaaS for diagnostic labs and hospitals) Jan 2024 – Jan 2026
+Product Analyst (Associate Product Manager) Pune, India
+• Launched “Smart Reports” end-to-end increasing average lab revenue by ~$2,000 MRR per lab and expanding usage across India,
+Saudi Arabia & the UK.
+• Shipped 50+ mobile-first enhancements across Android, iPhone & iPad improving usability, accessibility and reducing key task
+time by ~20% (Doctor App, Phlebotomist App, Patient App)
+• Led the development & rollout of a B2B Logistics App, streamlining hospital → lab sample-collection workflows; cut turnaround
+time by 18% and unlocked new revenue streams across mid-sized Indian labs.
+• Improved AI Report Filling accuracy from ~50% to close to 90% and cleaned up the UX.
+• Enhanced AI-TRF Scan on dropping registration time from ~2 min to 50 seconds, much quicker onboarding with fewer errors.
+• Developed "Picklist" feature for rapid frequent-test selection; solved 80% repeat-test inefficiency in US labs by replacing slow
+search-add with quick favorites → faster ordering and reduced effort.
+• Redesigned core LIMS modules (Sample Archival, Org Management) improving operational efficiency by 15% and reducing
+process errors by 30%.
+• Built a multilingual EN/ES Resource Center, reducing support queries by 30% and decreasing onboarding time by 25%.
+• Developed and validated MVPs for Smart Report Template and Report Gallery, cutting onboarding time by 25%.
+Sprinto (B2B SaaS for security compliance and automation) Feb 2023 - Nov 2023
+Associate Product Manager Intern Pune, India
+• Designed and launched a “Report Issue” module, reducing inbound manual issue reports by 30% and improving triage accuracy.
+• Built Security Questionnaire Auto-Suggestions, accelerating enterprise sales cycles; directly contributed to closing a $24K ARR client.
+• Created a centralized Bug Bounty Hub used by security engineers, improving collaboration and reducing median response time by
+25%.
+• Optimized workflow checks, reducing compliance failures by 40%, improving audit readiness & platform reliability.
+• Implemented RBAC, tightening permission boundaries reducing unauthorized-access risks by ~60% and helping teams pass SOC2
+audits faster.
+Nil Barriers (Early-stage edtech startup focused on social inclusion) Nov 2022 - Jun 2023
+Product Lead Pune, India
+• Conducted targeted user research to identify crucial features for the MVP and inform product vision.
+• Led the creation of the platform's landing page and executed rigorous feature testing to ensure a seamless user experience.
+EDUCATION
+N. L. Dalmia Institute of Management Studies and Research 2020 - 2022
+• Post Graduate Diploma, Management, Marketing (Cumulative GPA: 8.58/10.0)
+SIDE PROJECTS
+Stare V2 | Fully-coded platform for aspiring PMs to practice case studies & build portfolios
+• Rebuilt (Vibe Coded using Lovable & Antigravity) Stare as a fully coded V2 adding AI features and major UX upgrades to replace the
+no-code MVP
+• Stare V1 - Built in 2 days using no-code tools; ranked #6 on Product Hunt; 1,000+ subscribers within 2 months across 63 countries.
+(ARR USD120)
+Networking Sheet 2.0 | Networking platform built for Product Con attendees to connect and collaborate
+• MVP for Product Con (Product School); 1,300 unique users Day 1, 1.7 min avg. session time. Profit 25USD.
+PMQ | AI-powered Q&A platform for aspiring Product Managers
+• PM interview-prep platform; #9 on Product Hunt, 700+ users in 3 days, 60% avg. scroll depth.</textarea>
+
+          <label style="margin-top: 10px; display:block;">Resume PDF URL (Public Link)</label>
+          <input type="text" id="resume-url" placeholder="https://example.com/resume.pdf" class="input-field" />
           <button id="save-settings">Save Configuration</button>
         </div>
       </div>
@@ -47,7 +113,7 @@
 
         <div class="card">
           <button id="scan-btn" class="secondary mb-4">🔄 Re-Scan Page</button>
-          
+
           <button id="fill-btn" disabled>
             ✨ Auto-Fill with Gemini
           </button>
@@ -63,4 +129,5 @@
   </div>
   <script src="panel.js"></script>
 </body>
+
 </html>

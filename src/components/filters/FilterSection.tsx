@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -241,7 +240,7 @@ export function FilterSection() {
 
                 <button
                     onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-                    className="group flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-primary transition-all mb-4"
+                    className="group flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-primary transition-all mb-4 relative"
                 >
                     <Bolt className={cn("w-4 h-4 transition-transform", isAdvancedOpen && "rotate-180 text-primary")} />
                     <span>{isAdvancedOpen ? 'Hide Advanced Options' : 'Advanced Options'}</span>

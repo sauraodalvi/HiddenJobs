@@ -7,16 +7,12 @@
         "sidePanel",
         "storage",
         "activeTab",
-        "scripting"
+        "scripting",
+        "contextMenus"
     ],
     "host_permissions": [
         "https://generativelanguage.googleapis.com/*",
-        "*://boards.greenhouse.io/*",
-        "*://jobs.lever.co/*",
-        "*://*.ashbyhq.com/*",
-        "*://*.myworkdayjobs.com/*",
-        "*://jobs.smartrecruiters.com/*",
-        "*://*.bamboohr.com/*"
+        "<all_urls>"
     ],
     "background": {
         "service_worker": "background.js"
@@ -24,9 +20,20 @@
     "side_panel": {
         "default_path": "panel.html"
     },
+    "icons": {
+        "16": "icon.png",
+        "32": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
     "action": {
         "default_title": "Open HiddenApply Ghost",
-        "default_icon": "icon.png"
+        "default_icon": {
+            "16": "icon.png",
+            "32": "icon.png",
+            "48": "icon.png",
+            "128": "icon.png"
+        }
     },
     "content_scripts": [
         {

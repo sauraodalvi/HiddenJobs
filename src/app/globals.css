@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply font-sans bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300;
+    @apply font-sans bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100;
   }
 }
 
@@ -110,4 +110,17 @@ html.dark .gradient-text {
 
 .dark .custom-scrollbar {
   scrollbar-color: #334155 transparent;
+}
+
+.fallback-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.dark .fallback-initial {
+  color: #475569;
 }

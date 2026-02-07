@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { FilterSection } from "@/components/filters/FilterSection";
 import { ResultsSection } from "@/components/results/ResultsSection";
 import { Header } from "@/components/layout/Header";
+import { InfoSection } from "@/components/layout/InfoSection";
 
 export default function Home() {
   return (
@@ -31,7 +32,8 @@ export default function Home() {
             <ResultsSection />
           </Suspense>
 
-
+          {/* New SEO/AEO/GEO Section */}
+          <InfoSection />
 
         </div>
 
@@ -47,7 +49,7 @@ export default function Home() {
             <div className="w-6 h-6 bg-primary rounded-md flex items-center justify-center">
               <div className="w-3 h-3 rounded-full border border-white" />
             </div>
-            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">HiddenApply<span className="text-primary">Pro</span></span>
+            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">HiddenApply</span>
           </div>
           <div className="text-sm text-slate-400">
             © 2026 HiddenApply. Made for the builders.
