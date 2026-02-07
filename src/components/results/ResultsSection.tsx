@@ -7,6 +7,34 @@ import { ExternalLink, Copy, Check, Search, AlertTriangle, Loader2, X, Maximize2
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
+// Logo component with robust error handling
+function LogoImage({ link }: { link: any }) {
+    const [hasError, setHasError] = useState(false);
+    const logoUrl = `https://logo.clearbit.com/${link.logoDomain || link.domain.split('.').slice(-2).join('.')}`;
+
+    return (
+        <div className={cn(
+            "w-9 h-9 rounded-lg p-1 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 relative group-hover:border-primary/30 transition-colors shadow-sm",
+            hasError ? "bg-slate-50 dark:bg-slate-800" : "bg-white"
+        )}>
+            {!hasError ? (
+                <img
+                    src={logoUrl}
+                    alt={link.name}
+                    className="w-full h-full object-contain"
+                    loading="lazy"
+                    onError={() => setHasError(true)}
+                />
+            ) : (
+                <span className="text-[10px] font-black text-slate-400 dark:text-slate-500">
+                    {link.name[0].toUpperCase()}
+                </span>
+            )}
+        </div>
+    );
+}
+
+
 export function ResultsSection() {
     const { generateLinks, filters } = useSearchFilters();
     const { isPro } = useProFeatures();
@@ -126,26 +154,7 @@ export function ResultsSection() {
                                 )}
 
                                 {/* Logo */}
-                                <div className="w-9 h-9 rounded-lg bg-white p-1 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 relative group-hover:border-primary/30 transition-colors shadow-sm">
-                                    <img
-                                        src={`https://logo.clearbit.com/${link.logoDomain || link.domain.split('.').slice(-2).join('.')}`}
-                                        alt={link.name}
-                                        className="w-full h-full object-contain"
-                                        loading="lazy"
-                                        onError={(e) => {
-                                            const target = e.currentTarget;
-                                            target.parentElement!.classList.add('bg-slate-50');
-                                            target.style.display = 'none';
-                                            const parent = target.parentElement;
-                                            if (parent && !parent.querySelector('.fallback-initial')) {
-                                                const span = document.createElement('span');
-                                                span.innerText = link.name[0].toUpperCase();
-                                                span.className = "fallback-initial text-[10px] font-black text-slate-400";
-                                                parent.appendChild(span);
-                                            }
-                                        }}
-                                    />
-                                </div>
+                                <LogoImage link={link} />
 
                                 <div className="flex flex-col items-start text-left flex-1 min-w-0">
                                     <div className="flex items-center gap-1.5 w-full">
