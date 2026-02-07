@@ -49,10 +49,10 @@ export default function Home() {
             <div className="w-6 h-6 bg-primary rounded-md flex items-center justify-center">
               <div className="w-3 h-3 rounded-full border border-white" />
             </div>
-            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">HiddenApply</span>
+            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">HiddenJobs</span>
           </div>
           <div className="text-sm text-slate-400">
-            © 2026 HiddenApply. Made for the builders.
+            © 2026 HiddenJobs. Made for the builders.
           </div>
         </div>
       </footer>

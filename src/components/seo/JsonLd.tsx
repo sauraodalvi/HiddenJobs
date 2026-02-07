@@ -2,8 +2,8 @@ export default function JsonLd() {
     const webAppSchema = {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "HiddenApply",
-        "url": "https://hiddenapply.com",
+        "name": "HiddenJobs",
+        "url": "https://hiddenjobs.netlify.app",
         "description": "A search engine for the hidden job market that indexes unlisted roles from Greenhouse, Lever, and Ashby.",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "All",
@@ -20,7 +20,7 @@ export default function JsonLd() {
         ],
         "author": {
             "@type": "Organization",
-            "name": "HiddenApply"
+            "name": "HiddenJobs"
         }
     };
 
@@ -38,10 +38,10 @@ export default function JsonLd() {
             },
             {
                 "@type": "Question",
-                "name": "How does HiddenApply find these jobs?",
+                "name": "How does HiddenJobs find these jobs?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "HiddenApply uses advanced boolean search techniques to target the technical directories of ATS platforms directly, bypassing noisy job boards."
+                    "text": "HiddenJobs uses advanced boolean search techniques to target the technical directories of ATS platforms directly, bypassing noisy job boards."
                 }
             }
         ]

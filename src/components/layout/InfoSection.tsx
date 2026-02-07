@@ -7,7 +7,7 @@ const faqs = [
         answer: "The hidden job market refers to the roughly 60-70% of roles that are never posted on public job boards like LinkedIn or Indeed. These roles live directly on company careers pages (ATS platforms like Greenhouse and Lever) and are often filled via referrals or direct search before they ever go 'viral' public."
     },
     {
-        question: "How does HiddenApply find these jobs?",
+        question: "How does HiddenJobs find these jobs?",
         answer: "We use advanced boolean search techniques—often called 'Google Dorks'—to specifically target the technical directories of platforms like Greenhouse, Lever, Ashby, and Workday. This bypasses the noisy job boards and takes you straight to the source."
     },
     {
@@ -16,7 +16,7 @@ const faqs = [
     },
     {
         question: "Why not just use LinkedIn?",
-        answer: "LinkedIn jobs often receive 500+ applications within the first hour. By applying directly to the ATS link found by HiddenApply, you're often one of the first few applicants, significantly increasing your chances of a human recruiter actually seeing your resume."
+        answer: "LinkedIn jobs often receive 500+ applications within the first hour. By applying directly to the ATS link found by HiddenJobs, you're often one of the first few applicants, significantly increasing your chances of a human recruiter actually seeing your resume."
     }
 ];
 

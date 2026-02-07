@@ -26,7 +26,7 @@ export function Header() {
                         <div className="w-4 h-4 rounded-full border-2 border-white" />
                     </div>
                     <span className="font-bold text-xl tracking-tight font-display text-slate-900 dark:text-white">
-                        HiddenApply
+                        HiddenJobs
                     </span>
                 </Link>
 
