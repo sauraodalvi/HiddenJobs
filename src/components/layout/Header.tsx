@@ -6,7 +6,7 @@ import { Sparkles, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
-import { SignInButton, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { Zap } from "lucide-react";
 
 export function Header() {
     const { theme, setTheme } = useTheme();
@@ -42,17 +42,12 @@ export function Header() {
                         </button>
                     )}
 
-                    <SignedOut>
-                        <SignInButton mode="modal">
-                            <button className="bg-primary hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-lg shadow-blue-500/20">
-                                Sign In
-                            </button>
-                        </SignInButton>
-                    </SignedOut>
-
-                    <SignedIn>
-                        <UserButton afterSignOutUrl="/" />
-                    </SignedIn>
+                    <Link href="/pricing">
+                        <button className="bg-primary hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2">
+                            <Zap className="w-4 h-4" />
+                            Pricing
+                        </button>
+                    </Link>
                 </div>
             </div>
         </nav>

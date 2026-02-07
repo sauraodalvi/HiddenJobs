@@ -78,7 +78,8 @@ export function useSearchFilters() {
                 name: ats.name,
                 domain: ats.domain,
                 query,
-                locked: false,
+                locked: false, // Logic handled in UI
+                isPro: ats.isPro, // Pass through
                 googleUrl: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
                 duckduckgoUrl: `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
                 bingUrl: `https://www.bing.com/search?q=${encodeURIComponent(query)}`,

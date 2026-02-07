@@ -48,10 +48,11 @@ const pricingPlans = [
     },
 ];
 
-import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@clerk/nextjs";
 
 export default function PricingPage() {
-    const { user } = useUser();
+    // const { user } = useUser();
+    const user = null; // Auth removed
 
     return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans transition-colors duration-300 relative overflow-hidden">
@@ -81,9 +82,7 @@ export default function PricingPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
                         {pricingPlans.map((plan) => {
                             // Construct checkout URL with user_id passthrough
-                            const checkoutUrl = user?.id
-                                ? `${plan.checkoutUrl}?checkout[custom][user_id]=${user.id}`
-                                : plan.checkoutUrl;
+                            const checkoutUrl = plan.checkoutUrl;
 
                             return (
                                 <div
@@ -120,11 +119,17 @@ export default function PricingPage() {
                                     </div>
 
                                     <a
-                                        href={checkoutUrl}
+                                        href={plan.checkoutUrl}
                                         className={`lemonsqueezy-button block w-full py-4 rounded-2xl font-black text-center transition-all shadow-xl active:scale-95 uppercase tracking-widest text-xs ${plan.highlight
                                             ? "bg-primary text-white hover:bg-blue-600 shadow-blue-500/25"
                                             : "bg-white dark:bg-white/5 text-slate-900 dark:text-white border-2 border-slate-100 dark:border-white/5 hover:border-primary dark:hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-white/10 shadow-slate-200/50 dark:shadow-none"
                                             }`}
+                                        onClick={(e) => {
+                                            if (plan.checkoutUrl === '#') {
+                                                e.preventDefault();
+                                                alert("Checkout links will be configured by the administrator.");
+                                            }
+                                        }}
                                     >
                                         {plan.cta}
                                     </a>

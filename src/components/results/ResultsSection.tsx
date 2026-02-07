@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchFilters } from "@/hooks/use-search";
+import { useProFeatures } from "@/hooks/use-pro";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { ExternalLink, Copy, Check, Search, AlertTriangle, Loader2, X, Maximize2, ChevronLeft, Lock, RefreshCw, Sparkles, Globe, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,6 +9,7 @@ import Link from "next/link";
 
 export function ResultsSection() {
     const { generateLinks, filters } = useSearchFilters();
+    const { isPro } = useProFeatures();
 
     const links = useMemo(() => generateLinks(), [generateLinks]);
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -92,69 +94,88 @@ export function ResultsSection() {
             )}>
 
                 {/* Horizontal Tool Bar */}
+
+                {/* Horizontal Tool Bar */}
                 <div className={cn(
                     "flex overflow-x-auto pb-4 gap-3 custom-scrollbar shrink-0 snap-x transition-all duration-500",
                     isFullScreen ? "px-6 py-2 border-b border-slate-200 dark:border-slate-700 mb-4 bg-white/50 dark:bg-slate-800/50 rounded-2xl" : "mb-2"
                 )}>
-                    {links.map((link: any, idx: number) => (
-                        <div
-                            key={link.name}
-                            onClick={() => switchLink(link)}
-                            className={cn(
-                                "flex items-center space-x-3 p-3 pr-5 rounded-xl border transition-all min-w-[220px] snap-start relative overflow-hidden shrink-0 cursor-pointer",
-                                activeLink?.name === link.name
-                                    ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xl scale-[1.02]"
-                                    : "bg-white dark:bg-surface-dark border-slate-200 dark:border-border-dark hover:border-primary/50 text-slate-600 dark:text-slate-400"
-                            )}
-                        >
-                            {/* Logo */}
-                            <div className="w-9 h-9 rounded-lg bg-white p-1 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 relative group-hover:border-primary/30 transition-colors shadow-sm">
-                                <img
-                                    src={`https://logo.clearbit.com/${link.logoDomain || link.domain.split('.').slice(-2).join('.')}`}
-                                    alt={link.name}
-                                    className="w-full h-full object-contain"
-                                    loading="lazy"
-                                    onError={(e) => {
-                                        const target = e.currentTarget;
-                                        target.parentElement!.classList.add('bg-slate-50');
-                                        target.style.display = 'none';
-                                        const parent = target.parentElement;
-                                        if (parent && !parent.querySelector('.fallback-initial')) {
-                                            const span = document.createElement('span');
-                                            span.innerText = link.name[0].toUpperCase();
-                                            span.className = "fallback-initial text-[10px] font-black text-slate-400";
-                                            parent.appendChild(span);
-                                        }
-                                    }}
-                                />
-                            </div>
+                    {links.map((link: any, idx: number) => {
+                        const isLocked = link.isPro && !isPro;
 
-                            <div className="flex flex-col items-start text-left flex-1 min-w-0">
-                                <div className="flex items-center gap-1.5 w-full">
-                                    <span className="text-sm font-bold leading-none truncate">{link.name}</span>
-                                </div>
-                                <span className="text-[10px] opacity-70 mt-1 font-mono leading-none">
-                                    View latest postings
-                                </span>
-                            </div>
-
-                            {/* Status Icon */}
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    copyQuery(link.query, idx);
-                                }}
-                                className="p-1.5 hover:bg-white/20 rounded-md transition-colors"
-                                title="Copy Query"
-                            >
-                                {copiedIndex === idx ? (
-                                    <Check className="w-3.5 h-3.5 text-green-400" />
-                                ) : (
-                                    <Copy className="w-3.5 h-3.5 text-current opacity-70" />
+                        return (
+                            <div
+                                key={link.name}
+                                onClick={() => !isLocked && switchLink(link)}
+                                className={cn(
+                                    "flex items-center space-x-3 p-3 pr-5 rounded-xl border transition-all min-w-[220px] snap-start relative overflow-hidden shrink-0 cursor-pointer group",
+                                    activeLink?.name === link.name
+                                        ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xl scale-[1.02]"
+                                        : "bg-white dark:bg-surface-dark border-slate-200 dark:border-border-dark hover:border-primary/50 text-slate-600 dark:text-slate-400",
+                                    isLocked && "opacity-75 bg-slate-50 dark:bg-slate-900 cursor-not-allowed border-slate-100 dark:border-slate-800"
                                 )}
-                            </button>
-                        </div>
-                    ))}
+                            >
+                                {/* Locked Overlay */}
+                                {isLocked && (
+                                    <div className="absolute inset-0 z-20 bg-slate-100/50 dark:bg-slate-900/50 backdrop-blur-[1px] flex items-center justify-center">
+                                        <div className="bg-slate-900 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 shadow-lg">
+                                            <Lock className="w-3 h-3" />
+                                            <span>Pro</span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Logo */}
+                                <div className="w-9 h-9 rounded-lg bg-white p-1 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 relative group-hover:border-primary/30 transition-colors shadow-sm">
+                                    <img
+                                        src={`https://logo.clearbit.com/${link.logoDomain || link.domain.split('.').slice(-2).join('.')}`}
+                                        alt={link.name}
+                                        className="w-full h-full object-contain"
+                                        loading="lazy"
+                                        onError={(e) => {
+                                            const target = e.currentTarget;
+                                            target.parentElement!.classList.add('bg-slate-50');
+                                            target.style.display = 'none';
+                                            const parent = target.parentElement;
+                                            if (parent && !parent.querySelector('.fallback-initial')) {
+                                                const span = document.createElement('span');
+                                                span.innerText = link.name[0].toUpperCase();
+                                                span.className = "fallback-initial text-[10px] font-black text-slate-400";
+                                                parent.appendChild(span);
+                                            }
+                                        }}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col items-start text-left flex-1 min-w-0">
+                                    <div className="flex items-center gap-1.5 w-full">
+                                        <span className="text-sm font-bold leading-none truncate">{link.name}</span>
+                                    </div>
+                                    <span className="text-[10px] opacity-70 mt-1 font-mono leading-none">
+                                        View latest postings
+                                    </span>
+                                </div>
+
+                                {/* Status Icon */}
+                                {!isLocked && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            copyQuery(link.query, idx);
+                                        }}
+                                        className="p-1.5 hover:bg-white/20 rounded-md transition-colors"
+                                        title="Copy Query"
+                                    >
+                                        {copiedIndex === idx ? (
+                                            <Check className="w-3.5 h-3.5 text-green-400" />
+                                        ) : (
+                                            <Copy className="w-3.5 h-3.5 text-current opacity-70" />
+                                        )}
+                                    </button>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
 
                 {/* Embedded Viewer Pane */}
@@ -222,12 +243,32 @@ export function ResultsSection() {
                     </div>
 
                     {/* Iframe View */}
-                    <div className="flex-1 w-full bg-slate-50 dark:bg-slate-900 relative">
-                        {activeLink ? (
+                    <div className="flex-1 w-full bg-slate-50 dark:bg-slate-900 relative flex flex-col">
+                        {activeLink && activeLink.isPro && !isPro ? (
+                            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-8 text-center bg-slate-200/50 dark:bg-slate-800/50 backdrop-blur-sm">
+                                <div className="max-w-md bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 animate-in fade-in zoom-in-95 duration-300">
+                                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/20">
+                                        <Lock className="w-8 h-8 text-white relative z-10" />
+                                        <div className="absolute inset-0 bg-white/20 rounded-full animate-ping opacity-30"></div>
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
+                                        Pro Feature Locked
+                                    </h3>
+                                    <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                                        Access to <span className="font-semibold text-slate-900 dark:text-white">{activeLink.name}</span> search results is available exclusively to Pro members.
+                                    </p>
+
+                                    <Link href="/pricing" className="inline-flex items-center justify-center w-full px-6 py-4 text-base font-bold text-white transition-all duration-200 bg-slate-900 rounded-xl hover:bg-slate-800 hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 group">
+                                        <Sparkles className="w-5 h-5 mr-2 text-yellow-500 group-hover:rotate-12 transition-transform" />
+                                        Upgrade to Pro
+                                    </Link>
+                                </div>
+                            </div>
+                        ) : activeLink ? (
                             <iframe
                                 key={`${activeLink.name}-${activeEngine}`} // Force re-render on switch
                                 src={getEmbedUrl()}
-                                className="w-full h-full border-none"
+                                className="w-full h-full border-none flex-1"
                                 title="Search Results Viewer"
                             />
                         ) : (
@@ -237,15 +278,17 @@ export function ResultsSection() {
                             </div>
                         )}
 
-                        {/* Security Warning Overlay (Visible only briefly) */}
-                        <div className="absolute bottom-4 right-4 max-w-xs bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl pointer-events-none animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-1000 fill-mode-both">
-                            <div className="flex items-start gap-3">
-                                <Shield className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                                <p className="text-[10px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    Secure Iframe. Some results may be blocked by search engine security policies. Use the "Open External" link if needed.
-                                </p>
+                        {/* Security Warning Overlay (Visible only if iframe is active) */}
+                        {activeLink && !(activeLink.isPro && !isPro) && (
+                            <div className="absolute bottom-4 right-4 max-w-xs bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl pointer-events-none animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-1000 fill-mode-both z-20">
+                                <div className="flex items-start gap-3">
+                                    <Shield className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                                    <p className="text-[10px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                                        Secure Iframe. Some results may be blocked by search engine security policies. Use the "Open External" link if needed.
+                                    </p>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
 

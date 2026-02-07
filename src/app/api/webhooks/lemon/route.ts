@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 
+export const runtime = 'nodejs'; // Use Node.js runtime to avoid edge limitations with crypto
+
 export async function POST(req: NextRequest) {
     try {
         const rawBody = await req.text();

@@ -9,9 +9,9 @@ export const ATS_PLATFORMS = [
   { name: 'Breezy HR', domain: 'breezy.hr', logoDomain: 'breezy.hr', isPro: false },
   { name: 'iCIMS', domain: 'icims.com', logoDomain: 'icims.com', isPro: false },
   { name: 'Jobvite', domain: 'jobs.jobvite.com', logoDomain: 'jobvite.com', isPro: false },
-  { name: 'Recruiterbox', domain: 'recruiterbox.com', logoDomain: 'recruiterbox.com', isPro: false },
-  { name: 'Ashby', domain: 'ashbyhq.com', logoDomain: 'ashbyhq.com', isPro: false },
-  { name: 'Workable', domain: 'apply.workable.com', logoDomain: 'workable.com', isPro: false },
+  { name: 'Recruiterbox', domain: 'recruiterbox.com', logoDomain: 'recruiterbox.com', isPro: true },
+  { name: 'Ashby', domain: 'ashbyhq.com', logoDomain: 'ashbyhq.com', isPro: true },
+  { name: 'Workable', domain: 'apply.workable.com', logoDomain: 'workable.com', isPro: true },
 ];
 
 export const ROLE_PRESETS: Record<string, string> = {
