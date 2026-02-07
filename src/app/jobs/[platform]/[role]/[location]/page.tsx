@@ -59,8 +59,24 @@ export default async function JobDirectoryPage({ params }: PageProps) {
     const dork = generateSeoDork(platform.domain, role.label, location.label);
     const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
 
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://hiddenjobs.netlify.app/" },
+            { "@type": "ListItem", "position": 2, "name": "Jobs", "item": "https://hiddenjobs.netlify.app/jobs" },
+            { "@type": "ListItem", "position": 3, "name": platform.label, "item": `https://hiddenjobs.netlify.app/jobs/platform/${platformSlug}` },
+            { "@type": "ListItem", "position": 4, "name": role.label, "item": `https://hiddenjobs.netlify.app/jobs/role/${roleSlug}` },
+            { "@type": "ListItem", "position": 5, "name": location.label, "item": `https://hiddenjobs.netlify.app/jobs/${platformSlug}/${roleSlug}/${locationSlug}` }
+        ]
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
             <Header />
 
             <main className="max-w-4xl mx-auto px-6 py-20 pb-32">

@@ -66,3 +66,16 @@ export function generateSeoDork(platformDomain: string, roleLabel: string, locat
 
     return assembleDork(platformDomain, components);
 }
+
+export function getBreadcrumbSchema(items: { name: string, item: string }[]) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": items.map((item, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": item.name,
+            "item": `https://hiddenjobs.netlify.app${item.item}`
+        }))
+    };
+}
