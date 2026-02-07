@@ -147,3 +147,36 @@ export const ENGLISH_KEYWORDS = {
   include: '("English speaking" OR "English fluent" OR "Work in English")',
   exclude: '-"German" -"French" -"Spanish" -"Dutch" -"Italian" -"Portuguese" -"Chinese" -"Japanese" -"Russian" -"Arabic"'
 };
+
+// SEO Directory Constants
+export const DIRECTORY_ROLES = [
+  { slug: 'software-engineer', label: 'Software Engineer' },
+  { slug: 'frontend-engineer', label: 'Frontend Engineer' },
+  { slug: 'backend-engineer', label: 'Backend Engineer' },
+  { slug: 'full-stack-engineer', label: 'Full Stack Engineer' },
+  { slug: 'devops-engineer', label: 'DevOps Engineer' },
+  { slug: 'machine-learning-engineer', label: 'Machine Learning Engineer' },
+  { slug: 'product-manager', label: 'Product Manager' },
+  { slug: 'product-designer', label: 'Product Designer' },
+  { slug: 'data-scientist', label: 'Data Scientist' },
+  { slug: 'data-analyst', label: 'Data Analyst' },
+  { slug: 'growth-marketer', label: 'Growth Marketer' },
+];
+
+export const DIRECTORY_LOCATIONS = [
+  { slug: 'remote', label: 'Remote' },
+  { slug: 'new-york', label: 'New York' },
+  { slug: 'san-francisco', label: 'San Francisco' },
+  { slug: 'london', label: 'London' },
+  { slug: 'berlin', label: 'Berlin' },
+  { slug: 'bangalore', label: 'Bangalore' },
+  { slug: 'toronto', label: 'Toronto' },
+];
+
+export const DIRECTORY_PLATFORMS = [
+  { slug: 'greenhouse', label: 'Greenhouse', domain: 'boards.greenhouse.io' },
+  { slug: 'lever', label: 'Lever', domain: 'jobs.lever.co' },
+  { slug: 'ashby', label: 'Ashby', domain: 'jobs.ashbyhq.com' },
+  { slug: 'workday', label: 'Workday', domain: 'myworkdayjobs.com' },
+  { slug: 'smartrecruiters', label: 'SmartRecruiters', domain: 'jobs.smartrecruiters.com' },
+];

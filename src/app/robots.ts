@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
-            disallow: ['/private/', '/api/'],
+            disallow: '/api/',
         },
         sitemap: 'https://hiddenjobs.netlify.app/sitemap.xml',
     };

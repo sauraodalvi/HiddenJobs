@@ -31,6 +31,12 @@ export function Header() {
                 </Link>
 
 
+                <div className="flex-1 flex items-center justify-center space-x-6">
+                    <Link href="/jobs" className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+                        Directory
+                    </Link>
+                </div>
+
                 <div className="flex items-center space-x-4">
                     {/* Theme Toggle */}
                     {mounted && (
