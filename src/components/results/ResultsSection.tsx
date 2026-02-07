@@ -10,24 +10,46 @@ import Link from "next/link";
 // Logo component with robust error handling
 function LogoImage({ link }: { link: any }) {
     const [hasError, setHasError] = useState(false);
+
+    // Mapping of major ATS platforms to their brand colors
+    const brandColors: Record<string, string> = {
+        'Greenhouse': 'bg-[#00b28f]',
+        'Lever': 'bg-[#25282a]',
+        'Workday': 'bg-[#005cb9]',
+        'SmartRecruiters': 'bg-[#004cd4]',
+        'BambooHR': 'bg-[#619a3c]',
+        'JazzHR': 'bg-[#f7941e]',
+        'Breezy HR': 'bg-[#00aaff]',
+        'Ashby': 'bg-[#ff5a5f]',
+        'Workable': 'bg-[#409e60]',
+    };
+
+    const brandColor = brandColors[link.name] || "bg-slate-100 dark:bg-slate-800";
     const logoUrl = `https://logo.clearbit.com/${link.logoDomain || link.domain.split('.').slice(-2).join('.')}`;
+
+    // If the domain is known to fail often or we want to be ultra-robust, 
+    // we can skip the request entirely for major platforms.
+    // For now, we'll try once and fallback quickly.
 
     return (
         <div className={cn(
-            "w-9 h-9 rounded-lg p-1 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 relative group-hover:border-primary/30 transition-colors shadow-sm",
-            hasError ? "bg-slate-50 dark:bg-slate-800" : "bg-white"
+            "w-9 h-9 rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 dark:border-slate-800 relative group-hover:border-primary/30 transition-colors shadow-sm",
+            hasError ? brandColor : "bg-white"
         )}>
             {!hasError ? (
                 <img
                     src={logoUrl}
                     alt={link.name}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain p-1"
                     loading="lazy"
                     onError={() => setHasError(true)}
                 />
             ) : (
-                <span className="text-[10px] font-black text-slate-400 dark:text-slate-500">
-                    {link.name[0].toUpperCase()}
+                <span className={cn(
+                    "text-[10px] font-black uppercase tracking-tighter",
+                    brandColors[link.name] ? "text-white" : "text-slate-400 dark:text-slate-500"
+                )}>
+                    {link.name.substring(0, 2)}
                 </span>
             )}
         </div>
