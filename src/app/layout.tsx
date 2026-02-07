@@ -66,7 +66,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "pk_test_YWRlcXVhdGUtcm9iaW4tMzkuY2xlcmsuYWNjb3VudHMuZGV2JA"}>
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.variable} ${jetbrains.variable} font-sans`} suppressHydrationWarning>
           <ThemeProvider
