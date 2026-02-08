@@ -15,7 +15,13 @@ export const getDaysAgo = (days: string | number) => {
         // Google 'after:' is inclusive of the date provided. 
         // to get "past 24h", we ideally want yesterday's date.
         const date = new Date();
-        date.setDate(date.getDate() - Number(days));
+        const daysNum = Number(days);
+        if (daysNum < 1) {
+            // Convert fractional days to hours
+            date.setHours(date.getHours() - (daysNum * 24));
+        } else {
+            date.setDate(date.getDate() - Math.floor(daysNum));
+        }
         return date.toISOString().split('T')[0];
     } catch (e) {
         return new Date().toISOString().split('T')[0];
@@ -116,19 +122,21 @@ export const buildDorkComponents = ({
     // --- 2. Location & Country Logic ---
     const locationParts: string[] = [];
 
-    // Base Location
+    // A. Work Mode (Always included if selected)
     if (location === 'remote') {
         locationParts.push('("remote" OR "work from home" OR "wfh" OR "anywhere")');
     } else if (location === 'hybrid') {
-        locationParts.push('("hybrid" OR "flexible" OR "return to office")'); // 'return to office' is often in text for hybrid
+        locationParts.push('("hybrid" OR "flexible" OR "return to office")');
     } else if (location === 'onsite') {
-        locationParts.push('("on-site" OR "office-based" OR "in-office" -remote)'); // Excluding remote helps
-    } else if (location === 'specific' && specificLocation) {
-        // Use smartCountry here too! If they type "UK" in the city box, treating it as a country is helpful.
+        locationParts.push('("on-site" OR "office-based" OR "in-office" -remote)');
+    }
+
+    // B. Geo-location (Always included if typed)
+    if (specificLocation && specificLocation.trim()) {
         locationParts.push(smartCountry(specificLocation));
     }
 
-    // Country Filter
+    // C. Country Filter (Additional dropdown)
     if (props.country) {
         locationParts.push(smartCountry(props.country));
     }
@@ -143,7 +151,6 @@ export const buildDorkComponents = ({
     let experienceQuery = '';
     const exp = (props.experience || '').toLowerCase();
 
-    // Explicit exclusions/inclusions based on level
     if (exp === 'intern') experienceQuery = '("Intern" OR "Internship" OR "Co-op")';
     else if (exp === 'junior') experienceQuery = '("Junior" OR "Jr" OR "Entry Level" OR "Graduate")';
     else if (exp === 'mid') experienceQuery = '("Mid-level" OR "Mid Level" OR "Associate")';
@@ -151,17 +158,20 @@ export const buildDorkComponents = ({
     else if (exp === 'staff') experienceQuery = '("Staff" OR "Principal" OR "Distinguished")';
     else if (exp === 'manager') experienceQuery = '("Manager" OR "Head" OR "Director" OR "VP")';
 
-    // --- 5. Company & Salary (Power Features) ---
+    // --- 5. Company & Salary (Multi-company inurl strategy) ---
     let companyQuery = '';
     if (props.company) {
-        companyQuery = `intitle:"${props.company}"`;
+        const companies = props.company.split(',').map(c => c.trim()).filter(Boolean);
+        if (companies.length > 0) {
+            const inurlParts = companies.map(c => `inurl:${c.toLowerCase()}`);
+            companyQuery = `(${inurlParts.join(' OR ')})`;
+        }
     }
 
     let salaryQuery = '';
     if (props.salaryMin || props.salaryMax) {
         const min = props.salaryMin || '1';
         const max = props.salaryMax || '999999';
-        // Check if both are digits, if so use num..num
         const isMinNum = /^\d+$/.test(min.replace(/[,.kK]/g, ''));
         const isMaxNum = /^\d+$/.test(max.replace(/[,.kK]/g, ''));
 
@@ -261,7 +271,7 @@ export const buildDorkComponents = ({
         const dateString = getDaysAgo(checkDays);
         timeQuery = `after:${dateString}`;
 
-        timeLabel = days < 1 ? '12h' : `${days}d`;
+        timeLabel = days < 1 ? `${Math.round(days * 24)}h` : `${days}d`;
     }
 
     // --- Preview String ---

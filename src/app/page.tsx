@@ -12,7 +12,7 @@ export default function Home() {
     <div className="min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <Header />
 
-      <main className="relative pt-20 pb-32 overflow-hidden dot-grid">
+      <main className="relative pt-20 pb-32 dot-grid">
         <div className="max-w-5xl mx-auto px-6 text-center">
           {/* Hero Heading */}
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 gradient-text dark:text-white text-slate-900 leading-tight">

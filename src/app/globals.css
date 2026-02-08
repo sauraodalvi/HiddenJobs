@@ -124,3 +124,20 @@ html.dark .gradient-text {
 .dark .fallback-initial {
   color: #475569;
 }
+
+/* Base resets for robust dropdowns */
+select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+select::-ms-expand {
+  display: none !important;
+}
+
+/* Ensure suggestions list can have custom scrollbar in all browsers */
+.suggestions-list {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}

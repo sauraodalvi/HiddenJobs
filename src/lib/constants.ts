@@ -138,8 +138,9 @@ export const COUNTRY_MAPPINGS: Record<string, string> = {
   'fr': '"France" OR "Paris"',
   'australia': '"Australia" OR "Sydney" OR "Melbourne"',
   'au': '"Australia" OR "Sydney" OR "Melbourne"',
-  'india': '"India" OR "Bangalore" OR "Bengaluru" OR "Delhi" OR "Mumbai"',
-  'in': '"India" OR "Bangalore" OR "Bengaluru" OR "Delhi" OR "Mumbai"',
+  'india': '"India" OR "Bangalore" OR "Bengaluru" OR "Delhi" OR "Mumbai" OR "Pune"',
+  'in': '"India" OR "Bangalore" OR "Bengaluru" OR "Delhi" OR "Mumbai" OR "Pune"',
+  'pune': '"Pune" OR "Maharashtra" OR "India"',
   'remote': '"Remote" OR "Work From Home" OR "Anywhere"', // Fallback if needed
 };
 
