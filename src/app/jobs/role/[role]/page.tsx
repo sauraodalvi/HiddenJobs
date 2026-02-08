@@ -130,10 +130,6 @@ export default async function RoleDirectoryPage({ params }: PageProps) {
                             <p className="text-slate-400 leading-relaxed mb-6">
                                 In today's market, speed is everything. By the time a {role.label} role reaches a main job board, it likely has hundreds of applicants. Using HiddenJobs allows you to apply within the first few hours of a company posting to their own site.
                             </p>
-                            <Link href="/pricing" className="inline-flex items-center font-bold text-primary group">
-                                Unlock Premium Filters
-                                <ChevronRight className="w-4 h-4 ml-1 group-hover:ml-2 transition-all" />
-                            </Link>
                         </div>
                         <div className="space-y-6">
                             <div className="bg-white/5 p-6 rounded-2xl border border-white/10">

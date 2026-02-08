@@ -12,7 +12,7 @@ export function useProFeatures() {
     // const { isLoaded, isSignedIn, user } = useUser();
 
     const isLoaded = true;
-    const isPro = false;
+    const isPro = true; // Everyone is Pro now
     const user = null;
 
     const [searchCount, setSearchCount] = useState<number>(0);
@@ -38,16 +38,17 @@ export function useProFeatures() {
     }, []);
 
     const incrementSearch = () => {
-        if (isPro) return; // Don't track limits for pros
-
+        // Disabled searching tracking for now as it's free
+        /*
         const current = getStorageItem("search_count", 0);
         const next = Number(current) + 1;
         setStorageItem("search_count", next);
         setSearchCount(next);
+        */
     };
 
-    const searchesLeft = Math.max(0, FREE_SEARCH_LIMIT - searchCount);
-    const isLimitReached = !isPro && searchesLeft <= 0;
+    const searchesLeft = Infinity; // Infinite searches
+    const isLimitReached = false; // Never reached
 
     return {
         isPro,

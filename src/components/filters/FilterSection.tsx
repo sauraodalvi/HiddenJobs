@@ -66,11 +66,6 @@ export function FilterSection() {
     const iconClass = "absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5";
 
     const handleGo = () => {
-        if (isLimitReached) {
-            router.push('/pricing');
-            return;
-        }
-
         const updates: Record<string, string | null> = {
             role: localRole,
             location: localLocation,
@@ -115,23 +110,7 @@ export function FilterSection() {
     return (
         <div className="max-w-4xl mx-auto relative z-10 -mt-8">
 
-            {/* Seniority Quick Toggles */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mb-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
-                {['intern', 'junior', 'senior', 'staff', 'manager'].map((level) => (
-                    <button
-                        key={level}
-                        onClick={() => setLocalExperience(localExperience === level ? '' : level)}
-                        className={cn(
-                            "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border shadow-sm active:scale-95",
-                            localExperience === level
-                                ? "bg-primary border-primary text-white shadow-primary/20"
-                                : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-primary"
-                        )}
-                    >
-                        {level}
-                    </button>
-                ))}
-            </div>
+
 
             {/* Search Island */}
             <div className={cn(containerClass, mobileStackClass)}>
@@ -291,11 +270,6 @@ export function FilterSection() {
                         <span>{isLimitReached ? 'UPGRADE' : 'GO'}</span>
                         {!isLimitReached && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                     </button>
-                    {!isPro && !isLimitReached && (
-                        <span className="w-full text-center text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                            {searchesLeft} free {searchesLeft === 1 ? 'search' : 'searches'} left
-                        </span>
-                    )}
                 </div>
 
             </div>
@@ -315,11 +289,7 @@ export function FilterSection() {
                 {isAdvancedOpen && (
                     <div className="w-full mt-4 relative">
                         {/* Import ProGate at the top of file first! */}
-                        <ProGate
-                            feature="Advanced Filters"
-                            description="Target specific companies, salaries, and seniority levels."
-                            className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-slate-200/50 dark:border-white/10 rounded-[2.5rem] p-4 md:p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] animate-in slide-in-from-top-8 fade-in duration-500 ease-out relative overflow-hidden group/panel"
-                        >
+                        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-slate-200/50 dark:border-white/10 rounded-[2.5rem] p-4 md:p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] animate-in slide-in-from-top-8 fade-in duration-500 ease-out relative overflow-hidden group/panel">
                             {/* Decorative Background Glows */}
                             <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none group-hover/panel:bg-primary/10 transition-colors duration-700" />
                             <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none group-hover/panel:bg-emerald-500/10 transition-colors duration-700" />
@@ -527,7 +497,7 @@ export function FilterSection() {
                                     </button>
                                 </div>
                             </div>
-                        </ProGate>
+                        </div>
                     </div>
                 )}
             </div>

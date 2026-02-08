@@ -31,29 +31,23 @@ export function Header() {
                 </Link>
 
 
-                <div className="flex-1 flex items-center justify-center space-x-6">
+                <div className="flex items-center space-x-6">
                     <Link href="/jobs" className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
                         Directory
                     </Link>
-                </div>
 
-                <div className="flex items-center space-x-4">
-                    {/* Theme Toggle */}
-                    {mounted && (
-                        <button
-                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                            className="p-2 text-slate-500 hover:text-primary transition-colors"
-                        >
-                            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                        </button>
-                    )}
-
-                    <Link href="/pricing">
-                        <button className="bg-primary hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2">
-                            <Zap className="w-4 h-4" />
-                            Pricing
-                        </button>
-                    </Link>
+                    <div className="flex items-center space-x-2">
+                        <div className="w-px h-4 bg-slate-200 dark:bg-slate-800 mx-2" />
+                        {/* Theme Toggle */}
+                        {mounted && (
+                            <button
+                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                className="p-2 text-slate-500 hover:text-primary transition-colors"
+                            >
+                                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </nav>

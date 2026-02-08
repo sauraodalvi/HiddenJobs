@@ -62,11 +62,7 @@ export function Footer() {
                                     Directory Index
                                 </Link>
                             </li>
-                            <li>
-                                <Link href="/pricing" className="text-sm text-slate-500 hover:text-primary transition-colors">
-                                    Pricing
-                                </Link>
-                            </li>
+
                             {DIRECTORY_LOCATIONS.slice(0, 3).map(loc => (
                                 <li key={loc.slug}>
                                     <Link
