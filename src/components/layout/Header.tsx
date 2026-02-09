@@ -36,6 +36,15 @@ export function Header() {
                         Directory
                     </Link>
 
+                    <a
+                        href="https://saurao.gumroad.com/l/BuymeaCoffee"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-bold text-primary hover:text-primary/80 transition-all flex items-center gap-1.5"
+                    >
+                        Donate
+                    </a>
+
                     <div className="flex items-center space-x-2">
                         <div className="w-px h-4 bg-slate-200 dark:bg-slate-800 mx-2" />
                         {/* Theme Toggle */}

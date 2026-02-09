@@ -165,7 +165,7 @@ export function FilterSection() {
             {/* Search Island */}
             <div className={cn(
                 containerClass,
-                "flex-col md:flex-row overflow-visible",
+                "flex-col md:flex-row overflow-visible text-left",
                 mobileStackClass
             )}>
 
@@ -216,7 +216,7 @@ export function FilterSection() {
                     />
 
                     {showRoleSuggestions && filteredRoleSuggestions.length > 0 && (
-                        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl overflow-hidden overflow-y-auto max-h-[400px] z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl overflow-hidden overflow-y-auto max-h-[400px] z-[100] animate-in fade-in slide-in-from-top-2 duration-200 text-left">
                             {filteredRoleSuggestions.map((item, idx) => {
                                 if (item.type === 'category') {
                                     return (
