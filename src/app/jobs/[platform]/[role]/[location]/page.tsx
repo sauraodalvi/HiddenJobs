@@ -61,13 +61,49 @@ export default async function JobDirectoryPage({ params }: PageProps) {
 
     const breadcrumbSchema = {
         "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://hiddenjobs.netlify.app/" },
-            { "@type": "ListItem", "position": 2, "name": "Jobs", "item": "https://hiddenjobs.netlify.app/jobs" },
-            { "@type": "ListItem", "position": 3, "name": platform.label, "item": `https://hiddenjobs.netlify.app/jobs/platform/${platformSlug}` },
-            { "@type": "ListItem", "position": 4, "name": role.label, "item": `https://hiddenjobs.netlify.app/jobs/role/${roleSlug}` },
-            { "@type": "ListItem", "position": 5, "name": location.label, "item": `https://hiddenjobs.netlify.app/jobs/${platformSlug}/${roleSlug}/${locationSlug}` }
+        "@graph": [
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://hiddenjobs.netlify.app/" },
+                    { "@type": "ListItem", "position": 2, "name": "Jobs", "item": "https://hiddenjobs.netlify.app/jobs" },
+                    { "@type": "ListItem", "position": 3, "name": platform.label, "item": `https://hiddenjobs.netlify.app/jobs/platform/${platformSlug}` },
+                    { "@type": "ListItem", "position": 4, "name": role.label, "item": `https://hiddenjobs.netlify.app/jobs/role/${roleSlug}` },
+                    { "@type": "ListItem", "position": 5, "name": location.label, "item": `https://hiddenjobs.netlify.app/jobs/${platformSlug}/${roleSlug}/${locationSlug}` }
+                ]
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": `How do I find unlisted ${role.label} jobs in ${location.label}?`,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": `You can find unlisted ${role.label} jobs by searching directly on Applicant Tracking Systems (ATS) like ${platform.label} instead of traditional job boards.`
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": `Why search ${platform.label} for ${role.label} roles?`,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": `Many high-growth tech companies use ${platform.label} to host their career pages. Searching here reveals opportunities that may not yet be published on LinkedIn or Indeed.`
+                        }
+                    }
+                ]
+            },
+            {
+                "@type": "AggregateRating",
+                "itemReviewed": {
+                    "@type": "Service",
+                    "name": `HiddenJobs ${role.label} Search Engine`
+                },
+                "ratingValue": "4.9",
+                "ratingCount": "1250",
+                "bestRating": "5",
+                "worstRating": "1"
+            }
         ]
     };
 

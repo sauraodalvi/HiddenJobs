@@ -32,6 +32,15 @@ export function Header() {
 
 
                 <div className="flex items-center space-x-6">
+                    <a
+                        href="https://thestare.in/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
+                    >
+                        Become Product Manager
+                    </a>
+
                     <Link href="/jobs" className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
                         Directory
                     </Link>
