@@ -13,7 +13,7 @@ export default function Home() {
       <Header />
 
       <main className="relative pt-20 pb-32 dot-grid">
-        <div className="max-w-5xl mx-auto px-6 text-center">
+        <div className="max-w-7xl mx-auto px-6 text-center">
           {/* Hero Heading */}
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 gradient-text dark:text-white text-slate-900 leading-tight">
             Uncover Hidden Jobs<br />Before They Hit LinkedIn.

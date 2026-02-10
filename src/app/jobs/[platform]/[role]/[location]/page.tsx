@@ -202,7 +202,7 @@ export default async function JobDirectoryPage({ params }: PageProps) {
                 <section className="mt-20">
                     <h2 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">Other Locations</h2>
                     <div className="flex flex-wrap gap-3">
-                        {DIRECTORY_LOCATIONS.map(loc => (
+                        {DIRECTORY_LOCATIONS.filter(loc => loc.slug !== locationSlug).map(loc => (
                             <Link
                                 key={loc.slug}
                                 href={`/jobs/${platformSlug}/${roleSlug}/${loc.slug}`}
@@ -215,9 +215,15 @@ export default async function JobDirectoryPage({ params }: PageProps) {
                 </section>
 
                 <section className="mt-12">
-                    <h2 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">Other Roles on {platform.label}</h2>
+                    <h2 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">Related Opportunities in {location.label}</h2>
                     <div className="flex flex-wrap gap-3">
-                        {DIRECTORY_ROLES.map(r => (
+                        {DIRECTORY_ROLES.filter(r => r.slug !== roleSlug).sort((a, b) => {
+                            // Simple relevance sort based on shared words in slug
+                            const currentWords = roleSlug.split('-').filter(w => w.length > 2); // Filter short words
+                            const aScore = currentWords.filter(w => a.slug.includes(w)).length;
+                            const bScore = currentWords.filter(w => b.slug.includes(w)).length;
+                            return bScore - aScore;
+                        }).slice(0, 10).map(r => (
                             <Link
                                 key={r.slug}
                                 href={`/jobs/${platformSlug}/${r.slug}/${locationSlug}`}
