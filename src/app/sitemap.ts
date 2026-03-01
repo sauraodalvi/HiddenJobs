@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const routes = [
         '',
         '/jobs',
+        '/explore',
 
     ].map(route => ({
         url: `${baseUrl}${route}`,

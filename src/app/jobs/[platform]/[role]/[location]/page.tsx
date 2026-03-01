@@ -19,8 +19,8 @@ export async function generateStaticParams() {
     const params = [];
 
     for (const platform of DIRECTORY_PLATFORMS) {
-        for (const role of DIRECTORY_ROLES.slice(0, 15)) { // Top 15 roles
-            for (const location of DIRECTORY_LOCATIONS.slice(0, 5)) { // Top 5 locations
+        for (const role of DIRECTORY_ROLES.slice(0, 60)) { // Expanded roles coverage
+            for (const location of DIRECTORY_LOCATIONS.slice(0, 10)) { // Expanded locations coverage
                 params.push({
                     platform: platform.slug,
                     role: role.slug,
@@ -74,6 +74,26 @@ export default async function JobDirectoryPage({ params }: PageProps) {
                     { "@type": "ListItem", "position": 4, "name": role.label, "item": `https://hiddenjobs.netlify.app/jobs/role/${roleSlug}` },
                     { "@type": "ListItem", "position": 5, "name": location.label, "item": `https://hiddenjobs.netlify.app/jobs/${platformSlug}/${roleSlug}/${locationSlug}` }
                 ]
+            },
+            {
+                "@type": "JobPosting",
+                "title": `${role.label} Roles in ${location.label}`,
+                "description": `Find unlisted ${role.label} jobs in ${location.label} on ${platform.label}. Access the hidden job market with direct-to-ATS search queries.`,
+                "datePosted": new Date().toISOString(),
+                "hiringOrganization": {
+                    "@type": "Organization",
+                    "name": "HiddenJobs",
+                    "sameAs": "https://hiddenjobs.netlify.app"
+                },
+                "jobLocation": {
+                    "@type": "Place",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "addressLocality": location.label,
+                        "addressCountry": "Global"
+                    }
+                },
+                "employmentType": "FULL_TIME"
             },
             {
                 "@type": "FAQPage",

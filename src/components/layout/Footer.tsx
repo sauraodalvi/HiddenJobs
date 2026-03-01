@@ -23,11 +23,11 @@ export function Footer() {
                     <div>
                         <h4 className="font-bold text-slate-900 dark:text-white mb-6">Platforms</h4>
                         <ul className="space-y-4">
-                            {DIRECTORY_PLATFORMS.slice(0, 5).map(platform => (
+                            {DIRECTORY_PLATFORMS.map(platform => (
                                 <li key={platform.slug}>
                                     <Link
-                                        href={`/jobs/${platform.slug}/software-engineer/remote`}
-                                        className="text-sm text-slate-500 hover:text-primary transition-colors"
+                                        href={`/jobs/platform/${platform.slug}`}
+                                        className="text-sm text-slate-500 hover:text-primary transition-colors hover:translate-x-1 inline-block"
                                     >
                                         {platform.label}
                                     </Link>
@@ -40,11 +40,11 @@ export function Footer() {
                     <div>
                         <h4 className="font-bold text-slate-900 dark:text-white mb-6">Top Roles</h4>
                         <ul className="space-y-4">
-                            {DIRECTORY_ROLES.slice(0, 5).map(role => (
+                            {DIRECTORY_ROLES.slice(0, 8).map(role => (
                                 <li key={role.slug}>
                                     <Link
-                                        href={`/jobs/greenhouse/${role.slug}/remote`}
-                                        className="text-sm text-slate-500 hover:text-primary transition-colors"
+                                        href={`/jobs/role/${role.slug}`}
+                                        className="text-sm text-slate-500 hover:text-primary transition-colors hover:translate-x-1 inline-block"
                                     >
                                         {role.label}
                                     </Link>
@@ -58,16 +58,16 @@ export function Footer() {
                         <h4 className="font-bold text-slate-900 dark:text-white mb-6">Discovery</h4>
                         <ul className="space-y-4">
                             <li>
-                                <Link href="/jobs" className="text-sm text-slate-500 hover:text-primary transition-colors font-semibold">
-                                    Directory Index
+                                <Link href="/jobs" className="text-sm text-primary hover:underline transition-colors font-bold flex items-center gap-1">
+                                    Browse All Directories
                                 </Link>
                             </li>
 
-                            {DIRECTORY_LOCATIONS.slice(0, 3).map(loc => (
+                            {DIRECTORY_LOCATIONS.map(loc => (
                                 <li key={loc.slug}>
                                     <Link
-                                        href={`/jobs/greenhouse/software-engineer/${loc.slug}`}
-                                        className="text-sm text-slate-500 hover:text-primary transition-colors"
+                                        href={`/jobs/location/${loc.slug}`}
+                                        className="text-sm text-slate-500 hover:text-primary transition-colors hover:translate-x-1 inline-block"
                                     >
                                         Jobs in {loc.label}
                                     </Link>

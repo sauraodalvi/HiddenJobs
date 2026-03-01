@@ -3,26 +3,34 @@ import { HelpCircle, Zap, Shield, Globe, Search, Layers } from "lucide-react";
 
 const faqs = [
     {
-        question: "What is the 'Hidden Job Market'?",
-        answer: "The hidden job market refers to the roughly 60-70% of roles that are never posted on public job boards like LinkedIn or Indeed. These roles live directly on company careers pages (ATS platforms like Greenhouse and Lever) and are often filled via referrals or direct search before they ever go 'viral' public."
+        question: "What exactly is the 'Hidden Job Market'?",
+        answer: "The hidden job market refers to the roughly 60-70% of roles that are never posted on public job boards like LinkedIn or Indeed. These roles live directly on internal Applicant Tracking System (ATS) platforms. By the time a job hits LinkedIn, it already has hundreds of applicants."
     },
     {
-        question: "How does HiddenJobs find these jobs?",
-        answer: "We use advanced boolean search techniques—often called 'Google Dorks'—to specifically target the technical directories of platforms like Greenhouse, Lever, Ashby, and Workday. This bypasses the noisy job boards and takes you straight to the source."
+        question: "How does Boolean Dorking work?",
+        answer: "We use advanced boolean search techniques—often called 'Google Dorking'—to specifically target the technical directories of platforms like Greenhouse, Lever, Ashby, and Workday. This allows you to filter for exact roles and locations while bypassing non-job search results."
     },
     {
         question: "Is this legal and safe?",
-        answer: "Absolutely. We are simply generating advanced search queries for public search engines. We don't scrape private data or bypass any authentication. Everything we find is a publicly indexed job posting that is just hard to find through normal search interfaces."
+        answer: "Absolutely. We are simply generating automated search queries for public search engines. We don't scrape private data, bypass authentication, or access any non-public information. Everything we find is a publicly indexed career page."
     },
     {
-        question: "Why not just use LinkedIn?",
-        answer: "LinkedIn jobs often receive 500+ applications within the first hour. By applying directly to the ATS link found by HiddenJobs, you're often one of the first few applicants, significantly increasing your chances of a human recruiter actually seeing your resume."
+        question: "Why not just use LinkedIn or Indeed?",
+        answer: "LinkedIn jobs often receive 500+ applications within the first hour. By finding the direct ATS link, you are effectively applying to the 'source of truth'. This often places your resume at the top of the pile before the role even goes viral."
+    },
+    {
+        question: "How do I find unlisted Remote roles?",
+        answer: "Our engine is optimized to detect 'Remote' and 'Work from Home' keywords within the metadata of ATS headers across 10+ different platforms, ensuring you see global opportunities that aggregators often miss."
+    },
+    {
+        question: "Which ATS platforms do you support?",
+        answer: "We currently index jobs from Greenhouse, Lever, Ashby, Workday, Paradox, and Workable, covering over 80% of the tech startup and enterprise ecosystem."
     }
 ];
 
 export function InfoSection() {
     return (
-        <section className="mt-32 border-t border-slate-100 dark:border-slate-800 pt-32 pb-20">
+        <section id="faq" className="mt-32 border-t border-slate-100 dark:border-slate-800 pt-32 pb-20">
             <div className="max-w-4xl mx-auto px-6 text-left">
 
                 {/* Value Props */}
@@ -57,21 +65,21 @@ export function InfoSection() {
                 </div>
 
                 {/* FAQ Section (AEO/GEO focus) */}
-                <h2 className="text-3xl font-bold mb-12 flex items-center gap-3">
+                <h2 className="text-3xl font-black mb-12 flex items-center gap-3">
                     <HelpCircle className="w-8 h-8 text-primary" />
-                    Frequently Asked Questions
+                    Deep Dive: The Hidden Job Market
                 </h2>
 
-                <div className="space-y-8">
+                <div className="grid md:grid-cols-2 gap-8">
                     {faqs.map((faq, i) => (
-                        <div key={i} className="group">
-                            <h3 className="text-xl font-semibold mb-3 text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                        <article key={i} className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary/30 transition-colors shadow-sm group">
+                            <h3 className="text-lg font-bold mb-3 text-slate-900 dark:text-white group-hover:text-primary transition-colors">
                                 {faq.question}
                             </h3>
-                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed max-w-3xl">
-                                {faq.answer}
+                            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed italic">
+                                "{faq.answer}"
                             </p>
-                        </div>
+                        </article>
                     ))}
                 </div>
 

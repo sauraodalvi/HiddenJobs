@@ -152,13 +152,16 @@ export function ResultsSection() {
                                 key={link.name}
                                 onClick={() => switchLink(link)}
                                 className={cn(
-                                    "flex items-center space-x-3 p-3 pr-5 rounded-xl border transition-all min-w-[220px] snap-start relative overflow-hidden shrink-0 cursor-pointer group",
+                                    "flex items-center space-x-3 p-3 pr-5 rounded-xl border transition-all min-w-[220px] snap-start relative overflow-hidden shrink-0 cursor-pointer group active:scale-95",
                                     activeLink?.name === link.name
-                                        ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xl scale-[1.02]"
-                                        : "bg-white dark:bg-surface-dark border-slate-200 dark:border-border-dark hover:border-primary/50 text-slate-600 dark:text-slate-400"
+                                        ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xl scale-[1.02] ring-2 ring-primary/20"
+                                        : "bg-white dark:bg-surface-dark border-slate-200 dark:border-border-dark hover:border-primary/50 text-slate-600 dark:text-slate-400 hover:shadow-md"
                                 )}
                             >
-
+                                {/* Active Indicator Dot */}
+                                {activeLink?.name === link.name && (
+                                    <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                                )}
 
                                 {/* Logo */}
                                 <LogoImage link={link} />
@@ -178,13 +181,18 @@ export function ResultsSection() {
                                         e.stopPropagation();
                                         copyQuery(link.query, idx);
                                     }}
-                                    className="p-1.5 hover:bg-white/20 rounded-md transition-colors"
+                                    className={cn(
+                                        "p-2 rounded-lg transition-all",
+                                        copiedIndex === idx
+                                            ? "bg-emerald-500/20 text-emerald-500"
+                                            : "hover:bg-primary/10 hover:text-primary"
+                                    )}
                                     title="Copy Query"
                                 >
                                     {copiedIndex === idx ? (
-                                        <Check className="w-3.5 h-3.5 text-green-400" />
+                                        <Check className="w-4 h-4" />
                                     ) : (
-                                        <Copy className="w-3.5 h-3.5 text-current opacity-70" />
+                                        <Copy className="w-4 h-4 text-current opacity-70" />
                                     )}
                                 </button>
                             </div>
@@ -225,11 +233,11 @@ export function ResultsSection() {
                                 href={getActiveUrl()}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-[10px] font-bold text-slate-400 hover:text-primary transition-colors flex items-center gap-1.5 uppercase tracking-tight"
+                                className="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
                             >
                                 <ExternalLink className="w-3 h-3" />
-                                <span className="hidden sm:inline">Iframe Blocked? Open in New Tab</span>
-                                <span className="sm:hidden">Open External</span>
+                                <span className="hidden sm:inline">Open in New Tab</span>
+                                <span className="sm:hidden">External</span>
                             </a>
                         </div>
 
