@@ -69,13 +69,13 @@ export function MarketViewer({ isOpen, onClose, links, activeLinkName }: MarketV
                 <div className="px-6 py-4 border-b border-slate-100 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50/50 dark:bg-black/20 backdrop-blur">
 
                     {/* ATS Switcher */}
-                    <div className="flex overflow-x-auto pb-1 gap-2 custom-scrollbar w-full md:w-auto">
+                    <div className="flex overflow-x-auto pb-1 gap-2 custom-scrollbar w-full md:w-auto px-1 md:px-0">
                         {links.map((link) => (
                             <button
                                 key={link.name}
                                 onClick={() => setActiveLink(link)}
                                 className={cn(
-                                    "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border",
+                                    "px-3 md:px-4 py-2 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border shrink-0",
                                     activeLink?.name === link.name
                                         ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-lg"
                                         : "bg-white dark:bg-slate-800 border-slate-200 dark:border-white/5 text-slate-500 hover:border-primary"

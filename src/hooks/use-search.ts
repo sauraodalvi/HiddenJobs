@@ -53,8 +53,8 @@ export function useSearchFilters() {
         router.replace(`?${params.toString()}`, { scroll: false });
     }, [searchParams, router]);
 
-    // Batch update helper to avoid race conditions
-    const updateFilters = useCallback((updates: Record<string, string | null>) => {
+    // Batch update helper with safety for nav promises
+    const updateFilters = useCallback(async (updates: Record<string, string | null>) => {
         const params = new URLSearchParams(searchParams.toString());
 
         Object.entries(updates).forEach(([key, value]) => {
@@ -65,7 +65,12 @@ export function useSearchFilters() {
             }
         });
 
-        router.replace(`?${params.toString()}`, { scroll: false });
+        try {
+            await router.replace(`?${params.toString()}`, { scroll: false });
+        } catch (e) {
+            // Silently handle race condition nav errors
+            console.debug("Navigation suppressed", e);
+        }
     }, [searchParams, router]);
 
     // Derived logic
