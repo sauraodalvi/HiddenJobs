@@ -6,6 +6,9 @@ import { Header } from '@/components/layout/Header';
 import { ExternalLink, Search, Globe, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/Footer';
+import { FAQSection } from '@/components/seo/FAQSection';
+import { CareerIntelligence } from '@/components/seo/CareerIntelligence';
+import { StructuredInsights } from '@/components/seo/StructuredInsights';
 
 interface PageProps {
     params: Promise<{
@@ -76,64 +79,46 @@ export default async function JobDirectoryPage({ params }: PageProps) {
                 ]
             },
             {
-                "@type": "JobPosting",
-                "title": `${role.label} Roles in ${location.label}`,
-                "description": `Find unlisted ${role.label} jobs in ${location.label} on ${platform.label}. Access the hidden job market with direct-to-ATS search queries.`,
-                "datePosted": new Date().toISOString(),
-                "hiringOrganization": {
+                "@type": "Service",
+                "name": `HiddenJobs ${role.label} Search Engine`,
+                "description": `Automated search engine for unlisted ${role.label} positions in ${location.label} tracking ${platform.label} ATS updates.`,
+                "provider": {
                     "@type": "Organization",
                     "name": "HiddenJobs",
-                    "sameAs": "https://hiddenjobs.netlify.app"
+                    "url": "https://hiddenjobs.netlify.app"
                 },
-                "jobLocation": {
-                    "@type": "Place",
-                    "address": {
-                        "@type": "PostalAddress",
-                        "addressLocality": location.label,
-                        "addressCountry": "Global"
-                    }
+                "areaServed": {
+                    "@type": "City",
+                    "name": location.label
                 },
-                "employmentType": "FULL_TIME"
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "4.9",
+                    "ratingCount": "1250",
+                    "bestRating": "5",
+                    "worstRating": "1"
+                }
             },
             {
                 "@type": "FAQPage",
                 "mainEntity": [
                     {
                         "@type": "Question",
-                        "name": `How do I find unlisted ${role.label} jobs in ${location.label}?`,
+                        "name": `How can I find hidden ${role.label} jobs in ${location.label} using ${platform.label}?`,
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": `You can find unlisted ${role.label} jobs by searching directly on Applicant Tracking Systems (ATS) like ${platform.label} instead of traditional job boards.`
+                            "text": `To find unlisted ${role.label} roles in ${location.label}, you should search ${platform.label} career portals directly. HiddenJobs automates this with direct ATS search queries.`
                         }
                     },
                     {
                         "@type": "Question",
-                        "name": `Why search ${platform.label} for ${role.label} roles?`,
+                        "name": `What are the benefits of applying directly to ${platform.label} career portals?`,
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": `Many high-growth tech companies use ${platform.label} to host their career pages. Searching here reveals opportunities that may not yet be published on LinkedIn or Indeed.`
-                        }
-                    },
-                    {
-                        "@type": "Question",
-                        "name": `Are there hidden ${role.label} jobs in ${location.label}?`,
-                        "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": `Yes, our data indicates that approximately 40-60% of ${role.label} roles in ${location.label} are not listed on major aggregators but are visible on direct ATS searches.`
+                            "text": `Applying directly to ${platform.label} ensures your resume enters the ATS database immediately, bypassing external boards and reducing competition.`
                         }
                     }
                 ]
-            },
-            {
-                "@type": "AggregateRating",
-                "itemReviewed": {
-                    "@type": "Service",
-                    "name": `HiddenJobs ${role.label} Search Engine`
-                },
-                "ratingValue": "4.9",
-                "ratingCount": "1250",
-                "bestRating": "5",
-                "worstRating": "1"
             }
         ]
     };
@@ -175,49 +160,66 @@ export default async function JobDirectoryPage({ params }: PageProps) {
                         </div>
                     </div>
 
-                    <p className="text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed">
-                        Currently tracking <strong>{role.label}</strong> roles specifically on the <strong>{platform.label}</strong> applicant tracking system for <strong>{location.label}</strong>.
-                        <br className="hidden md:block" />
-                        <span className="inline-block mt-4 text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-700/50 px-4 py-2 rounded-lg text-base font-medium border border-slate-200 dark:border-slate-700">
-                            💡 <strong>Market Insight:</strong> Direct ATS searching on {platform.label} typically reveals <strong>3x more</strong> {role.label} opportunities in {location.label} compared to standard job boards.
-                        </span>
-                    </p>
+                    <div className="prose prose-slate dark:prose-invert max-w-none mb-10">
+                        <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Discover high-impact <strong>{role.label}</strong> opportunities across the <strong>{platform.label}</strong> ecosystem in <strong>{location.label}</strong>.
+                            Our automated tracking system identifies unlisted openings by searching direct company career portals, giving you a competitive edge in the {location.label} job market.
+                        </p>
 
-                    <div className="space-y-6">
-                        <div className="p-6 rounded-2xl bg-slate-900 dark:bg-slate-950 text-white shadow-2xl relative overflow-hidden group border border-slate-800">
-                            <div className="relative z-10">
-                                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                                    <Search className="w-5 h-5 text-blue-400" />
-                                    Live Search Query
-                                </h3>
-                                <div className="font-mono text-xs md:text-sm bg-black/30 p-4 rounded-xl mb-6 break-all line-clamp-3 group-hover:line-clamp-none transition-all border border-white/5">
-                                    {dork}
+                        <StructuredInsights
+                            role={role.label}
+                            location={location.label}
+                            platform={platform.label}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-2 space-y-6">
+                            <div className="p-6 rounded-2xl bg-slate-900 dark:bg-slate-950 text-white shadow-2xl relative overflow-hidden group border border-slate-800">
+                                <div className="relative z-10">
+                                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                        <Search className="w-5 h-5 text-blue-400" />
+                                        Live Search Query
+                                    </h3>
+                                    <div className="font-mono text-xs md:text-sm bg-black/30 p-4 rounded-xl mb-6 break-all line-clamp-3 group-hover:line-clamp-none transition-all border border-white/5">
+                                        {dork}
+                                    </div>
+                                    <a
+                                        href={googleUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg active:scale-95"
+                                    >
+                                        View Live Results
+                                        <ExternalLink className="w-5 h-5" />
+                                    </a>
                                 </div>
-                                <a
-                                    href={googleUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg active:scale-95"
-                                >
-                                    View Live Results
-                                    <ExternalLink className="w-5 h-5" />
-                                </a>
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[80px] -mr-32 -mt-32" />
                             </div>
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[80px] -mr-32 -mt-32" />
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-primary/50 transition-colors bg-white dark:bg-slate-800/50">
+                                    <h4 className="font-bold mb-2 text-slate-900 dark:text-white">Why {platform.label}?</h4>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400">Most high-growth companies use {platform.label} exclusively. Searching it directly bypasses 90% of your competition.</p>
+                                </div>
+                                <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-primary/50 transition-colors bg-white dark:bg-slate-800/50">
+                                    <h4 className="font-bold mb-2 text-slate-900 dark:text-white">Verified {location.label}</h4>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400">Filtered for local and remote-first companies hiring specifically for {location.label} based talent.</p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-primary/50 transition-colors bg-white dark:bg-slate-800/50">
-                                <h4 className="font-bold mb-2 text-slate-900 dark:text-white">Why {platform.label}?</h4>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">Most high-growth companies use {platform.label} exclusively. Searching it directly bypasses 90% of your competition.</p>
-                            </div>
-                            <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-primary/50 transition-colors bg-white dark:bg-slate-800/50">
-                                <h4 className="font-bold mb-2 text-slate-900 dark:text-white">Verified {location.label}</h4>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">Filtered for local and remote-first companies hiring specifically for {location.label} based talent.</p>
-                            </div>
+                        <div className="lg:col-span-1">
+                            <CareerIntelligence />
                         </div>
                     </div>
                 </div>
+
+                <FAQSection
+                    role={role.label}
+                    location={location.label}
+                    platform={platform.label}
+                />
 
                 <section className="mt-20">
                     <h2 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">Other Locations</h2>
@@ -254,8 +256,8 @@ export default async function JobDirectoryPage({ params }: PageProps) {
                         ))}
                     </div>
                 </section>
-            </main>
+            </main >
             <Footer />
-        </div>
+        </div >
     );
 }

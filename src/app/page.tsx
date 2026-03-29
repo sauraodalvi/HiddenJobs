@@ -6,10 +6,13 @@ import { Header } from "@/components/layout/Header";
 import { InfoSection } from "@/components/layout/InfoSection";
 
 import { Footer } from "@/components/layout/Footer";
+import { AboutHiddenMarket } from "@/components/seo/AboutHiddenMarket";
+import { GlobalSchema } from "@/components/seo/GlobalSchema";
 
 export default function Home() {
   return (
     <div className="min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      <GlobalSchema />
       <Header />
 
       <main className="relative pt-20 pb-32 dot-grid">
@@ -35,6 +38,8 @@ export default function Home() {
           <InfoSection />
 
         </div>
+
+        <AboutHiddenMarket />
       </main>
 
       <Footer />

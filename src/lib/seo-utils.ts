@@ -8,8 +8,8 @@ export function getSeoMetadata(platformSlug: string, roleSlug: string, locationS
 
     if (!platform || !role || !location) return null;
 
-    const title = `${role.label} Jobs on ${platform.label} in ${location.label} | HiddenJobs`;
-    const description = `Find the latest ${role.label} job openings directly on the ${platform.label} job board for ${location.label}. Bypass LinkedIn and discover the hidden job market.`;
+    const title = `Apply: ${role.label} Roles in ${location.label} (${platform.label} ATS)`;
+    const description = `Access private ${role.label} job listings in ${location.label} by searching ${platform.label} career portals. Avoid common job board competition and apply directly to the hidden market.`;
 
     return {
         title,

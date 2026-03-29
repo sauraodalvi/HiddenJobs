@@ -57,8 +57,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Deep Dynamic Job Pages
     const jobRoutes: MetadataRoute.Sitemap = [];
     DIRECTORY_PLATFORMS.forEach(platform => {
-        DIRECTORY_ROLES.forEach(role => {
-            DIRECTORY_LOCATIONS.forEach(location => {
+        // Match generateStaticParams limits: slice(0, 60) for roles and slice(0, 10) for locations
+        DIRECTORY_ROLES.slice(0, 60).forEach(role => {
+            DIRECTORY_LOCATIONS.slice(0, 10).forEach(location => {
                 jobRoutes.push({
                     url: `${baseUrl}/jobs/${platform.slug}/${role.slug}/${location.slug}`,
                     lastModified: new Date(),
