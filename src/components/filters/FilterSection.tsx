@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchFilters } from "@/hooks/use-search";
 import { useProFeatures } from "@/hooks/use-pro";
-import { ROLE_PRESETS } from "@/lib/constants";
+import { ROLE_PRESETS, DIRECTORY_ROLES } from "@/lib/constants";
+import { searchCities } from "@/app/actions/geo";
 import { Search, MapPin, Terminal, Bolt, Code, Clock, ChevronDown, ArrowRight, Check, X, Building, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProGate } from "@/components/common/ProGate";
@@ -20,6 +21,9 @@ export function FilterSection() {
     // Split Location State
     const [localWorkMode, setLocalWorkMode] = useState(filters.location === 'specific' ? 'remote' : filters.location);
     const [localGeoLocation, setLocalGeoLocation] = useState(filters.specificLocation || '');
+    const [citySuggestions, setCitySuggestions] = useState<{ name: string, slug: string }[]>([]);
+    const [showCitySuggestions, setShowCitySuggestions] = useState(false);
+    const [selectedCitySlug, setSelectedCitySlug] = useState<string | null>(null);
 
     const [localExclude, setLocalExclude] = useState(filters.exclude);
     const [localInclude, setLocalInclude] = useState(filters.include);
@@ -75,11 +79,23 @@ export function FilterSection() {
     const iconClass = "absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 z-20 pointer-events-none group-hover:text-primary transition-colors";
 
     const handleGo = () => {
+        // Find slugs for redirection
+        const roleSlug = DIRECTORY_ROLES.find((r: any) => r.label === localRole)?.slug;
+        const citySlug = selectedCitySlug || localGeoLocation.toLowerCase().replace(/\s+/g, '-');
+
+        // PRETTY REDIRECT: If we have a preset role and a specific city, go to the pSEO page
+        if (roleSlug && (localWorkMode === 'onsite' || localGeoLocation)) {
+            incrementSearch();
+            router.push(`/jobs/${roleSlug}-in-${citySlug}`);
+            return;
+        }
+
         const updates: Record<string, string | null> = {
             time: localTime,
             from: localTime === 'custom' ? localFrom : null,
             to: localTime === 'custom' ? localTo : null,
         };
+        // ... (existing update logic)
 
         // Unified Role Resolution
         const isPresetRole = roleOptions.includes(localRole);
@@ -300,11 +316,42 @@ export function FilterSection() {
                     <input
                         type="text"
                         value={localGeoLocation}
-                        onChange={(e) => setLocalGeoLocation(e.target.value)}
+                        onChange={async (e) => {
+                            const val = e.target.value;
+                            setLocalGeoLocation(val);
+                            if (val.length > 1) {
+                                const suggestions = await searchCities(val);
+                                setCitySuggestions(suggestions);
+                                setShowCitySuggestions(true);
+                            } else {
+                                setShowCitySuggestions(false);
+                            }
+                        }}
+                        onFocus={() => localGeoLocation.length > 1 && setShowCitySuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowCitySuggestions(false), 200)}
                         onKeyDown={handleKeyDown}
                         placeholder="Worldwide"
                         className="w-full pl-12 pr-10 py-4 bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white font-mono text-sm"
                     />
+
+                    {showCitySuggestions && citySuggestions.length > 0 && (
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                            {citySuggestions.map((city) => (
+                                <div
+                                    key={city.slug}
+                                    onMouseDown={() => {
+                                        setLocalGeoLocation(city.name);
+                                        setSelectedCitySlug(city.slug);
+                                        setShowCitySuggestions(false);
+                                    }}
+                                    className="px-4 py-2.5 text-sm cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-600 dark:text-slate-300 font-mono flex items-center justify-between"
+                                >
+                                    <span>{city.name}</span>
+                                    <MapPin className="w-3 h-3 opacity-30" />
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Time Range */}

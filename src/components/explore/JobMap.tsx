@@ -31,10 +31,22 @@ function MapController({ center }: { center: [number, number] }) {
 
 import { MarketViewer } from './MarketViewer';
 
+import { getMapMarkers } from '@/app/actions/geo';
+
 export default function JobMap() {
     const { generateLinks, filters, updateFilters } = useSearchFilters();
     const [mapCenter, setMapCenter] = useState<[number, number]>([30, 0]);
     const [showViewer, setShowViewer] = useState(false);
+    const [markers, setMarkers] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchMarkers = async () => {
+            const data = await getMapMarkers();
+            setMarkers(data);
+        };
+        fetchMarkers();
+    }, []);
+
     const links = generateLinks();
 
     // Custom "Market Cluster" Icon - Dynamic based on selection and job activity
@@ -109,13 +121,13 @@ export default function JobMap() {
 
                 <MapController center={mapCenter} />
 
-                {DIRECTORY_LOCATIONS.filter(l => l.coords).map((loc) => (
+                {markers.map((loc) => (
                     <Marker
                         key={loc.slug}
-                        position={[loc.coords!.lat, loc.coords!.lng]}
-                        icon={createCustomIcon(loc)}
+                        position={[loc.lat!, loc.lng!]}
+                        icon={createCustomIcon({ ...loc, label: loc.name })}
                         eventHandlers={{
-                            click: () => handleCityClick(loc)
+                            click: () => handleCityClick({ ...loc, label: loc.name, coords: { lat: loc.lat, lng: loc.lng } })
                         }}
                     >
                         <Popup className="custom-popup" closeButton={false}>

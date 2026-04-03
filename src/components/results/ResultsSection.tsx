@@ -53,9 +53,20 @@ function LogoImage({ link }: { link: any }) {
 }
 
 
-export function ResultsSection() {
-    const { generateLinks, filters } = useSearchFilters();
+export function ResultsSection({ initialRole, initialLocation }: { initialRole?: string, initialLocation?: string }) {
+    const { generateLinks, filters, updateFilters } = useSearchFilters();
     const { isPro } = useProFeatures();
+
+    // Initialize filters if provided
+    useEffect(() => {
+        if (initialRole || initialLocation) {
+            updateFilters({
+                role: initialRole || filters.role,
+                location: initialLocation ? 'specific' : filters.location,
+                specificLocation: initialLocation || filters.specificLocation
+            });
+        }
+    }, [initialRole, initialLocation]);
 
     const links = useMemo(() => generateLinks(), [generateLinks]);
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);

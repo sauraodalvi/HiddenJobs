@@ -1,15 +1,17 @@
-import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
 import { Header } from '@/components/layout/Header';
 import { ChevronRight, Briefcase, MapPin, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/Footer';
+import { getDirectoryData } from '@/app/actions/geo';
 
 export const metadata = {
     title: 'Job Directories | HiddenJobs',
     description: 'Browse hidden jobs by platform, role, and location. Explore unlisted opportunities on Greenhouse, Lever, and Ashby.',
 };
 
-export default function JobsDirectoryIndex() {
+export default async function JobsDirectoryIndex() {
+    const { roles, cities, platforms } = await getDirectoryData();
+
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
             <Header />
@@ -34,7 +36,7 @@ export default function JobsDirectoryIndex() {
                             <h2 className="text-xl font-bold dark:text-white">By Platform</h2>
                         </div>
                         <div className="space-y-3">
-                            {DIRECTORY_PLATFORMS.map(platform => (
+                            {platforms.map(platform => (
                                 <Link
                                     key={platform.slug}
                                     href={`/jobs/platform/${platform.slug}`}
@@ -56,7 +58,7 @@ export default function JobsDirectoryIndex() {
                             <h2 className="text-xl font-bold dark:text-white">By Role</h2>
                         </div>
                         <div className="space-y-3">
-                            {DIRECTORY_ROLES.slice(0, 10).map(role => (
+                            {roles.slice(0, 10).map(role => (
                                 <Link
                                     key={role.slug}
                                     href={`/jobs/role/${role.slug}`}
@@ -78,7 +80,7 @@ export default function JobsDirectoryIndex() {
                             <h2 className="text-xl font-bold dark:text-white">By Location</h2>
                         </div>
                         <div className="space-y-3">
-                            {DIRECTORY_LOCATIONS.map(loc => (
+                            {cities.map(loc => (
                                 <Link
                                     key={loc.slug}
                                     href={`/jobs/location/${loc.slug}`}
