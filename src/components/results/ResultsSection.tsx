@@ -53,7 +53,7 @@ function LogoImage({ link }: { link: any }) {
 }
 
 
-export function ResultsSection({ initialRole, initialLocation }: { initialRole?: string, initialLocation?: string }) {
+export function ResultsSection({ initialRole, initialLocation, initialPlatform }: { initialRole?: string, initialLocation?: string, initialPlatform?: string }) {
     const { generateLinks, filters, updateFilters } = useSearchFilters();
     const { isPro } = useProFeatures();
 
@@ -70,7 +70,21 @@ export function ResultsSection({ initialRole, initialLocation }: { initialRole?:
 
     const links = useMemo(() => generateLinks(), [generateLinks]);
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-    const [activeLink, setActiveLink] = useState<any>(links[0]);
+    const [activeLink, setActiveLink] = useState<any>(null);
+
+    // Set initial platform if provided
+    useEffect(() => {
+        if (initialPlatform && links.length > 0) {
+            const platformLink = links.find((l: any) => l.name.toLowerCase() === initialPlatform.toLowerCase());
+            if (platformLink) {
+                setActiveLink(platformLink);
+            } else {
+                setActiveLink(links[0]);
+            }
+        } else if (!activeLink && links.length > 0) {
+            setActiveLink(links[0]);
+        }
+    }, [initialPlatform, links]);
     const [activeEngine, setActiveEngine] = useState<'google' | 'ddg' | 'bing' | 'brave' | 'yahoo'>('ddg');
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [isExiting, setIsExiting] = useState(false);
