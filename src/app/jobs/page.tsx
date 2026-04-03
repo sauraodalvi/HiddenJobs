@@ -3,6 +3,7 @@ import { ChevronRight, Briefcase, MapPin, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/Footer';
 import { getDirectoryData } from '@/app/actions/geo';
+import { DIRECTORY_ROLES } from '@/lib/constants';
 
 export const metadata = {
     title: 'Job Directories | HiddenJobs',
@@ -36,7 +37,7 @@ export default async function JobsDirectoryIndex() {
                             <h2 className="text-xl font-bold dark:text-white">By Platform</h2>
                         </div>
                         <div className="space-y-3">
-                            {platforms.map(platform => (
+                            {platforms.map((platform: any) => (
                                 <Link
                                     key={platform.slug}
                                     href={`/jobs/platform/${platform.slug}`}
@@ -58,7 +59,7 @@ export default async function JobsDirectoryIndex() {
                             <h2 className="text-xl font-bold dark:text-white">By Role</h2>
                         </div>
                         <div className="space-y-3">
-                            {roles.slice(0, 10).map(role => (
+                            {roles.slice(0, 10).map((role: any) => (
                                 <Link
                                     key={role.slug}
                                     href={`/jobs/role/${role.slug}`}
@@ -80,7 +81,7 @@ export default async function JobsDirectoryIndex() {
                             <h2 className="text-xl font-bold dark:text-white">By Location</h2>
                         </div>
                         <div className="space-y-3">
-                            {cities.map(loc => (
+                            {cities.map((loc: any) => (
                                 <Link
                                     key={loc.slug}
                                     href={`/jobs/location/${loc.slug}`}
@@ -105,13 +106,13 @@ export default async function JobsDirectoryIndex() {
                             <h2 className="text-xl font-bold dark:text-white">Internships & Specializations</h2>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {DIRECTORY_ROLES.filter(r =>
+                            {DIRECTORY_ROLES.filter((r: any) =>
                                 r.slug.includes('intern') ||
                                 r.slug.includes('associate') ||
                                 r.slug.includes('ios') ||
                                 r.slug.includes('android') ||
                                 r.slug.includes('security')
-                            ).map(role => (
+                            ).map((role: any) => (
                                 <Link
                                     key={role.slug}
                                     href={`/jobs/role/${role.slug}`}
@@ -133,13 +134,13 @@ export default async function JobsDirectoryIndex() {
                             <h2 className="text-xl font-bold dark:text-white">Senior & Leadership</h2>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {DIRECTORY_ROLES.filter(r =>
+                            {DIRECTORY_ROLES.filter((r: any) =>
                                 r.slug.includes('senior') ||
                                 r.slug.includes('staff') ||
                                 r.slug.includes('manager') ||
                                 r.slug.includes('director') ||
                                 r.slug.includes('principal')
-                            ).slice(0, 12).map(role => (
+                            ).slice(0, 12).map((role: any) => (
                                 <Link
                                     key={role.slug}
                                     href={`/jobs/role/${role.slug}`}

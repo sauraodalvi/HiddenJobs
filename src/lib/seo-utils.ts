@@ -4,7 +4,18 @@ import { eq, and } from "drizzle-orm";
 import { buildDorkComponents, assembleDork } from "./utils";
 import { generateJobCityContent } from "./gemini";
 
-import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS } from "./constants";
+import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from "./constants";
+
+export function getPlatformSeoMetadata(platformSlug: string) {
+    const platform = DIRECTORY_PLATFORMS.find(p => p.slug === platformSlug);
+    if (!platform) return null;
+
+    return {
+        title: `${platform.label} Hidden Jobs | Unlisted ${platform.label} Roles | HiddenJobs`,
+        description: `Expose unlisted technical roles indexed from ${platform.label} applicant tracking systems. Access thousands of opportunities not on LinkedIn.`,
+        platform
+    };
+}
 
 export async function getSeoMetadata(roleSlug: string, locationSlug: string) {
     // Fallback for local development without DB

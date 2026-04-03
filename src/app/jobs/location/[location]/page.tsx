@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { location: locationSlug } = await params;
-    const seo = getLocationSeoMetadata(locationSlug);
+    const seo = await getLocationSeoMetadata(locationSlug);
 
     if (!seo) return { title: 'Not Found' };
 
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function LocationDirectoryPage({ params }: PageProps) {
     const { location: locationSlug } = await params;
-    const seo = getLocationSeoMetadata(locationSlug);
+    const seo = await getLocationSeoMetadata(locationSlug);
 
     if (!seo) notFound();
 

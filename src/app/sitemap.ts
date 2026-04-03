@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://hiddenjobs.netlify.app';
 
     // 1. Core pages
-    const routes = ['', '/jobs', '/explore'].map(route => ({
+    const routes = ['', '/jobs', '/explore'].map((route: string) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // 2. Location Hubs (All cities from DB)
     const dbCities = await db.select().from(cities);
-    const locationHubs = dbCities.map(city => ({
+    const locationHubs = dbCities.map((city: any) => ({
         url: `${baseUrl}/jobs/location/${city.slug}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // 3. Role Hubs (All roles from DB)
     const dbRoles = await db.select().from(jobRoles);
-    const roleHubs = dbRoles.map(role => ({
+    const roleHubs = dbRoles.map((role: any) => ({
         url: `${baseUrl}/jobs/role/${role.slug}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,

@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { cities } from "@/lib/db/schema";
+import { cities, jobRoles } from "@/lib/db/schema";
 import { sql, ilike, desc, or } from "drizzle-orm";
 
 export async function searchCities(query: string) {
@@ -38,7 +38,9 @@ export async function getMapMarkers() {
     // Fallback for mock mode
     if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('YOUR_DATABASE_URL')) {
         const { DIRECTORY_LOCATIONS } = await import("@/lib/constants");
-        return DIRECTORY_LOCATIONS.filter(l => l.coords);
+        return DIRECTORY_LOCATIONS
+            .filter(l => l.coords)
+            .map(l => ({ ...l, name: l.label, lat: l.coords?.lat, lng: l.coords?.lng }));
     }
 
     return await db.select({
@@ -74,8 +76,8 @@ export async function getDirectoryData() {
     const { DIRECTORY_PLATFORMS } = await import("@/lib/constants");
 
     return {
-        roles: topRoles.map(r => ({ label: r.name, slug: r.slug })),
-        cities: topCities.map(c => ({ label: c.name, slug: c.slug, jobCount: c.jobCount })),
+        roles: topRoles.map((r: any) => ({ label: r.name, slug: r.slug })),
+        cities: topCities.map((c: any) => ({ label: c.name, slug: c.slug, jobCount: c.jobCount })),
         platforms: DIRECTORY_PLATFORMS
     };
 }

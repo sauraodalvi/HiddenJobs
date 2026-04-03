@@ -51,7 +51,8 @@ export default function JobMap() {
 
     // Custom "Market Cluster" Icon - Dynamic based on selection and job activity
     const createCustomIcon = (loc: any) => {
-        const isSelected = filters.specificLocation?.toLowerCase() === loc.label.toLowerCase();
+        const cityName = loc.label || loc.name || '';
+        const isSelected = filters.specificLocation?.toLowerCase() === cityName.toLowerCase();
         const pulseColor = isSelected ? 'bg-primary' : 'bg-emerald-500';
         const hasData = loc.jobCount && loc.companies;
 
@@ -121,67 +122,70 @@ export default function JobMap() {
 
                 <MapController center={mapCenter} />
 
-                {markers.map((loc) => (
-                    <Marker
-                        key={loc.slug}
-                        position={[loc.lat!, loc.lng!]}
-                        icon={createCustomIcon({ ...loc, label: loc.name })}
-                        eventHandlers={{
-                            click: () => handleCityClick({ ...loc, label: loc.name, coords: { lat: loc.lat, lng: loc.lng } })
-                        }}
-                    >
-                        <Popup className="custom-popup" closeButton={false}>
-                            <div className="p-3 w-[260px] md:w-[280px] font-sans rounded-2xl bg-white dark:bg-slate-900 border-none shadow-none">
-                                <div className="flex items-center justify-between mb-3 border-b border-slate-100 dark:border-white/5 pb-2">
-                                    <h3 className="font-black text-slate-900 dark:text-white flex items-center gap-2 text-sm uppercase tracking-tight">
-                                        <MapPin className="w-4 h-4 text-primary" />
-                                        {loc.label} Hub
-                                    </h3>
-                                    <span className="text-[10px] font-black uppercase text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">ACTIVE</span>
-                                </div>
+                {markers.map((loc) => {
+                    const cityName = loc.label || loc.name || 'Unknown';
+                    return (
+                        <Marker
+                            key={loc.slug}
+                            position={[loc.lat!, loc.lng!]}
+                            icon={createCustomIcon({ ...loc, label: cityName })}
+                            eventHandlers={{
+                                click: () => handleCityClick({ ...loc, label: cityName, coords: { lat: loc.lat, lng: loc.lng } })
+                            }}
+                        >
+                            <Popup className="custom-popup" closeButton={false}>
+                                <div className="p-3 w-[260px] md:w-[280px] font-sans rounded-2xl bg-white dark:bg-slate-900 border-none shadow-none">
+                                    <div className="flex items-center justify-between mb-3 border-b border-slate-100 dark:border-white/5 pb-2">
+                                        <h3 className="font-black text-slate-900 dark:text-white flex items-center gap-2 text-sm uppercase tracking-tight">
+                                            <MapPin className="w-4 h-4 text-primary" />
+                                            {cityName} Hub
+                                        </h3>
+                                        <span className="text-[10px] font-black uppercase text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">ACTIVE</span>
+                                    </div>
 
-                                <div className="space-y-3 mb-4">
-                                    {loc.jobCount && (
-                                        <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 p-2 rounded-xl">
-                                            <div className="flex items-center gap-2">
-                                                <Zap className="w-3.5 h-3.5 text-primary fill-primary" />
-                                                <span className="text-[11px] font-black tracking-tight text-slate-700 dark:text-slate-200">
-                                                    ~{loc.jobCount.toLocaleString()} Jobs
+                                    <div className="space-y-3 mb-4">
+                                        {loc.jobCount && (
+                                            <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 p-2 rounded-xl">
+                                                <div className="flex items-center gap-2">
+                                                    <Zap className="w-3.5 h-3.5 text-primary fill-primary" />
+                                                    <span className="text-[11px] font-black tracking-tight text-slate-700 dark:text-slate-200">
+                                                        ~{loc.jobCount.toLocaleString()} Jobs
+                                                    </span>
+                                                </div>
+                                                <span className="text-[10px] font-bold text-slate-400">
+                                                    Fresh
                                                 </span>
                                             </div>
-                                            <span className="text-[10px] font-bold text-slate-400">
-                                                Fresh
-                                            </span>
-                                        </div>
-                                    )}
+                                        )}
 
-                                    {loc.companies && (
-                                        <div className="space-y-2">
-                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Top Movers</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {loc.companies.map((domain: string) => (
-                                                    <div key={domain} className="w-8 h-8 rounded-xl border border-slate-100 dark:border-white/5 bg-white dark:bg-slate-800 p-1.5 flex items-center justify-center shadow-sm" title={domain}>
-                                                        <img src={`https://icons.duckduckgo.com/ip3/${domain}.ico`}
-                                                            className="w-full h-full object-contain"
-                                                            alt={domain} />
-                                                    </div>
-                                                ))}
+                                        {loc.companies && (
+                                            <div className="space-y-2">
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Top Movers</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {loc.companies.map((domain: string) => (
+                                                        <div key={domain} className="w-8 h-8 rounded-xl border border-slate-100 dark:border-white/5 bg-white dark:bg-slate-800 p-1.5 flex items-center justify-center shadow-sm" title={domain}>
+                                                            <img src={`https://icons.duckduckgo.com/ip3/${domain}.ico`}
+                                                                className="w-full h-full object-contain"
+                                                                alt={domain} />
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
+                                        )}
+                                    </div>
 
-                                <button
-                                    onClick={() => handleCityClick(loc)}
-                                    className="w-full py-3 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-primary/20"
-                                >
-                                    Pivot to this Market
-                                    <ArrowRight className="w-3 h-3" />
-                                </button>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
+                                    <button
+                                        onClick={() => handleCityClick(loc)}
+                                        className="w-full py-3 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-primary/20"
+                                    >
+                                        Pivot to this Market
+                                        <ArrowRight className="w-3 h-3" />
+                                    </button>
+                                </div>
+                            </Popup>
+                        </Marker>
+                    );
+                })}
             </MapContainer>
 
             {/* Premium Launch Console (Terminal) - Responsive Stacking */}

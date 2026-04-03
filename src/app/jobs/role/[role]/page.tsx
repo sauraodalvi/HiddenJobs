@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { role: roleSlug } = await params;
-    const seo = getRoleSeoMetadata(roleSlug);
+    const seo = await getRoleSeoMetadata(roleSlug);
 
     if (!seo) return { title: 'Not Found' };
 
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function RoleDirectoryPage({ params }: PageProps) {
     const { role: roleSlug } = await params;
-    const seo = getRoleSeoMetadata(roleSlug);
+    const seo = await getRoleSeoMetadata(roleSlug);
 
     if (!seo) notFound();
 
