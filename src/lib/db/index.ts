@@ -11,9 +11,13 @@ const sql = isMock ? null : neon(databaseUrl!);
 const createMock = () => {
     const handler: ProxyHandler<any> = {
         get: (target, prop) => {
-            if (prop === 'then') return undefined; // Avoid promise issues
-            const noop = () => new Proxy({}, handler);
-            return noop;
+            if (prop === 'then') {
+                return (onFulfilled: any) => Promise.resolve([]).then(onFulfilled);
+            }
+            if (prop === 'catch') {
+                return (onRejected: any) => Promise.resolve([]).catch(onRejected);
+            }
+            return () => new Proxy({}, handler);
         }
     };
     return new Proxy({}, handler) as any;

@@ -16,18 +16,25 @@ interface Props {
 
 export async function generateStaticParams() {
     // Pre-render the top 100 combinations by population to ensure fast loading for major markets
-    const topCities = await db.select().from(cities).orderBy(desc(cities.population)).limit(10);
-    const topRoles = await db.select().from(jobRoles).limit(10);
+    try {
+        const topCities = await db.select().from(cities).orderBy(desc(cities.population)).limit(10);
+        const topRoles = await db.select().from(jobRoles).limit(10);
 
-    const params = [];
-    for (const city of topCities) {
-        for (const role of topRoles) {
-            params.push({
-                roleAndCity: `${role.slug}-in-${city.slug}`,
-            });
+        if (!Array.isArray(topCities) || !Array.isArray(topRoles)) return [];
+
+        const params = [];
+        for (const city of topCities) {
+            for (const role of topRoles) {
+                params.push({
+                    roleAndCity: `${role.slug}-in-${city.slug}`,
+                });
+            }
         }
+        return params;
+    } catch (error) {
+        console.error('[generateStaticParams] DB error, skipping pre-render:', error);
+        return [];
     }
-    return params;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

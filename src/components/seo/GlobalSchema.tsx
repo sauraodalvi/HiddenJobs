@@ -6,12 +6,12 @@ export const GlobalSchema = () => {
         "@graph": [
             {
                 "@type": "Organization",
-                "@id": "https://hiddenjobs.netlify.app/#organization",
+                "@id": "https://hiddenjobs.vercel.app/#organization",
                 "name": "HiddenJobs",
-                "url": "https://hiddenjobs.netlify.app",
+                "url": "https://hiddenjobs.vercel.app",
                 "logo": {
                     "@type": "ImageObject",
-                    "url": "https://hiddenjobs.netlify.app/logo.png"
+                    "url": "https://hiddenjobs.vercel.app/logo.png"
                 },
                 "description": "Premium search engine for uncovering unlisted jobs in high-growth companies tracking direct-to-ATS openings.",
                 "sameAs": [
@@ -21,13 +21,13 @@ export const GlobalSchema = () => {
             },
             {
                 "@type": "WebSite",
-                "@id": "https://hiddenjobs.netlify.app/#website",
-                "url": "https://hiddenjobs.netlify.app",
+                "@id": "https://hiddenjobs.vercel.app/#website",
+                "url": "https://hiddenjobs.vercel.app",
                 "name": "HiddenJobs",
-                "publisher": { "@id": "https://hiddenjobs.netlify.app/#organization" },
+                "publisher": { "@id": "https://hiddenjobs.vercel.app/#organization" },
                 "potentialAction": {
                     "@type": "SearchAction",
-                    "target": "https://hiddenjobs.netlify.app/explore?q={search_term_string}",
+                    "target": "https://hiddenjobs.vercel.app/explore?q={search_term_string}",
                     "query-input": "required name=search_term_string"
                 }
             },
@@ -35,7 +35,7 @@ export const GlobalSchema = () => {
                 "@type": "Person",
                 "name": "Alex Rivera",
                 "jobTitle": "Lead ATS Researcher",
-                "worksFor": { "@id": "https://hiddenjobs.netlify.app/#organization" },
+                "worksFor": { "@id": "https://hiddenjobs.vercel.app/#organization" },
                 "description": "Specialist in Greenhouse and Lever ATS indexing strategies."
             }
         ]

@@ -22,14 +22,14 @@ export const metadata: Metadata = {
     icon: '/icon',
     apple: '/apple-icon',
   },
-  metadataBase: new URL("https://hiddenjobs.netlify.app"),
+  metadataBase: new URL("https://hiddenjobs.vercel.app"),
   verification: {
     google: "56R-JruPxjmoOonvhlzkMpNgJqO9-PG-AEJsjPXX_pw",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://hiddenjobs.netlify.app",
+    url: "https://hiddenjobs.vercel.app",
     title: "HiddenJobs | Find the 60% of Jobs Not on LinkedIn",
     description: "Search 50k+ live unlisted roles directly on Greenhouse, Lever, and Ashby. Stop competing with 1000+ applicants on LinkedIn.",
     siteName: "HiddenJobs",

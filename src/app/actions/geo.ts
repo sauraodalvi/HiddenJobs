@@ -68,16 +68,26 @@ export async function getDirectoryData() {
         };
     }
 
-    const [topRoles, topCities] = await Promise.all([
-        db.select().from(jobRoles).orderBy(desc(jobRoles.id)).limit(30),
-        db.select().from(cities).orderBy(desc(cities.jobCount), desc(cities.population)).limit(30)
-    ]);
+    try {
+        const [topRoles, topCities] = await Promise.all([
+            db.select().from(jobRoles).orderBy(desc(jobRoles.id)).limit(30),
+            db.select().from(cities).orderBy(desc(cities.jobCount), desc(cities.population)).limit(30)
+        ]);
 
-    const { DIRECTORY_PLATFORMS } = await import("@/lib/constants");
+        const { DIRECTORY_PLATFORMS } = await import("@/lib/constants");
 
-    return {
-        roles: topRoles.map((r: any) => ({ label: r.name, slug: r.slug })),
-        cities: topCities.map((c: any) => ({ label: c.name, slug: c.slug, jobCount: c.jobCount })),
-        platforms: DIRECTORY_PLATFORMS
-    };
+        return {
+            roles: Array.isArray(topRoles) ? topRoles.map((r: any) => ({ label: r.name, slug: r.slug })) : [],
+            cities: Array.isArray(topCities) ? topCities.map((c: any) => ({ label: c.name, slug: c.slug, jobCount: c.jobCount })) : [],
+            platforms: DIRECTORY_PLATFORMS
+        };
+    } catch (error) {
+        console.error('[getDirectoryData] DB error:', error);
+        const { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } = await import("@/lib/constants");
+        return {
+            roles: DIRECTORY_ROLES.slice(0, 20),
+            cities: DIRECTORY_LOCATIONS.slice(0, 20),
+            platforms: DIRECTORY_PLATFORMS
+        };
+    }
 }

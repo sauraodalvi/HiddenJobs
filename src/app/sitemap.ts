@@ -7,9 +7,9 @@ export const dynamic = 'force-static';
 export const revalidate = 86400; // 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://hiddenjobs.netlify.app';
+    const baseUrl = 'https://hiddenjobs.vercel.app';
 
-    // 1. Core pages
+    // 1. Core pages (always present)
     const routes = ['', '/jobs', '/explore'].map((route: string) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
@@ -17,41 +17,50 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 1,
     }));
 
-    // 2. Location Hubs (All cities from DB)
-    const dbCities = await db.select().from(cities);
-    const locationHubs = dbCities.map((city: any) => ({
-        url: `${baseUrl}/jobs/location/${city.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.9,
-    }));
-
-    // 3. Role Hubs (All roles from DB)
-    const dbRoles = await db.select().from(jobRoles);
-    const roleHubs = dbRoles.map((role: any) => ({
-        url: `${baseUrl}/jobs/role/${role.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.9,
-    }));
-
-    // 4. Global Job Combo Pages ([role]-in-[city])
-    // We only index the top 50,000 combinations in the main sitemap to avoid timeouts
-    // For a true 10M+ scale, we would use sitemap index files
-    const topCities = dbCities.slice(0, 100);
-    const topRoles = dbRoles.slice(0, 500);
-
-    const jobRoutes: MetadataRoute.Sitemap = [];
-    for (const city of topCities) {
-        for (const role of topRoles) {
-            jobRoutes.push({
-                url: `${baseUrl}/jobs/${role.slug}-in-${city.slug}`,
-                lastModified: new Date(),
-                changeFrequency: 'weekly' as const,
-                priority: 0.7,
-            });
-        }
+    // Guard: skip DB routes if DATABASE_URL is not configured
+    if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('YOUR_DATABASE_URL')) {
+        return routes;
     }
 
-    return [...routes, ...locationHubs, ...roleHubs, ...jobRoutes];
+    try {
+        // 2. Location Hubs
+        const dbCities = await db.select().from(cities);
+        const locationHubs = Array.isArray(dbCities) ? dbCities.map((city: any) => ({
+            url: `${baseUrl}/jobs/location/${city.slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+        })) : [];
+
+        // 3. Role Hubs
+        const dbRoles = await db.select().from(jobRoles);
+        const roleHubs = Array.isArray(dbRoles) ? dbRoles.map((role: any) => ({
+            url: `${baseUrl}/jobs/role/${role.slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+        })) : [];
+
+        // 4. Job Combo Pages (capped to prevent timeout)
+        const topCities = Array.isArray(dbCities) ? dbCities.slice(0, 50) : [];
+        const topRoles = Array.isArray(dbRoles) ? dbRoles.slice(0, 100) : [];
+
+        const jobRoutes: MetadataRoute.Sitemap = [];
+        for (const city of topCities) {
+            for (const role of topRoles) {
+                jobRoutes.push({
+                    url: `${baseUrl}/jobs/${role.slug}-in-${city.slug}`,
+                    lastModified: new Date(),
+                    changeFrequency: 'weekly' as const,
+                    priority: 0.7,
+                });
+            }
+        }
+
+        return [...routes, ...locationHubs, ...roleHubs, ...jobRoutes];
+    } catch (error) {
+        // If DB is unreachable, return only static routes to avoid a 500
+        console.error('[sitemap] DB error, falling back to static routes:', error);
+        return routes;
+    }
 }

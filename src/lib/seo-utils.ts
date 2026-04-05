@@ -38,68 +38,105 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string) {
     }
 
     // 1. Fetch Role and Location from DB
-    const [role] = await db.select().from(jobRoles).where(eq(jobRoles.slug, roleSlug));
-    const [location] = await db.select().from(cities).where(eq(cities.slug, locationSlug));
+    try {
+        const [role] = await db.select().from(jobRoles).where(eq(jobRoles.slug, roleSlug));
+        const [location] = await db.select().from(cities).where(eq(cities.slug, locationSlug));
 
-    if (!role || !location) return null;
+        if (!role || !location) return null;
 
-    // 2. Fetch or Generate cached SEO content
-    let [content] = await db.select().from(seoContent).where(
-        and(
-            eq(seoContent.roleId, role.id),
-            eq(seoContent.cityId, location.id)
-        )
-    );
+        // 2. Fetch or Generate cached SEO content
+        let [content] = await db.select().from(seoContent).where(
+            and(
+                eq(seoContent.roleId, role.id),
+                eq(seoContent.cityId, location.id)
+            )
+        );
 
-    // Dynamic AI Generation (JIT) if cache is missing
-    if (!content && process.env.GEMINI_API_KEY) {
-        const aiData = await generateJobCityContent(role.name, location.name);
-        if (aiData) {
-            const [newContent] = await db.insert(seoContent).values({
-                roleId: role.id,
-                cityId: location.id,
-                title: `Hidden Jobs: ${role.name} Roles in ${location.name} | Unlisted Tech Jobs`,
-                description: aiData.metaDescription,
-                aiOverview: aiData.aiOverview,
-                faqs: JSON.stringify(aiData.faqs)
-            }).returning();
-            content = newContent;
+        // Dynamic AI Generation (JIT) if cache is missing
+        if (!content && process.env.GEMINI_API_KEY) {
+            const aiData = await generateJobCityContent(role.name, location.name);
+            if (aiData) {
+                const [newContent] = await db.insert(seoContent).values({
+                    roleId: role.id,
+                    cityId: location.id,
+                    title: `Hidden Jobs: ${role.name} Roles in ${location.name} | Unlisted Tech Jobs`,
+                    description: aiData.metaDescription,
+                    aiOverview: aiData.aiOverview,
+                    faqs: JSON.stringify(aiData.faqs)
+                }).returning();
+                content = newContent;
+            }
         }
+
+        const title = content?.title || `Hidden Jobs: ${role.name} Roles in ${location.name} | Unlisted Tech Jobs`;
+        const description = content?.description || `Find unlisted ${role.name} job listings in ${location.name}. Bypass the competition and apply directly to companies in ${location.name}.`;
+
+        return {
+            title,
+            description,
+            role,
+            location,
+            aiOverview: content?.aiOverview,
+            faqs: content?.faqs ? JSON.parse(content.faqs) : null
+        };
+    } catch (error) {
+        console.error('[seo-utils] getSeoMetadata DB error:', error);
+        return null;
     }
-
-    const title = content?.title || `Hidden Jobs: ${role.name} Roles in ${location.name} | Unlisted Tech Jobs`;
-    const description = content?.description || `Find unlisted ${role.name} job listings in ${location.name}. Bypass the competition and apply directly to companies in ${location.name}.`;
-
-    return {
-        title,
-        description,
-        role,
-        location,
-        aiOverview: content?.aiOverview,
-        faqs: content?.faqs ? JSON.parse(content.faqs) : null
-    };
 }
 
 export async function getLocationSeoMetadata(locationSlug: string) {
-    const [location] = await db.select().from(cities).where(eq(cities.slug, locationSlug));
-    if (!location) return null;
+    // Fallback: use static constants if DB is not configured
+    if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('YOUR_DATABASE_URL')) {
+        const location = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
+        if (!location) return null;
+        return {
+            title: `Hidden Jobs in ${location.label} | Open Tech Roles | HiddenJobs`,
+            description: `Explore unlisted tech jobs in ${location.label}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${location.label}.`,
+            location: { id: 0, name: location.label, slug: location.slug }
+        };
+    }
 
-    return {
-        title: `Hidden Jobs in ${location.name} | Open Tech Roles | HiddenJobs`,
-        description: `Explore unlisted tech jobs in ${location.name}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${location.name}.`,
-        location
-    };
+    try {
+        const [location] = await db.select().from(cities).where(eq(cities.slug, locationSlug));
+        if (!location) return null;
+
+        return {
+            title: `Hidden Jobs in ${location.name} | Open Tech Roles | HiddenJobs`,
+            description: `Explore unlisted tech jobs in ${location.name}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${location.name}.`,
+            location
+        };
+    } catch (error) {
+        console.error('[seo-utils] getLocationSeoMetadata DB error:', error);
+        return null;
+    }
 }
 
 export async function getRoleSeoMetadata(roleSlug: string) {
-    const [role] = await db.select().from(jobRoles).where(eq(jobRoles.slug, roleSlug));
-    if (!role) return null;
+    // Fallback: use static constants if DB is not configured
+    if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('YOUR_DATABASE_URL')) {
+        const role = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
+        if (!role) return null;
+        return {
+            title: `${role.label} Hidden Jobs | Unlisted ${role.label} Roles | HiddenJobs`,
+            description: `Find unlisted ${role.label} positions across top ATS platforms. Bypass job boards and apply directly.`,
+            role: { id: 0, name: role.label, slug: role.slug }
+        };
+    }
 
-    return {
-        title: `${role.name} Hidden Jobs | Unlisted ${role.name} Roles | HiddenJobs`,
-        description: `Find unlisted ${role.name} positions across top ATS platforms. Bypass job boards and apply directly.`,
-        role
-    };
+    try {
+        const [role] = await db.select().from(jobRoles).where(eq(jobRoles.slug, roleSlug));
+        if (!role) return null;
+
+        return {
+            title: `${role.name} Hidden Jobs | Unlisted ${role.name} Roles | HiddenJobs`,
+            description: `Find unlisted ${role.name} positions across top ATS platforms. Bypass job boards and apply directly.`,
+            role
+        };
+    } catch (error) {
+        console.error('[seo-utils] getRoleSeoMetadata DB error:', error);
+        return null;
+    }
 }
 
 export function generateSeoDork(platformDomain: string, roleName: string, locationName: string) {
@@ -125,7 +162,7 @@ export function getBreadcrumbSchema(items: { name: string, item: string }[]) {
             "@type": "ListItem",
             "position": index + 1,
             "name": item.name,
-            "item": `https://hiddenjobs.netlify.app${item.item}`
+            "item": `https://hiddenjobs.vercel.app${item.item}`
         }))
     };
 }
@@ -144,7 +181,7 @@ export function getJobPostingSchema(roleName: string, locationName: string, desc
             }
         },
         "hiringOrganization": {
-            "@id": "https://hiddenjobs.netlify.app#organization"
+            "@id": "https://hiddenjobs.vercel.app#organization"
         }
     };
 }
