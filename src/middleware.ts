@@ -8,7 +8,13 @@ export function middleware(request: NextRequest) {
     if (hostname && (hostname.includes('hiddenjobs.netlify.app') || hostname.includes('hidden-apply.netlify.app'))) {
         const url = request.nextUrl.clone();
         url.hostname = 'hiddenjobs.vercel.app';
-        url.port = ''; // Ensure no port is carried over (Netlify/Vercel standard)
+        url.port = ''; // Ensure no port is carried over
+
+        // If it's the root path, redirect to /explore as requested
+        if (url.pathname === '/') {
+            url.pathname = '/explore';
+        }
+
         return NextResponse.redirect(url, 301); // Permanent Redirect for SEO
     }
 
