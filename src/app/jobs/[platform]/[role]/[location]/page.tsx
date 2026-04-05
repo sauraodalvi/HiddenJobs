@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: `${seo.role.name} Roles in ${seo.location.name} on ${platformLabel} | HiddenJobs`,
         description: `Browse ${seo.role.name} job opportunities in ${seo.location.name} specifically indexed from ${platformLabel}. ${seo.description}`,
         alternates: {
-            canonical: `https://hiddenjobs.netlify.app/jobs/${platform}/${role}/${location}`,
+            canonical: `https://hiddenjobs.vercel.app/jobs/${platform}/${role}/${location}`,
         },
     };
 }

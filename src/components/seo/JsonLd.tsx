@@ -3,7 +3,7 @@ export default function JsonLd() {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "HiddenJobs",
-        "url": "https://hiddenjobs.netlify.app",
+        "url": "https://hiddenjobs.vercel.app",
         "description": "A search engine for the hidden job market that indexes unlisted roles from Greenhouse, Lever, and Ashby.",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "All",

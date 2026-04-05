@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `https://hiddenjobs.netlify.app/jobs/${roleAndCity}`,
+            canonical: `https://hiddenjobs.vercel.app/jobs/${roleAndCity}`,
         },
     };
 }

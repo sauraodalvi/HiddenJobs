@@ -16,22 +16,32 @@ export async function searchCities(query: string) {
             .map(l => ({ name: l.label, slug: l.slug }));
     }
 
-    const results = await db.select({
-        name: cities.name,
-        slug: cities.slug,
-        country: cities.country
-    })
-        .from(cities)
-        .where(
-            or(
-                ilike(cities.name, `%${query}%`),
-                ilike(cities.slug, `%${query}%`)
+    try {
+        const results = await db.select({
+            name: cities.name,
+            slug: cities.slug,
+            country: cities.country
+        })
+            .from(cities)
+            .where(
+                or(
+                    ilike(cities.name, `%${query}%`),
+                    ilike(cities.slug, `%${query}%`)
+                )
             )
-        )
-        .orderBy(desc(cities.population))
-        .limit(10);
+            .orderBy(desc(cities.population))
+            .limit(10);
 
-    return results;
+        return results;
+    } catch (error) {
+        console.error('[searchCities] DB error:', error);
+        // Fallback to static data
+        const { DIRECTORY_LOCATIONS } = await import("@/lib/constants");
+        return DIRECTORY_LOCATIONS
+            .filter(l => l.label.toLowerCase().includes(query.toLowerCase()))
+            .slice(0, 5)
+            .map(l => ({ name: l.label, slug: l.slug }));
+    }
 }
 
 export async function getMapMarkers() {
@@ -43,18 +53,26 @@ export async function getMapMarkers() {
             .map(l => ({ ...l, name: l.label, lat: l.coords?.lat, lng: l.coords?.lng }));
     }
 
-    return await db.select({
-        name: cities.name,
-        slug: cities.slug,
-        lat: cities.latitude,
-        lng: cities.longitude,
-        population: cities.population,
-        jobCount: cities.jobCount
-    })
-        .from(cities)
-        .where(sql`${cities.latitude} IS NOT NULL`)
-        .orderBy(desc(cities.jobCount), desc(cities.population)) // Prioritize job density
-        .limit(500); // Limit to top 500 cities for performance on map
+    try {
+        return await db.select({
+            name: cities.name,
+            slug: cities.slug,
+            lat: cities.latitude,
+            lng: cities.longitude,
+            population: cities.population,
+            jobCount: cities.jobCount
+        })
+            .from(cities)
+            .where(sql`${cities.latitude} IS NOT NULL`)
+            .orderBy(desc(cities.jobCount), desc(cities.population)) // Prioritize job density
+            .limit(500); // Limit to top 500 cities for performance on map
+    } catch (error) {
+        console.error('[getMapMarkers] DB error:', error);
+        const { DIRECTORY_LOCATIONS } = await import("@/lib/constants");
+        return DIRECTORY_LOCATIONS
+            .filter(l => l.coords)
+            .map(l => ({ ...l, name: l.label, lat: l.coords?.lat, lng: l.coords?.lng }));
+    }
 }
 
 export async function getDirectoryData() {
