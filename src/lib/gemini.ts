@@ -1,9 +1,22 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+let genAI: GoogleGenerativeAI | null = null;
+let model: any = null;
+
+function getModel() {
+    if (!process.env.GEMINI_API_KEY) return null;
+
+    if (!genAI) {
+        genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    }
+    return model;
+}
 
 export async function generateJobCityContent(roleName: string, cityName: string) {
+    const currentModel = getModel();
+    if (!currentModel) return null;
+
     const prompt = `
         You are an expert career counselor and SEO strategist. 
         Create a high-quality, engaging overview for a job seeker looking for ${roleName} roles in ${cityName}.
@@ -26,7 +39,7 @@ export async function generateJobCityContent(roleName: string, cityName: string)
     `;
 
     try {
-        const result = await model.generateContent(prompt);
+        const result = await currentModel.generateContent(prompt);
         const text = result.response.text();
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (!jsonMatch) throw new Error("Failed to parse Gemini response as JSON");
