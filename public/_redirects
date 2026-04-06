@@ -1,2 +1,2 @@
-/  https://hiddenjobs.vercel.app/explore  301!
-/* https://hiddenjobs.vercel.app/:splat  301!
+# Redirection logic has been moved to src/middleware.ts for more control.
+# Forced Edge-level redirects are disabled to allow both domains to concurrently serve the app.
