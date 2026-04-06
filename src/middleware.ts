@@ -2,14 +2,6 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const url = request.nextUrl.clone();
-
-    // Redirect root to /explore
-    if (url.pathname === '/') {
-        url.pathname = '/explore';
-        return NextResponse.redirect(url, 308); // Permanent redirect to /explore
-    }
-
     return NextResponse.next();
 }
 
