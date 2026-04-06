@@ -154,7 +154,10 @@ export function generateSeoDork(platformDomain: string, roleName: string, locati
     return assembleDork(platformDomain, components);
 }
 
+import { getBaseUrl } from "./domain";
+
 export function getBreadcrumbSchema(items: { name: string, item: string }[]) {
+    const baseUrl = getBaseUrl();
     return {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -162,12 +165,13 @@ export function getBreadcrumbSchema(items: { name: string, item: string }[]) {
             "@type": "ListItem",
             "position": index + 1,
             "name": item.name,
-            "item": `https://hiddenjobs.vercel.app${item.item}`
+            "item": `${baseUrl}${item.item}`
         }))
     };
 }
 
 export function getJobPostingSchema(roleName: string, locationName: string, description: string) {
+    const baseUrl = getBaseUrl();
     return {
         "@context": "https://schema.org",
         "@type": "JobPosting",
@@ -181,7 +185,7 @@ export function getJobPostingSchema(roleName: string, locationName: string, desc
             }
         },
         "hiringOrganization": {
-            "@id": "https://hiddenjobs.vercel.app#organization"
+            "@id": `${baseUrl}#organization`
         }
     };
 }

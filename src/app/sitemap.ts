@@ -6,8 +6,10 @@ import { cities, jobRoles } from '@/lib/db/schema';
 export const dynamic = 'force-static';
 export const revalidate = 86400; // 24 hours
 
+import { getBaseUrl } from '@/lib/domain';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://hiddenjobs.vercel.app';
+    const baseUrl = getBaseUrl();
 
     // 1. Core pages (always present)
     const routes = ['', '/jobs', '/explore'].map((route: string) => ({

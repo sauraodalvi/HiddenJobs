@@ -2,20 +2,12 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const hostname = request.headers.get('host');
+    const url = request.nextUrl.clone();
 
-    // If the request is coming from the Netlify domain, redirect to Vercel
-    if (hostname && (hostname.includes('hiddenjobs.netlify.app') || hostname.includes('hidden-apply.netlify.app'))) {
-        const url = request.nextUrl.clone();
-        url.hostname = 'hiddenjobs.vercel.app';
-        url.port = ''; // Ensure no port is carried over
-
-        // If it's the root path, redirect to /explore as requested
-        if (url.pathname === '/') {
-            url.pathname = '/explore';
-        }
-
-        return NextResponse.redirect(url, 301); // Permanent Redirect for SEO
+    // Redirect root to /explore
+    if (url.pathname === '/') {
+        url.pathname = '/explore';
+        return NextResponse.redirect(url, 308); // Permanent redirect to /explore
     }
 
     return NextResponse.next();

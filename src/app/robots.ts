@@ -13,6 +13,6 @@ export default function robots(): MetadataRoute.Robots {
                 allow: '/',
             },
         ],
-        sitemap: 'https://hiddenjobs.vercel.app/sitemap.xml',
+        sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://hiddenjobs.vercel.app'}/sitemap.xml`,
     };
 }

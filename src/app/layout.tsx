@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     icon: '/icon',
     apple: '/apple-icon',
   },
-  metadataBase: new URL("https://hiddenjobs.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://hiddenjobs.vercel.app"),
   verification: {
     google: "56R-JruPxjmoOonvhlzkMpNgJqO9-PG-AEJsjPXX_pw",
   },
