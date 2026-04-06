@@ -58,6 +58,11 @@ export function Footer() {
                         <h4 className="font-bold text-slate-900 dark:text-white mb-6">Discovery</h4>
                         <ul className="space-y-4">
                             <li>
+                                <Link href="/about" className="text-sm text-slate-500 hover:text-primary transition-colors hover:translate-x-1 inline-block">
+                                    About HiddenJobs
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/jobs" className="text-sm text-primary hover:underline transition-colors font-bold flex items-center gap-1">
                                     Browse All Directories
                                 </Link>
@@ -87,6 +92,6 @@ export function Footer() {
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer >
     );
 }

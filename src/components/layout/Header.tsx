@@ -9,6 +9,7 @@ import Link from "next/link";
 const NAV_LINKS = [
     { href: "https://thestare.in/", label: "Become Product Manager", external: true },
     { href: "/explore", label: "Explore" },
+    { href: "/about", label: "About" },
     { href: "/jobs", label: "Directory" },
 ];
 
