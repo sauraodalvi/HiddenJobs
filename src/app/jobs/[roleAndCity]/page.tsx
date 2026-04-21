@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import { getSeoMetadata, getBreadcrumbSchema, getJobPostingSchema, getFallbackSeoMetadata, getFaqSchema } from '@/lib/seo-utils';
 import { notFound } from 'next/navigation';
 import { ResultsSection } from '@/components/results/ResultsSection';
@@ -158,13 +159,16 @@ export default async function JobPage({ params }: Props) {
                     </section>
                 )}
 
-                {/* Results UI */}
-                <div className="mt-12">
-                    <ResultsSection
-                        initialRole={seo.role.name}
-                        initialLocation={seo.location.name}
-                    />
-                </div>
+                <Suspense fallback={
+                    <div className="w-full h-48 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-3xl" />
+                }>
+                    <div className="mt-12">
+                        <ResultsSection
+                            initialRole={seo.role.name}
+                            initialLocation={seo.location.name}
+                        />
+                    </div>
+                </Suspense>
 
                 {/* AEO FAQ Section */}
                 {seo.faqs && (

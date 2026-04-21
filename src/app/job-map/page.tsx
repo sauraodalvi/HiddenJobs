@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { proxySearch } from '@/app/actions/test-proxy';
 import { getCityCoordinates } from '@/app/actions/geo';
@@ -26,7 +26,7 @@ const JobMap = dynamic(() => import('@/components/explore/JobMap'), {
     )
 });
 
-export default function JobDiscoveryPage() {
+function JobDiscoveryContent() {
     const { filters, updateFilters } = useSearchFilters();
     const [role, setRole] = useState(filters.role);
     const [location, setLocation] = useState(filters.specificLocation || filters.location);
@@ -210,5 +210,17 @@ export default function JobDiscoveryPage() {
 
             <Footer />
         </div>
+    );
+}
+
+export default function JobDiscoveryPage() {
+    return (
+        <Suspense fallback={
+            <div className="h-screen w-screen bg-slate-900 flex items-center justify-center">
+                <Zap className="w-12 h-12 text-primary animate-pulse" />
+            </div>
+        }>
+            <JobDiscoveryContent />
+        </Suspense>
     );
 }

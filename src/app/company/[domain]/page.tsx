@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { DIRECTORY_LOCATIONS } from '@/lib/constants';
 import { getCompanySeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
@@ -130,7 +131,11 @@ export default async function CompanyHubPage({ params }: PageProps) {
                         or we just rely on the URL param and useSearchFilters detecting the 'company' in URL.
                         Since JobPage doesn't have useSearchParams, we should probably pass it.
                     */}
-                    <ResultsSection initialCompany={domain.split('.')[0]} />
+                    <Suspense fallback={
+                        <div className="w-full h-48 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-3xl" />
+                    }>
+                        <ResultsSection initialCompany={domain.split('.')[0]} />
+                    </Suspense>
                 </div>
 
                 {/* FAQ Section */}
