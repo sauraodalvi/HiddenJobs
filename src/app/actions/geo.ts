@@ -4,6 +4,44 @@ import { db } from "@/lib/db";
 import { cities, jobRoles } from "@/lib/db/schema";
 import { sql, ilike, desc, or } from "drizzle-orm";
 
+export async function getCityCoordinates(cityName: string) {
+    if (!cityName) return null;
+
+    // Fast path: check static constants first
+    const { DIRECTORY_LOCATIONS } = await import("@/lib/constants");
+    const staticMatch = DIRECTORY_LOCATIONS.find(l =>
+        l.label.toLowerCase() === cityName.toLowerCase() ||
+        l.slug.toLowerCase() === cityName.toLowerCase()
+    );
+    if (staticMatch?.coords) return staticMatch.coords;
+
+    // Database path
+    if (process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('YOUR_DATABASE_URL')) {
+        try {
+            const [match] = await db.select({
+                lat: cities.latitude,
+                lng: cities.longitude
+            })
+                .from(cities)
+                .where(
+                    or(
+                        ilike(cities.name, cityName),
+                        ilike(cities.slug, cityName)
+                    )
+                )
+                .limit(1);
+
+            if (match && match.lat && match.lng) {
+                return { lat: match.lat, lng: match.lng };
+            }
+        } catch (e) {
+            console.error('[getCityCoordinates] DB error:', e);
+        }
+    }
+
+    return null;
+}
+
 export async function searchCities(query: string) {
     if (!query || query.length < 2) return [];
 

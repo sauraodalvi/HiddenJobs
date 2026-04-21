@@ -38,6 +38,7 @@ export function useSearchFilters() {
             salaryMin: getParam('salaryMin', ''),
             salaryMax: getParam('salaryMax', ''),
             englishOnly: getParam('englishOnly', 'false') === 'true',
+            platform: getParam('platform', 'greenhouse.io'),
         };
     }, [searchParams]);
 

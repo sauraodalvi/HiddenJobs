@@ -6,8 +6,8 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DIRECTORY_LOCATIONS, ATS_PLATFORMS } from '@/lib/constants';
-import { cn } from '@/lib/utils';
-import { Search, MapPin, ExternalLink, Globe, Zap, ArrowRight } from 'lucide-react';
+import { cn, getCompanyLogo, getLogoFallback, getFinalFallback, getCompanyLogoHtml } from '@/lib/utils';
+import { Search, MapPin, ExternalLink, Globe, Zap, ArrowRight, X } from 'lucide-react';
 import { useSearchFilters } from '@/hooks/use-search';
 import { MapSidebar } from './MapSidebar';
 import Link from 'next/link';
@@ -33,19 +33,41 @@ import { MarketViewer } from './MarketViewer';
 
 import { getMapMarkers } from '@/app/actions/geo';
 
-export default function JobMap() {
+interface JobMapProps {
+    externalMarkers?: any[];
+    center?: [number, number];
+    useBaseMarkers?: boolean;
+    showSidebar?: boolean;
+}
+
+export default function JobMap({
+    externalMarkers,
+    center,
+    useBaseMarkers = true,
+    showSidebar = true
+}: JobMapProps) {
     const { generateLinks, filters, updateFilters } = useSearchFilters();
-    const [mapCenter, setMapCenter] = useState<[number, number]>([30, 0]);
+    const [mapCenter, setMapCenter] = useState<[number, number]>(center || [30, 0]);
     const [showViewer, setShowViewer] = useState(false);
     const [markers, setMarkers] = useState<any[]>([]);
 
     useEffect(() => {
-        const fetchMarkers = async () => {
-            const data = await getMapMarkers();
-            setMarkers(data);
-        };
-        fetchMarkers();
-    }, []);
+        if (center) setMapCenter(center);
+    }, [center]);
+
+    useEffect(() => {
+        if (useBaseMarkers) {
+            const fetchMarkers = async () => {
+                const data = await getMapMarkers();
+                setMarkers(data);
+            };
+            fetchMarkers();
+        } else {
+            setMarkers([]);
+        }
+    }, [useBaseMarkers]);
+
+    const activeMarkers = externalMarkers || markers;
 
     const links = generateLinks();
 
@@ -60,10 +82,7 @@ export default function JobMap() {
         const companiesHtml = hasData ? loc.companies.slice(0, 3).map((domain: string, i: number) => `
             <div class="absolute w-7 h-7 rounded-full border border-white dark:border-slate-800 bg-white dark:bg-slate-700 shadow-sm overflow-hidden transition-all duration-700 hover:scale-150 hover:z-50 ring-2 ring-primary/5" 
                  style="transform: rotate(${i * 120}deg) translateY(-24px) rotate(-${i * 120}deg);">
-                <img src="https://icons.duckduckgo.com/ip3/${domain}.ico" 
-                     class="w-full h-full object-contain p-1" 
-                     alt="${domain}"
-                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${domain.charAt(0)}&background=6366f1&color=fff&bold=true&font-size=0.6'" />
+                ${getCompanyLogoHtml(domain, 16, "w-full h-full object-contain")}
             </div>
         `).join('') : '';
 
@@ -75,7 +94,7 @@ export default function JobMap() {
                     <div class="absolute w-12 h-12 ${pulseColor}/20 rounded-full animate-ping"></div>
                     
                     <!-- Company Orbit Cluster (Visible on Hover or if Selected) -->
-                    <div class="absolute inset-0 flex items-center justify-center transition-transform duration-[2000ms] group-hover/marker:rotate-[360deg]">
+                    <div className="absolute inset-0 flex items-center justify-center transition-transform duration-[2000ms] group-hover/marker:rotate-[360deg]">
                         ${companiesHtml}
                     </div>
 
@@ -106,7 +125,7 @@ export default function JobMap() {
     return (
         <div className="h-[calc(100vh-64px)] md:h-[750px] w-full relative z-10 overflow-hidden bg-slate-50 dark:bg-slate-900">
             {/* The Intelligent Sidebar (Command Center) */}
-            <MapSidebar onFlyTo={handleFlyTo} />
+            {showSidebar && <MapSidebar onFlyTo={handleFlyTo} />}
 
             <MapContainer
                 center={mapCenter}
@@ -122,7 +141,7 @@ export default function JobMap() {
 
                 <MapController center={mapCenter} />
 
-                {markers.map((loc) => {
+                {activeMarkers.map((loc) => {
                     const cityName = loc.label || loc.name || 'Unknown';
                     return (
                         <Marker
@@ -164,9 +183,19 @@ export default function JobMap() {
                                                 <div className="flex flex-wrap gap-2">
                                                     {loc.companies.map((domain: string) => (
                                                         <div key={domain} className="w-8 h-8 rounded-xl border border-slate-100 dark:border-white/5 bg-white dark:bg-slate-800 p-1.5 flex items-center justify-center shadow-sm" title={domain}>
-                                                            <img src={`https://icons.duckduckgo.com/ip3/${domain}.ico`}
+                                                            <img src={getCompanyLogo(domain)}
                                                                 className="w-full h-full object-contain"
-                                                                alt={domain} />
+                                                                alt={domain}
+                                                                onError={(e) => {
+                                                                    const target = e.target as HTMLImageElement;
+                                                                    if (target.src === getCompanyLogo(domain)) {
+                                                                        target.src = getLogoFallback(domain);
+                                                                    } else if (target.src === getLogoFallback(domain)) {
+                                                                        target.src = getFinalFallback(domain);
+                                                                        target.onerror = null;
+                                                                    }
+                                                                }}
+                                                            />
                                                         </div>
                                                     ))}
                                                 </div>
@@ -205,7 +234,7 @@ export default function JobMap() {
                                 </div>
                             </div>
                             <div className="font-mono text-[10px] md:text-xs truncate text-slate-400 dark:text-slate-500 bg-black/20 dark:bg-slate-50 p-2 rounded-lg border border-white/5 dark:border-slate-200">
-                                {links[0]?.query || 'Initializing...'}
+                                {links.find(l => l.domain.includes(filters.platform) || filters.platform.includes(l.name.toLowerCase()))?.query || links[0]?.query || 'Initializing...'}
                             </div>
                         </div>
                     </div>

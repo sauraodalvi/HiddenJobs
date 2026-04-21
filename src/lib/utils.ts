@@ -59,7 +59,7 @@ const smartCountry = (input: string): string => {
     const lower = input.trim().toLowerCase().replace(/^\./, ''); // remove leading dot if user typed .uk
 
     if (COUNTRY_MAPPINGS[lower]) {
-        return `(${COUNTRY_MAPPINGS[lower]})`;
+        return COUNTRY_MAPPINGS[lower]; // Return raw string, assembleDork will wrap if needed
     }
 
     // Fallback: Smart phrase it
@@ -93,6 +93,7 @@ interface BuildDorkParams {
     salaryMin?: string;
     salaryMax?: string;
     englishOnly?: boolean;
+    platform?: string;
 }
 
 export const buildDorkComponents = ({
@@ -304,16 +305,58 @@ export const assembleDork = (domain: string, components: DorkComponents) => {
     // 5. Time
 
     const queryParts = [
-        roleQuery,
-        keywordsQuery
-    ].filter(Boolean).join(' ');
+        roleQuery ? (roleQuery.includes(' OR ') ? `(${roleQuery})` : roleQuery) : '',
+        keywordsQuery ? (keywordsQuery.includes(' OR ') ? `(${keywordsQuery})` : keywordsQuery) : ''
+    ].filter(Boolean).join(' '); // Space is implied AND
 
     const parts = [
         `site:${domain}`,
-        `(${queryParts})`, // Wrap the positive constraints to bind them tightly
+        queryParts,
         excludeQuery,
         timeQuery
     ].filter(Boolean);
 
     return parts.join(' ');
+};
+
+/**
+ * Resilient Company Logo Utility
+ * Provides a primary DDG URL and a reliable Google fallback
+ */
+export const getCompanyLogo = (domain: string) => {
+    if (!domain) return `https://ui-avatars.com/api/?name=?&background=6366f1&color=fff`;
+    // We return DDG as primary, but UI should handle fallback to Google then UI-Avatars
+    return `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+};
+
+export const getLogoFallback = (domain: string) => {
+    // Stage 2: Google Favicon Service
+    return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+};
+
+export const getFinalFallback = (domain: string) => {
+    // Stage 3: Initial-based Avatar
+    const char = domain?.split('.')[0]?.charAt(0).toUpperCase() || 'J';
+    return `https://ui-avatars.com/api/?name=${char}&background=6366f1&color=fff&bold=true&font-size=0.6`;
+};
+
+/**
+ * HTML string version for Leaflet Templates
+ */
+export const getCompanyLogoHtml = (domain: string, size: number = 24, className: string = "") => {
+    const primary = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+    const secondary = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+    const final = `https://ui-avatars.com/api/?name=${domain.split('.')[0]?.charAt(0).toUpperCase() || 'J'}&background=6366f1&color=fff&bold=true`;
+
+    return `
+        <img 
+            src="${primary}" 
+            width="${size}" 
+            height="${size}" 
+            class="${className}"
+            style="border-radius: 4px; background: white; object-fit: contain;"
+            onerror="if(this.src!=='${secondary}'){this.src='${secondary}'}else{this.src='${final}';this.onerror=null;}"
+            alt=""
+        />
+    `;
 };

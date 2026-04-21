@@ -50,7 +50,7 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
                     <ChevronRight className="w-4 h-4 shrink-0" />
                     <Link href="/jobs" className="hover:text-primary transition-colors">Jobs</Link>
                     <ChevronRight className="w-4 h-4 shrink-0" />
-                    <span className="capitalize">{location.label}</span>
+                    <span className="capitalize">{location.name}</span>
                 </nav>
 
                 <div className="mb-16">
@@ -59,10 +59,10 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
                         Location Directory
                     </div>
                     <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-6">
-                        Hidden Tech Jobs in <span className="text-primary">{location.label}</span>
+                        Hidden Tech Jobs in <span className="text-primary">{location.name}</span>
                     </h1>
                     <p className="text-xl text-slate-500 dark:text-slate-400 max-w-3xl leading-relaxed">
-                        Currently tracking software engineering, product, and design roles across all major ATS platforms specifically for {location.label}. Bypass the crowded job boards.
+                        Currently tracking software engineering, product, and design roles across all major ATS platforms specifically for {location.name}. Bypass the crowded job boards.
                     </p>
                 </div>
 
@@ -79,13 +79,13 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
                             {DIRECTORY_PLATFORMS.map(platform => (
                                 <Link
                                     key={platform.slug}
-                                    href={`/jobs/${platform.slug}/software-engineer/${locationSlug}`}
+                                    href={`/jobs/platform/${platform.slug}/software-engineer/${locationSlug}`}
                                     className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
                                 >
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-primary transition-colors">Search {platform.label}</h3>
-                                            <p className="text-sm text-slate-500">Find {location.label} roles on {platform.label}</p>
+                                            <p className="text-sm text-slate-500">Find {location.name} roles on {platform.label}</p>
                                         </div>
                                         <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-primary transition-all translate-x-0 group-hover:translate-x-1" />
                                     </div>
@@ -100,13 +100,13 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
                             <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600">
                                 <Briefcase className="w-5 h-5" />
                             </div>
-                            <h2 className="text-2xl font-bold dark:text-white">Popular Roles in {location.label}</h2>
+                            <h2 className="text-2xl font-bold dark:text-white">Popular Roles in {location.name}</h2>
                         </div>
                         <div className="grid gap-4">
                             {DIRECTORY_ROLES.slice(0, 15).map(role => (
                                 <Link
                                     key={role.slug}
-                                    href={`/jobs/greenhouse/${role.slug}/${locationSlug}`}
+                                    href={`/jobs/platform/greenhouse/${role.slug}/${locationSlug}`}
                                     className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
                                 >
                                     <div className="flex items-center justify-between">
@@ -124,12 +124,12 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
 
                 {/* FAQ/AEO Section */}
                 <div className="mt-32 p-12 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
-                    <h2 className="text-3xl font-bold mb-12 dark:text-white">Finding Jobs in {location.label}</h2>
+                    <h2 className="text-3xl font-bold mb-12 dark:text-white">Finding Jobs in {location.name}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                         <div>
                             <h3 className="text-xl font-bold mb-4 dark:text-white">Why are these jobs "hidden"?</h3>
                             <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Many high-growth tech companies in {location.label} post directly to their ATS (like Greenhouse or Lever) but don't always pay to promote those same listings on LinkedIn or Indeed. We track those direct URLs.
+                                Many high-growth tech companies in {location.name} post directly to their ATS (like Greenhouse or Lever) but don't always pay to promote those same listings on LinkedIn or Indeed. We track those direct URLs.
                             </p>
                         </div>
                         <div>

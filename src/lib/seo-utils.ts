@@ -125,7 +125,20 @@ export async function getLocationSeoMetadata(locationSlug: string): Promise<Regi
 
     try {
         const [location] = await db.select().from(cities).where(eq(cities.slug, locationSlug));
-        if (!location) return null;
+
+        if (!location) {
+            // Final fallback to static constants if DB is configured but entry missing
+            const staticLoc = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
+            if (!staticLoc) return null;
+            return {
+                title: `Hidden Jobs in ${staticLoc.label} | Open Tech Roles | HiddenJobs`,
+                description: `Explore unlisted tech jobs in ${staticLoc.label}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${staticLoc.label}.`,
+                location: { id: 0, name: staticLoc.label, slug: staticLoc.slug, jobCount: staticLoc.jobCount },
+                role: { id: 0, name: 'Tech', slug: 'tech' },
+                updatedAt: new Date(),
+                robots: (staticLoc.jobCount || 0) === 0 ? 'noindex, nofollow' : 'index, follow'
+            };
+        }
 
         return {
             title: `Hidden Jobs in ${location.name} | Open Tech Roles | HiddenJobs`,
@@ -159,7 +172,20 @@ export async function getRoleSeoMetadata(roleSlug: string): Promise<RegionalSeoM
 
     try {
         const [role] = await db.select().from(jobRoles).where(eq(jobRoles.slug, roleSlug));
-        if (!role) return null;
+
+        if (!role) {
+            // Final fallback to static constants
+            const staticRole = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
+            if (!staticRole) return null;
+            return {
+                title: `${staticRole.label} Jobs: Apply Directly to ATS Boards | HiddenJobs`,
+                description: `Find unlisted ${staticRole.label} jobs. We scan internal Greenhouse and Lever boards directly so you can apply first.`,
+                role: { id: 0, name: staticRole.label, slug: staticRole.slug },
+                location: { id: 0, name: 'Global', slug: 'global', jobCount: 1000 },
+                updatedAt: new Date(),
+                robots: 'index, follow'
+            };
+        }
 
         return {
             title: `${role.name} Jobs: Apply Directly to ATS Boards | HiddenJobs`,
