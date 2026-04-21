@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getSeoMetadata, getBreadcrumbSchema, getJobPostingSchema } from '@/lib/seo-utils';
+import { getSeoMetadata, getBreadcrumbSchema, getJobPostingSchema, getFallbackSeoMetadata, getFaqSchema } from '@/lib/seo-utils';
 import { notFound } from 'next/navigation';
 import { ResultsSection } from '@/components/results/ResultsSection';
 import { Header } from '@/components/layout/Header';
@@ -7,6 +7,9 @@ import { Footer } from '@/components/layout/Footer';
 import { db } from '@/lib/db';
 import { cities, jobRoles } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
+import { Sparkles, Check } from 'lucide-react';
+import Link from 'next/link';
+import { getBaseUrl } from '@/lib/domain';
 
 interface Props {
     params: Promise<{
@@ -52,8 +55,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `https://hiddenjobs.vercel.app/jobs/${roleAndCity}`,
+            canonical: `${getBaseUrl()}/jobs/${roleAndCity}`,
         },
+        robots: seo.robots || 'index, follow',
     };
 }
 
@@ -64,7 +68,12 @@ export default async function JobPage({ params }: Props) {
     if (parts.length !== 2) notFound();
 
     const [roleSlug, locationSlug] = parts;
-    const seo = await getSeoMetadata(roleSlug, locationSlug);
+    let seo = await getSeoMetadata(roleSlug, locationSlug);
+
+    // Graceful fallback for valid role/location slugs missing specific DB content
+    if (!seo) {
+        seo = await getFallbackSeoMetadata(roleSlug, locationSlug);
+    }
 
     if (!seo) notFound();
 
@@ -76,6 +85,7 @@ export default async function JobPage({ params }: Props) {
     ]);
 
     const jobSchema = getJobPostingSchema(seo.role.name, seo.location.name, seo.description);
+    const faqSchema = seo.faqs ? getFaqSchema(seo.faqs) : null;
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
@@ -90,6 +100,12 @@ export default async function JobPage({ params }: Props) {
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jobSchema) }}
                 />
+                {faqSchema && (
+                    <script
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                    />
+                )}
 
                 <header className="mb-16 text-center max-w-4xl mx-auto">
                     <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl mb-6">
@@ -100,14 +116,45 @@ export default async function JobPage({ params }: Props) {
                     </p>
                 </header>
 
-                {/* AI Overview Section for GEO */}
+                {/* AI Overview Section for GEO - Visually Enhanced */}
                 {seo.aiOverview && (
-                    <section className="max-w-4xl mx-auto mb-20 bg-white dark:bg-slate-800 p-10 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl">
-                        <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white italic opacity-80 uppercase tracking-widest text-xs">Market Insights & Outlook</h2>
+                    <section className="max-w-4xl mx-auto mb-20 bg-white dark:bg-slate-800 p-10 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl relative overflow-hidden group">
+                        {/* Status bar */}
+                        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary/50 to-blue-600/50" />
+
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="p-3 bg-primary/10 rounded-2xl">
+                                <Sparkles className="w-6 h-6 text-primary" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Market Intelligence</h2>
+                                <p className="text-[10px] font-black tracking-widest text-slate-400 uppercase opacity-70">AI-Generated Insights for {seo.location.name}</p>
+                            </div>
+                        </div>
+
                         <div
-                            className="prose prose-slate dark:prose-invert max-w-none text-lg text-slate-600 dark:text-slate-300"
+                            className="prose prose-slate dark:prose-invert max-w-none text-lg text-slate-600 dark:text-slate-300 leading-relaxed space-y-4 marker:text-primary"
                             dangerouslySetInnerHTML={{ __html: seo.aiOverview }}
                         />
+
+                        {/* Subtle interactive element */}
+                        <div className="mt-8 pt-8 border-t border-slate-100 dark:border-white/5 flex items-center justify-between">
+                            <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                    <Check className="w-3 h-3 text-emerald-500" />
+                                    Last Scanned: {new Date(seo.updatedAt).toLocaleDateString()}
+                                </div>
+                                <div className="text-[10px] text-slate-400 font-medium italic">
+                                    Curated by HiddenJobs Analysis Team
+                                </div>
+                            </div>
+                            <Link
+                                href="/#pricing"
+                                className="text-[10px] font-black text-primary hover:underline uppercase tracking-widest"
+                            >
+                                Get Deeper Market Data →
+                            </Link>
+                        </div>
                     </section>
                 )}
 

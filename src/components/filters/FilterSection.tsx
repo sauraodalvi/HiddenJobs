@@ -6,7 +6,7 @@ import { useSearchFilters } from "@/hooks/use-search";
 import { useProFeatures } from "@/hooks/use-pro";
 import { ROLE_PRESETS, DIRECTORY_ROLES } from "@/lib/constants";
 import { searchCities } from "@/app/actions/geo";
-import { Search, MapPin, Terminal, Bolt, Code, Clock, ChevronDown, ArrowRight, Check, X, Building, DollarSign } from "lucide-react";
+import { Search, MapPin, Terminal, Bolt, Code, Clock, ChevronDown, ArrowRight, Check, X, Building, DollarSign, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProGate } from "@/components/common/ProGate";
 
@@ -455,17 +455,29 @@ export function FilterSection() {
                 {/* Launch Button Integrated */}
                 <div className="p-0.5 w-full md:w-auto">
                     <button
-                        onClick={handleGo}
+                        onClick={isLimitReached ? () => {
+                            router.push('/#pricing');
+                            setTimeout(() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                        } : handleGo}
                         className={cn(
                             "w-full h-full px-8 py-4 md:py-0 rounded-[1.25rem] font-black text-sm transition-all flex items-center justify-center space-x-2 group whitespace-nowrap shadow-lg active:scale-95",
                             isLimitReached
-                                ? "bg-slate-300 dark:bg-slate-700 cursor-not-allowed text-slate-500"
+                                ? "bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/25"
                                 : "bg-gradient-to-r from-primary to-blue-600 hover:to-blue-700 text-white shadow-blue-500/25 hover:shadow-blue-500/40"
                         )}
-                        title={isLimitReached ? "Free search limit reached" : "Launch Engine"}
+                        title={isLimitReached ? "Click to unlock more searches" : "Launch Engine"}
                     >
-                        <span>{isLimitReached ? 'UPGRADE' : 'GO'}</span>
-                        {!isLimitReached && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
+                        {isLimitReached ? (
+                            <>
+                                <Sparkles className="w-4 h-4 mr-1 text-white animate-pulse" />
+                                <span>UPGRADE</span>
+                            </>
+                        ) : (
+                            <>
+                                <span>GO</span>
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </>
+                        )}
                     </button>
                 </div>
             </div>

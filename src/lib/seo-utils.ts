@@ -6,18 +6,39 @@ import { generateJobCityContent } from "./gemini";
 
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from "./constants";
 
-export function getPlatformSeoMetadata(platformSlug: string) {
+export interface PlatformSeoMetadata {
+    title: string;
+    description: string;
+    platform: typeof DIRECTORY_PLATFORMS[0];
+    updatedAt: string;
+    robots: string;
+}
+
+export interface RegionalSeoMetadata {
+    title: string;
+    description: string;
+    role: { id: number; name: string; slug: string };
+    location: { id: number; name: string; slug: string; jobCount?: number };
+    aiOverview?: string | null;
+    faqs?: any[] | null;
+    updatedAt: Date | string;
+    robots: string;
+}
+
+export function getPlatformSeoMetadata(platformSlug: string): PlatformSeoMetadata | null {
     const platform = DIRECTORY_PLATFORMS.find(p => p.slug === platformSlug);
     if (!platform) return null;
 
     return {
-        title: `${platform.label} Hidden Jobs | Unlisted ${platform.label} Roles | HiddenJobs`,
-        description: `Expose unlisted technical roles indexed from ${platform.label} applicant tracking systems. Access thousands of opportunities not on LinkedIn.`,
-        platform
+        title: `Explore ${platform.label} Hidden Jobs | Apply Directly to Greenhouse, Lever, Ashby | HiddenJobs`,
+        description: `Stop applying on crowded job boards. Search ${platform.label} directly to find roles before they are indexed. Instant access to public ${platform.label} job boards.`,
+        platform,
+        updatedAt: new Date().toISOString(),
+        robots: 'index, follow' // Platforms always indexed
     };
 }
 
-export async function getSeoMetadata(roleSlug: string, locationSlug: string) {
+export async function getSeoMetadata(roleSlug: string, locationSlug: string): Promise<RegionalSeoMetadata | null> {
     // Fallback for local development without DB
     if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('YOUR_DATABASE_URL')) {
         const role = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
@@ -28,12 +49,12 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string) {
         return {
             role: { id: 0, name: role.label, slug: role.slug },
             location: { id: 0, name: location.label, slug: location.slug },
-            content: {
-                title: `Hidden Jobs: ${role.label} Roles in ${location.label} | Unlisted Tech Jobs`,
-                description: `Find unlisted ${role.label} job listings in ${location.label}.`,
-                aiOverview: `<h3>Market Outlook for ${role.label} in ${location.label}</h3><p>Local development mode: AI overviews require GEMINI_API_KEY. This is a preview of the dynamic page structure.</p>`,
-                faqs: '[]'
-            }
+            title: `Hidden Jobs: ${role.label} Roles in ${location.label} | Unlisted Tech Jobs`,
+            description: `Find unlisted ${role.label} job listings in ${location.label}.`,
+            aiOverview: `<h3>Market Outlook for ${role.label} in ${location.label}</h3><p>Local development mode: AI overviews require GEMINI_API_KEY. This is a preview of the dynamic page structure.</p>`,
+            faqs: [],
+            updatedAt: new Date(),
+            robots: 'index, follow'
         };
     }
 
@@ -68,8 +89,8 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string) {
             }
         }
 
-        const title = content?.title || `Hidden Jobs: ${role.name} Roles in ${location.name} | Unlisted Tech Jobs`;
-        const description = content?.description || `Find unlisted ${role.name} job listings in ${location.name}. Bypass the competition and apply directly to companies in ${location.name}.`;
+        const title = content?.title || `How to find unlisted ${role.name} jobs in ${location.name}? | HiddenJobs`;
+        const description = content?.description || `Looking for ${role.name} roles in ${location.name}? Access the hidden job market by searching Greenhouse, Lever, and Ashby boards directly. Skip the 1000+ applicants on LinkedIn and apply to unlisted roles.`;
 
         return {
             title,
@@ -77,7 +98,9 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string) {
             role,
             location,
             aiOverview: content?.aiOverview,
-            faqs: content?.faqs ? JSON.parse(content.faqs) : null
+            faqs: content?.faqs ? JSON.parse(content.faqs) : null,
+            updatedAt: content?.updatedAt || new Date(),
+            robots: (location.jobCount || 0) === 0 ? 'noindex, nofollow' : 'index, follow'
         };
     } catch (error) {
         console.error('[seo-utils] getSeoMetadata DB error:', error);
@@ -85,7 +108,7 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string) {
     }
 }
 
-export async function getLocationSeoMetadata(locationSlug: string) {
+export async function getLocationSeoMetadata(locationSlug: string): Promise<RegionalSeoMetadata | null> {
     // Fallback: use static constants if DB is not configured
     if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('YOUR_DATABASE_URL')) {
         const location = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
@@ -93,7 +116,10 @@ export async function getLocationSeoMetadata(locationSlug: string) {
         return {
             title: `Hidden Jobs in ${location.label} | Open Tech Roles | HiddenJobs`,
             description: `Explore unlisted tech jobs in ${location.label}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${location.label}.`,
-            location: { id: 0, name: location.label, slug: location.slug }
+            location: { id: 0, name: location.label, slug: location.slug, jobCount: location.jobCount },
+            role: { id: 0, name: 'Tech', slug: 'tech' },
+            updatedAt: new Date(),
+            robots: (location.jobCount || 0) === 0 ? 'noindex, nofollow' : 'index, follow'
         };
     }
 
@@ -104,7 +130,10 @@ export async function getLocationSeoMetadata(locationSlug: string) {
         return {
             title: `Hidden Jobs in ${location.name} | Open Tech Roles | HiddenJobs`,
             description: `Explore unlisted tech jobs in ${location.name}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${location.name}.`,
-            location
+            location,
+            role: { id: 0, name: 'Tech', slug: 'tech' },
+            updatedAt: new Date(),
+            robots: (location.jobCount || 0) === 0 ? 'noindex, nofollow' : 'index, follow'
         };
     } catch (error) {
         console.error('[seo-utils] getLocationSeoMetadata DB error:', error);
@@ -112,15 +141,19 @@ export async function getLocationSeoMetadata(locationSlug: string) {
     }
 }
 
-export async function getRoleSeoMetadata(roleSlug: string) {
+export async function getRoleSeoMetadata(roleSlug: string): Promise<RegionalSeoMetadata | null> {
     // Fallback: use static constants if DB is not configured
     if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('YOUR_DATABASE_URL')) {
         const role = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
         if (!role) return null;
+
         return {
-            title: `${role.label} Hidden Jobs | Unlisted ${role.label} Roles | HiddenJobs`,
-            description: `Find unlisted ${role.label} positions across top ATS platforms. Bypass job boards and apply directly.`,
-            role: { id: 0, name: role.label, slug: role.slug }
+            title: `${role.label} Jobs: Apply Directly to ATS Boards | HiddenJobs`,
+            description: `Find unlisted ${role.label} jobs. We scan internal Greenhouse and Lever boards directly so you can apply first.`,
+            role: { id: 0, name: role.label, slug: role.slug },
+            location: { id: 0, name: 'Global', slug: 'global', jobCount: 1000 },
+            updatedAt: new Date(),
+            robots: 'index, follow'
         };
     }
 
@@ -129,14 +162,62 @@ export async function getRoleSeoMetadata(roleSlug: string) {
         if (!role) return null;
 
         return {
-            title: `${role.name} Hidden Jobs | Unlisted ${role.name} Roles | HiddenJobs`,
-            description: `Find unlisted ${role.name} positions across top ATS platforms. Bypass job boards and apply directly.`,
-            role
+            title: `${role.name} Jobs: Apply Directly to ATS Boards | HiddenJobs`,
+            description: `Find unlisted ${role.name} jobs. We scan internal Greenhouse and Lever boards directly so you can apply first.`,
+            role,
+            location: { id: 0, name: 'Global', slug: 'global', jobCount: 1000 },
+            updatedAt: new Date(),
+            robots: 'index, follow'
         };
     } catch (error) {
         console.error('[seo-utils] getRoleSeoMetadata DB error:', error);
         return null;
     }
+}
+
+export function getCompanySeoMetadata(domain: string) {
+    // Simple logic to extract name from domain: "openai.com" -> "OpenAI"
+    const name = domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1);
+
+    return {
+        title: `How to find unlisted jobs at ${name}? | HiddenJobs`,
+        description: `Bypass the 1000+ applicants on LinkedIn. Search ${name}'s public Greenhouse and Lever boards directly. Find hidden roles before they are indexed.`,
+        companyName: name,
+        domain,
+        updatedAt: new Date().toISOString()
+    };
+}
+
+export async function getFallbackSeoMetadata(roleSlug: string, locationSlug: string): Promise<RegionalSeoMetadata | null> {
+    const role = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
+    const location = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
+
+    if (!role || !location) return null;
+
+    return {
+        title: `How to find unlisted ${role.label} jobs in ${location.label}? | HiddenJobs`,
+        description: `Looking for ${role.label} roles in ${location.label}? Access the hidden job market by searching Greenhouse, Lever, and Ashby boards directly.`,
+        role: { id: 0, name: role.label, slug: role.slug },
+        location: { id: 0, name: location.label, slug: location.slug, jobCount: location.jobCount },
+        aiOverview: null,
+        faqs: null,
+        updatedAt: new Date(),
+        robots: (location.jobCount || 0) === 0 ? 'noindex, nofollow' : 'index, follow'
+    };
+}
+
+export function getRegionalSeoMetadata(role: string, location: string, jobCount: number = 0) {
+    const updatedAt = new Date().toISOString();
+    const isThinContent = jobCount === 0;
+
+    return {
+        title: `${role} Jobs in ${location} (Direct ATS Apply) | HiddenJobs`,
+        description: `Discover internal job openings for ${role} in ${location}. Apply directly to company internal boards scanned from Greenhouse, Lever, and Ashby.`,
+        robots: isThinContent ? 'noindex, nofollow' : 'index, follow',
+        other: {
+            'last-scanned': updatedAt
+        }
+    };
 }
 
 export function generateSeoDork(platformDomain: string, roleName: string, locationName: string) {
@@ -187,5 +268,20 @@ export function getJobPostingSchema(roleName: string, locationName: string, desc
         "hiringOrganization": {
             "@id": `${baseUrl}#organization`
         }
+    };
+}
+
+export function getFaqSchema(faqs: { question: string, answer: string }[]) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faqs.map(faq => ({
+            "@type": "Question",
+            "name": faq.question,
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.answer
+            }
+        }))
     };
 }

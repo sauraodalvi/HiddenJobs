@@ -1,0 +1,470 @@
+[
+    {
+        "name": "San Francisco",
+        "slug": "san-francisco",
+        "country": "United States",
+        "countryCode": "US",
+        "lat": 37.7749,
+        "lng": -122.4194,
+        "jobs": 5000
+    },
+    {
+        "name": "New York",
+        "slug": "new-york",
+        "country": "United States",
+        "countryCode": "US",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "jobs": 4500
+    },
+    {
+        "name": "London",
+        "slug": "london",
+        "country": "United Kingdom",
+        "countryCode": "GB",
+        "lat": 51.5074,
+        "lng": -0.1278,
+        "jobs": 4200
+    },
+    {
+        "name": "Bangalore",
+        "slug": "bangalore",
+        "country": "India",
+        "countryCode": "IN",
+        "lat": 12.9716,
+        "lng": 77.5946,
+        "jobs": 4000
+    },
+    {
+        "name": "Berlin",
+        "slug": "berlin",
+        "country": "Germany",
+        "countryCode": "DE",
+        "lat": 52.52,
+        "lng": 13.405,
+        "jobs": 2800
+    },
+    {
+        "name": "Singapore",
+        "slug": "singapore",
+        "country": "Singapore",
+        "countryCode": "SG",
+        "lat": 1.3521,
+        "lng": 103.8198,
+        "jobs": 2500
+    },
+    {
+        "name": "Toronto",
+        "slug": "toronto",
+        "country": "Canada",
+        "countryCode": "CA",
+        "lat": 43.6532,
+        "lng": -79.3832,
+        "jobs": 2400
+    },
+    {
+        "name": "Sydney",
+        "slug": "sydney",
+        "country": "Australia",
+        "countryCode": "AU",
+        "lat": -33.8688,
+        "lng": 151.2093,
+        "jobs": 1800
+    },
+    {
+        "name": "Paris",
+        "slug": "paris",
+        "country": "France",
+        "countryCode": "FR",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "jobs": 1700
+    },
+    {
+        "name": "Amsterdam",
+        "slug": "amsterdam",
+        "country": "Netherlands",
+        "countryCode": "NL",
+        "lat": 52.3676,
+        "lng": 4.9041,
+        "jobs": 1600
+    },
+    {
+        "name": "Tel Aviv",
+        "slug": "tel-aviv",
+        "country": "Israel",
+        "countryCode": "IL",
+        "lat": 32.0853,
+        "lng": 34.7818,
+        "jobs": 1500
+    },
+    {
+        "name": "Seattle",
+        "slug": "seattle",
+        "country": "United States",
+        "countryCode": "US",
+        "lat": 47.6062,
+        "lng": -122.3321,
+        "jobs": 2200
+    },
+    {
+        "name": "Austin",
+        "slug": "austin",
+        "country": "United States",
+        "countryCode": "US",
+        "lat": 30.2672,
+        "lng": -97.7431,
+        "jobs": 1800
+    },
+    {
+        "name": "Boston",
+        "slug": "boston",
+        "country": "United States",
+        "countryCode": "US",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "jobs": 1700
+    },
+    {
+        "name": "Pune",
+        "slug": "pune",
+        "country": "India",
+        "countryCode": "IN",
+        "lat": 18.5204,
+        "lng": 73.8567,
+        "jobs": 1400
+    },
+    {
+        "name": "Hyderabad",
+        "slug": "hyderabad",
+        "country": "India",
+        "countryCode": "IN",
+        "lat": 17.385,
+        "lng": 78.4867,
+        "jobs": 1600
+    },
+    {
+        "name": "Stockholm",
+        "slug": "stockholm",
+        "country": "Sweden",
+        "countryCode": "SE",
+        "lat": 59.3293,
+        "lng": 18.0686,
+        "jobs": 1200
+    },
+    {
+        "name": "Dublin",
+        "slug": "dublin",
+        "country": "Ireland",
+        "countryCode": "IE",
+        "lat": 53.3498,
+        "lng": -6.2603,
+        "jobs": 1100
+    },
+    {
+        "name": "Munich",
+        "slug": "munich",
+        "country": "Germany",
+        "countryCode": "DE",
+        "lat": 48.1351,
+        "lng": 11.582,
+        "jobs": 1300
+    },
+    {
+        "name": "Zurich",
+        "slug": "zurich",
+        "country": "Switzerland",
+        "countryCode": "CH",
+        "lat": 47.3769,
+        "lng": 8.5417,
+        "jobs": 900
+    },
+    {
+        "name": "Lagos",
+        "slug": "lagos",
+        "country": "Nigeria",
+        "countryCode": "NG",
+        "lat": 6.5244,
+        "lng": 3.3792,
+        "jobs": 600
+    },
+    {
+        "name": "Cape Town",
+        "slug": "cape-town",
+        "country": "South Africa",
+        "countryCode": "ZA",
+        "lat": -33.9249,
+        "lng": 18.4241,
+        "jobs": 500
+    },
+    {
+        "name": "São Paulo",
+        "slug": "sao-paulo",
+        "country": "Brazil",
+        "countryCode": "BR",
+        "lat": -23.5505,
+        "lng": -46.6333,
+        "jobs": 1400
+    },
+    {
+        "name": "Mexico City",
+        "slug": "mexico-city",
+        "country": "Mexico",
+        "countryCode": "MX",
+        "lat": 19.4326,
+        "lng": -99.1332,
+        "jobs": 800
+    },
+    {
+        "name": "Vancouver",
+        "slug": "vancouver",
+        "country": "Canada",
+        "countryCode": "CA",
+        "lat": 49.2827,
+        "lng": -123.1207,
+        "jobs": 1200
+    },
+    {
+        "name": "Montreal",
+        "slug": "montreal",
+        "country": "Canada",
+        "countryCode": "CA",
+        "lat": 45.5017,
+        "lng": -73.5673,
+        "jobs": 1100
+    },
+    {
+        "name": "Melbourne",
+        "slug": "melbourne",
+        "country": "Australia",
+        "countryCode": "AU",
+        "lat": -37.8136,
+        "lng": 144.9631,
+        "jobs": 1000
+    },
+    {
+        "name": "Tokyo",
+        "slug": "tokyo",
+        "country": "Japan",
+        "countryCode": "JP",
+        "lat": 35.6762,
+        "lng": 139.6503,
+        "jobs": 1600
+    },
+    {
+        "name": "Seoul",
+        "slug": "seoul",
+        "country": "South Korea",
+        "countryCode": "KR",
+        "lat": 37.5665,
+        "lng": 126.978,
+        "jobs": 1400
+    },
+    {
+        "name": "Dubai",
+        "slug": "dubai",
+        "country": "United Arab Emirates",
+        "countryCode": "AE",
+        "lat": 25.2048,
+        "lng": 55.2708,
+        "jobs": 1200
+    },
+    {
+        "name": "Helsinki",
+        "slug": "helsinki",
+        "country": "Finland",
+        "countryCode": "FI",
+        "lat": 60.1699,
+        "lng": 24.9384,
+        "jobs": 700
+    },
+    {
+        "name": "Oslo",
+        "slug": "oslo",
+        "country": "Norway",
+        "countryCode": "NO",
+        "lat": 59.9139,
+        "lng": 10.7522,
+        "jobs": 600
+    },
+    {
+        "name": "Copenhagen",
+        "slug": "copenhagen",
+        "country": "Denmark",
+        "countryCode": "DK",
+        "lat": 55.6761,
+        "lng": 12.5683,
+        "jobs": 800
+    },
+    {
+        "name": "Warsaw",
+        "slug": "warsaw",
+        "country": "Poland",
+        "countryCode": "PL",
+        "lat": 52.2297,
+        "lng": 21.0122,
+        "jobs": 900
+    },
+    {
+        "name": "Tallinn",
+        "slug": "tallinn",
+        "country": "Estonia",
+        "countryCode": "EE",
+        "lat": 59.437,
+        "lng": 24.7536,
+        "jobs": 400
+    },
+    {
+        "name": "Prague",
+        "slug": "prague",
+        "country": "Czech Republic",
+        "countryCode": "CZ",
+        "lat": 50.0755,
+        "lng": 14.4378,
+        "jobs": 700
+    },
+    {
+        "name": "Barcelona",
+        "slug": "barcelona",
+        "country": "Spain",
+        "countryCode": "ES",
+        "lat": 41.3851,
+        "lng": 2.1734,
+        "jobs": 1100
+    },
+    {
+        "name": "Madrid",
+        "slug": "madrid",
+        "country": "Spain",
+        "countryCode": "ES",
+        "lat": 40.4168,
+        "lng": -3.7038,
+        "jobs": 1200
+    },
+    {
+        "name": "Lisbon",
+        "slug": "lisbon",
+        "country": "Portugal",
+        "countryCode": "PT",
+        "lat": 38.7223,
+        "lng": -9.1393,
+        "jobs": 600
+    },
+    {
+        "name": "Milan",
+        "slug": "milan",
+        "country": "Italy",
+        "countryCode": "IT",
+        "lat": 45.4642,
+        "lng": 9.19,
+        "jobs": 800
+    },
+    {
+        "name": "Rome",
+        "slug": "rome",
+        "country": "Italy",
+        "countryCode": "IT",
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "jobs": 600
+    },
+    {
+        "name": "Ho Chi Minh City",
+        "slug": "ho-chi-minh-city",
+        "country": "Vietnam",
+        "countryCode": "VN",
+        "lat": 10.8231,
+        "lng": 106.6297,
+        "jobs": 500
+    },
+    {
+        "name": "Jakarta",
+        "slug": "jakarta",
+        "country": "Indonesia",
+        "countryCode": "ID",
+        "lat": -6.2088,
+        "lng": 106.8456,
+        "jobs": 700
+    },
+    {
+        "name": "Manila",
+        "slug": "manila",
+        "country": "Philippines",
+        "countryCode": "PH",
+        "lat": 14.5995,
+        "lng": 120.9842,
+        "jobs": 600
+    },
+    {
+        "name": "Kuala Lumpur",
+        "slug": "kuala-lumpur",
+        "country": "Malaysia",
+        "countryCode": "MY",
+        "lat": 3.139,
+        "lng": 101.6869,
+        "jobs": 800
+    },
+    {
+        "name": "Bangkok",
+        "slug": "bangkok",
+        "country": "Thailand",
+        "countryCode": "TH",
+        "lat": 13.7563,
+        "lng": 100.5018,
+        "jobs": 700
+    },
+    {
+        "name": "Taipei",
+        "slug": "taipei",
+        "country": "Taiwan",
+        "countryCode": "TW",
+        "lat": 25.033,
+        "lng": 121.5654,
+        "jobs": 1200
+    },
+    {
+        "name": "Hong Kong",
+        "slug": "hong-kong",
+        "country": "Hong Kong",
+        "countryCode": "HK",
+        "lat": 22.3193,
+        "lng": 114.1694,
+        "jobs": 1500
+    },
+    {
+        "name": "Buenos Aires",
+        "slug": "buenos-aires",
+        "country": "Argentina",
+        "countryCode": "AR",
+        "lat": -34.6037,
+        "lng": -58.3816,
+        "jobs": 700
+    },
+    {
+        "name": "Santiago",
+        "slug": "santiago",
+        "country": "Chile",
+        "countryCode": "CL",
+        "lat": -33.4489,
+        "lng": -70.6693,
+        "jobs": 500
+    },
+    {
+        "name": "Bogotá",
+        "slug": "bogota",
+        "country": "Colombia",
+        "countryCode": "CO",
+        "lat": 4.711,
+        "lng": -74.0721,
+        "jobs": 600
+    },
+    {
+        "name": "Lima",
+        "slug": "lima",
+        "country": "Peru",
+        "countryCode": "PE",
+        "lat": -12.0464,
+        "lng": -77.0428,
+        "jobs": 400
+    }
+]

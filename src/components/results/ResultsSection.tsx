@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useSearchFilters } from "@/hooks/use-search";
 import { useProFeatures } from "@/hooks/use-pro";
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -53,20 +54,22 @@ function LogoImage({ link }: { link: any }) {
 }
 
 
-export function ResultsSection({ initialRole, initialLocation, initialPlatform }: { initialRole?: string, initialLocation?: string, initialPlatform?: string }) {
+export function ResultsSection({ initialRole, initialLocation, initialPlatform, initialCompany }: { initialRole?: string, initialLocation?: string, initialPlatform?: string, initialCompany?: string }) {
     const { generateLinks, filters, updateFilters } = useSearchFilters();
     const { isPro } = useProFeatures();
+    const router = useRouter();
 
     // Initialize filters if provided
     useEffect(() => {
-        if (initialRole || initialLocation) {
+        if (initialRole || initialLocation || initialCompany) {
             updateFilters({
                 role: initialRole || filters.role,
                 location: initialLocation ? 'specific' : filters.location,
-                specificLocation: initialLocation || filters.specificLocation
+                specificLocation: initialLocation || filters.specificLocation,
+                company: initialCompany || filters.company
             });
         }
-    }, [initialRole, initialLocation]);
+    }, [initialRole, initialLocation, initialCompany]);
 
     const links = useMemo(() => generateLinks(), [generateLinks]);
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -319,19 +322,43 @@ export function ResultsSection({ initialRole, initialLocation, initialPlatform }
                     </div>
                 </div>
 
-                {/* Footer Metrics */}
+                {/* Footer Metrics & Monetization Hook */}
                 {!isFullScreen && (
-                    <div className="mt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 font-mono uppercase tracking-widest gap-4">
-                        <div className="flex items-center gap-4">
-                            <span className="flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                indexing 50,000+ jobs
-                            </span>
-                            <span className="opacity-30">|</span>
-                            <span>last update: moments ago</span>
+                    <div className="mt-8 flex flex-col items-center gap-8">
+                        {/* Monetization Hook: Job Alerts */}
+                        <div className="w-full bg-gradient-to-br from-slate-900 to-indigo-950 dark:from-indigo-500/10 dark:to-purple-500/10 rounded-3xl p-8 border border-white/10 shadow-2xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                                <Sparkles className="w-24 h-24 text-white" />
+                            </div>
+                            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div className="text-center md:text-left">
+                                    <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tight">Never miss a hidden opening</h3>
+                                    <p className="text-indigo-200 text-sm font-medium">Get real-time alerts when new {filters.role || 'technical'} roles are found in {filters.specificLocation || 'your area'}.</p>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        router.push('/#pricing');
+                                        setTimeout(() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                                    }}
+                                    className="px-8 py-3 bg-white text-slate-900 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-indigo-50 transition-all shadow-xl shadow-white/5 active:scale-95 whitespace-nowrap"
+                                >
+                                    Enable Job Alerts
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span>search latency: ~0.4s</span>
+
+                        <div className="w-full flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 font-mono uppercase tracking-widest gap-4">
+                            <div className="flex items-center gap-4">
+                                <span className="flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                    indexing 50,000+ jobs
+                                </span>
+                                <span className="opacity-30">|</span>
+                                <span>last update: moments ago</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span>search latency: ~0.4s</span>
+                            </div>
                         </div>
                     </div>
                 )}

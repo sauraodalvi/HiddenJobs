@@ -9,58 +9,64 @@ import Script from "next/script";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 
-export const metadata: Metadata = {
-  title: {
-    default: "HiddenJobs | Find Unlisted Jobs on Greenhouse, Lever & Ashby",
-    template: "%s | HiddenJobs"
-  },
-  description: "The #1 Search Engine for the 'Hidden Job Market'. Bypass LinkedIn and search 50,000+ unlisted tech jobs directly on ATS platforms like Greenhouse, Lever, and Ashby.",
-  keywords: ["hidden job market", "ATS search", "Greenhouse jobs", "Lever jobs", "remote tech jobs", "job wrapper", "bypass linkedin", "unlisted jobs"],
-  authors: [{ name: "HiddenJobs Team" }],
-  creator: "HiddenJobs",
-  icons: {
-    icon: '/icon',
-    apple: '/apple-icon',
-  },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://hiddenjobs.vercel.app"),
-  verification: {
-    google: "56R-JruPxjmoOonvhlzkMpNgJqO9-PG-AEJsjPXX_pw",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://hiddenjobs.vercel.app",
-    title: "HiddenJobs | Find the 60% of Jobs Not on LinkedIn",
-    description: "Search 50k+ live unlisted roles directly on Greenhouse, Lever, and Ashby. Stop competing with 1000+ applicants on LinkedIn.",
-    siteName: "HiddenJobs",
-    images: [
-      {
-        url: "/og-image.png", // We will need to generate this or placeholder
-        width: 1200,
-        height: 630,
-        alt: "HiddenJobs Search Interface",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "HiddenJobs | Uncover Hidden Tech Jobs",
-    description: "Search 50k+ live unlisted roles directly on Greenhouse, Lever, and Ashby.",
-    images: ["/og-image.png"],
-    creator: "@HiddenJobs",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+import { getBaseUrl } from "@/lib/domain";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = getBaseUrl();
+
+  return {
+    title: {
+      default: "HiddenJobs | Find Unlisted Jobs on Greenhouse, Lever & Ashby",
+      template: "%s | HiddenJobs"
+    },
+    description: "The #1 Search Engine for the 'Hidden Job Market'. Bypass LinkedIn and search 50,000+ unlisted tech jobs directly on ATS platforms like Greenhouse, Lever, and Ashby.",
+    keywords: ["hidden job market", "ATS search", "Greenhouse jobs", "Lever jobs", "remote tech jobs", "job wrapper", "bypass linkedin", "unlisted jobs"],
+    authors: [{ name: "HiddenJobs Team" }],
+    creator: "HiddenJobs",
+    icons: {
+      icon: '/icon',
+      apple: '/apple-icon',
+    },
+    metadataBase: new URL(baseUrl),
+    verification: {
+      google: "56R-JruPxjmoOonvhlzkMpNgJqO9-PG-AEJsjPXX_pw",
+    },
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      url: baseUrl,
+      title: "HiddenJobs | Find the 60% of Jobs Not on LinkedIn",
+      description: "Search 50k+ live unlisted roles directly on Greenhouse, Lever, and Ashby. Stop competing with 1000+ applicants on LinkedIn.",
+      siteName: "HiddenJobs",
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: "HiddenJobs Search Interface",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "HiddenJobs | Uncover Hidden Tech Jobs",
+      description: "Search 50k+ live unlisted roles directly on Greenhouse, Lever, and Ashby.",
+      images: ["/og-image.png"],
+      creator: "@HiddenJobs",
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
-  },
-};
+  };
+}
 
 export default function RootLayout({
   children,

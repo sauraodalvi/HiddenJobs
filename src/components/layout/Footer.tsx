@@ -53,6 +53,23 @@ export function Footer() {
                         </ul>
                     </div>
 
+                    {/* Companies */}
+                    <div>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-6">Top Companies</h4>
+                        <ul className="space-y-4">
+                            {Array.from(new Set(DIRECTORY_LOCATIONS.flatMap(l => l.companies || []))).slice(0, 8).map(company => (
+                                <li key={company}>
+                                    <Link
+                                        href={`/company/${company}`}
+                                        className="text-sm text-slate-500 hover:text-primary transition-colors hover:translate-x-1 inline-block capitalize"
+                                    >
+                                        {company.split('.')[0]} Jobs
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
                     {/* Resources */}
                     <div>
                         <h4 className="font-bold text-slate-900 dark:text-white mb-6">Discovery</h4>
@@ -67,17 +84,6 @@ export function Footer() {
                                     Browse All Directories
                                 </Link>
                             </li>
-
-                            {DIRECTORY_LOCATIONS.map(loc => (
-                                <li key={loc.slug}>
-                                    <Link
-                                        href={`/jobs/location/${loc.slug}`}
-                                        className="text-sm text-slate-500 hover:text-primary transition-colors hover:translate-x-1 inline-block"
-                                    >
-                                        Jobs in {loc.label}
-                                    </Link>
-                                </li>
-                            ))}
                         </ul>
                     </div>
                 </div>

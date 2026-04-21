@@ -16,7 +16,7 @@ export function getBaseUrl(request?: Request): string {
         return `https://${process.env.VERCEL_URL}`;
     }
 
-    // 3. Fallback to request host if provided (useful in middleware/server components)
+    // 3. Request-based host detection (most accurate for failover)
     if (request) {
         const host = request.headers.get('host');
         if (host) {
@@ -25,6 +25,6 @@ export function getBaseUrl(request?: Request): string {
         }
     }
 
-    // 4. Ultimate fallback (default to vercel for legacy compatibility if everything else fails)
-    return 'https://hiddenjobs.vercel.app';
+    // 4. Default fallbacks (prioritize Netlify as main link if nothing else works)
+    return 'https://hiddenjobs.netlify.app';
 }

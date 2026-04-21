@@ -1,11 +1,12 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
-import { getPlatformSeoMetadata } from '@/lib/seo-utils';
+import { getPlatformSeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { Search, ChevronRight, Briefcase, MapPin, ExternalLink } from 'lucide-react';
+import { Search, ChevronRight, Briefcase, MapPin, ExternalLink, Sparkles, Check } from 'lucide-react';
 import Link from 'next/link';
+import { getBaseUrl } from '@/lib/domain';
 
 interface PageProps {
     params: Promise<{
@@ -28,6 +29,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: seo.title,
         description: seo.description,
+        alternates: {
+            canonical: `${getBaseUrl()}/jobs/platform/${platformSlug}`,
+        },
+        robots: seo.robots || 'index, follow',
     };
 }
 
@@ -39,19 +44,39 @@ export default async function PlatformDirectoryPage({ params }: PageProps) {
 
     const { platform } = seo;
 
+    // Structured Data
+    const breadcrumbs = getBreadcrumbSchema([
+        { name: 'Home', item: '/' },
+        { name: 'Jobs', item: '/jobs' },
+        { name: platform.label, item: `/jobs/platform/${platformSlug}` }
+    ]);
+
+    const platformFaqs = [
+        {
+            question: `How to find jobs on ${platform.label}?`,
+            answer: `You can find jobs on ${platform.label} by searching their public job boards. HiddenJobs aggregates these links for you so you can bypass the main job boards.`
+        },
+        {
+            question: `Is ${platform.label} better than LinkedIn for job hunting?`,
+            answer: `${platform.label} is an Applicant Tracking System (ATS). Applying directly through a company's ${platform.label} portal often gets your resume seen faster than LinkedIn where there are thousands of applicants.`
+        }
+    ];
+
+    const faqSchema = getFaqSchema(platformFaqs);
+
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
             <Header />
 
             <main className="max-w-5xl mx-auto px-6 py-20 pb-32">
-                {/* Breadcrumbs */}
-                <nav className="flex items-center space-x-2 text-sm text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2">
-                    <Link href="/" className="hover:text-primary transition-colors">Home</Link>
-                    <ChevronRight className="w-4 h-4 shrink-0" />
-                    <Link href="/jobs" className="hover:text-primary transition-colors">Jobs</Link>
-                    <ChevronRight className="w-4 h-4 shrink-0" />
-                    <span className="capitalize">{platform.label}</span>
-                </nav>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+                />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                />
 
                 <div className="mb-16">
                     <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-bold mb-6">
@@ -132,6 +157,16 @@ export default async function PlatformDirectoryPage({ params }: PageProps) {
                         <div className="flex flex-wrap gap-4">
                             <div className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm font-mono text-slate-600 dark:text-slate-400">
                                 site:{platform.domain} "software"
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1 mt-8">
+                            <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                <Check className="w-3 h-3 text-emerald-500" />
+                                Last Scanned: {new Date(seo.updatedAt).toLocaleDateString()}
+                            </div>
+                            <div className="text-[10px] text-slate-400 font-medium italic">
+                                Curated by HiddenJobs Analysis Team
                             </div>
                         </div>
                     </div>
