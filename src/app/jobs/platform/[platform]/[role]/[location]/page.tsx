@@ -6,9 +6,8 @@ import { ResultsSection } from '@/components/results/ResultsSection';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { getBaseUrl } from '@/lib/domain';
-import { db } from '@/lib/db';
-import { cities, jobRoles } from '@/lib/db/schema';
 import { DIRECTORY_PLATFORMS } from '@/lib/constants';
+import { DynamicAiPanels, DynamicAiPanelsSkeleton } from '@/components/seo/DynamicAiPanels';
 
 interface Props {
     params: Promise<{
@@ -92,31 +91,17 @@ export default async function PlatformJobPage({ params }: Props) {
                     </div>
                 </Suspense>
 
-                {/* AI Overview Section for GEO */}
-                {seo.aiOverview && (
-                    <section className="max-w-4xl mx-auto mt-20 mb-20 bg-white dark:bg-slate-800 p-10 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl">
-                        <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white italic opacity-80 uppercase tracking-widest text-xs">Market Insights & Outlook</h2>
-                        <div
-                            className="prose prose-slate dark:prose-invert max-w-none text-lg text-slate-600 dark:text-slate-300"
-                            dangerouslySetInnerHTML={{ __html: seo.aiOverview }}
-                        />
-                    </section>
-                )}
-
-                {/* AEO FAQ Section */}
-                {seo.faqs && (
-                    <section className="mt-32 max-w-4xl mx-auto">
-                        <h2 className="text-3xl font-black mb-12 text-slate-900 dark:text-white text-center">People also ask about {seo.role.name} roles</h2>
-                        <div className="grid gap-6">
-                            {seo.faqs.map((faq: any, i: number) => (
-                                <div key={i} className="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:shadow-md">
-                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{faq.question}</h3>
-                                    <p className="text-slate-500 dark:text-slate-400 leading-relaxed text-lg">{faq.answer}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                )}
+                <Suspense fallback={
+                    <DynamicAiPanelsSkeleton roleName={seo.role.name} cityName={seo.location.name} />
+                }>
+                    <DynamicAiPanels
+                        roleName={seo.role.name}
+                        cityName={seo.location.name}
+                        platformLabel={platformLabel}
+                        initialOverview={seo.aiOverview}
+                        initialFaqs={seo.faqs}
+                    />
+                </Suspense>
             </main>
             <Footer />
         </div>

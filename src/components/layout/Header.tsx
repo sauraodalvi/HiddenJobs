@@ -67,17 +67,19 @@ export function Header() {
 
                     <div className="flex items-center">
                         <div className="w-px h-4 bg-slate-200 dark:bg-slate-800 mx-4" />
-                        {mounted ? (
-                            <button
-                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                                className="p-2 text-slate-500 hover:text-primary transition-colors focus:outline-none"
-                                aria-label="Toggle theme"
-                            >
-                                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                            </button>
-                        ) : (
-                            <div className="w-9 h-9" /> // Placeholder to prevent layout shift
-                        )}
+                        <div className="w-10 h-10 flex items-center justify-center">
+                            {mounted ? (
+                                <button
+                                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                    className="p-2 text-slate-500 hover:text-primary transition-colors focus:outline-none"
+                                    aria-label="Toggle theme"
+                                >
+                                    {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                                </button>
+                            ) : (
+                                <div className="w-5 h-5" /> // Exact icon size placeholder
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

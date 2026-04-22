@@ -65,7 +65,7 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string): Pr
 
         if (!role || !location) return null;
 
-        // 2. Fetch or Generate cached SEO content
+        // 2. Fetch cached SEO content
         let [content] = await db.select().from(seoContent).where(
             and(
                 eq(seoContent.roleId, role.id),
@@ -73,31 +73,18 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string): Pr
             )
         );
 
-        // Dynamic AI Generation (JIT) if cache is missing
-        if (!content && process.env.GEMINI_API_KEY) {
-            const aiData = await generateJobCityContent(role.name, location.name);
-            if (aiData) {
-                const [newContent] = await db.insert(seoContent).values({
-                    roleId: role.id,
-                    cityId: location.id,
-                    title: `Hidden Jobs: ${role.name} Roles in ${location.name} | Unlisted Tech Jobs`,
-                    description: aiData.metaDescription,
-                    aiOverview: aiData.aiOverview,
-                    faqs: JSON.stringify(aiData.faqs)
-                }).returning();
-                content = newContent;
-            }
-        }
-
+        // IMMEDIATE RESPONSE: Return shell if content is missing
+        // This solves the TTFB / LCP bottleneck by allowing the page to paint 
+        // without waiting for Gemini/Groq.
         const title = content?.title || `How to find unlisted ${role.name} jobs in ${location.name}? | HiddenJobs`;
-        const description = content?.description || `Looking for ${role.name} roles in ${location.name}? Access the hidden job market by searching Greenhouse, Lever, and Ashby boards directly. Skip the 1000+ applicants on LinkedIn and apply to unlisted roles.`;
+        const description = content?.description || `Looking for ${role.name} roles in ${location.name}? Access the hidden job market by searching Greenhouse, Lever, and Ashby boards directly.`;
 
         return {
             title,
             description,
             role,
             location,
-            aiOverview: content?.aiOverview,
+            aiOverview: content?.aiOverview || null,
             faqs: content?.faqs ? JSON.parse(content.faqs) : null,
             updatedAt: content?.updatedAt || new Date(),
             robots: (location.jobCount || 0) === 0 ? 'noindex, nofollow' : 'index, follow'

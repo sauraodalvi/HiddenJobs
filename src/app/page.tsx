@@ -28,7 +28,10 @@ export default function Home() {
 
           {/* Main Interaction Area (The Island & Results) */}
           <Suspense fallback={
-            <div className="w-full h-24 bg-gray-100 dark:bg-slate-800 animate-pulse rounded-2xl max-w-3xl mx-auto" />
+            <div className="w-full space-y-12 animate-in fade-in duration-1000">
+              <div className="w-full h-32 bg-gray-100 dark:bg-slate-800/50 rounded-2xl max-w-3xl mx-auto animate-pulse" />
+              <div className="w-full h-[600px] bg-gray-50 dark:bg-slate-900/30 rounded-3xl animate-pulse" />
+            </div>
           }>
             <FilterSection />
             <ResultsSection />

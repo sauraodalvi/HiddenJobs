@@ -4,19 +4,33 @@ let genAI: GoogleGenerativeAI | null = null;
 let model: any = null;
 
 function getModel() {
-    if (!process.env.GEMINI_API_KEY) return null;
-
-    if (!genAI) {
-        genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    if (!process.env.GEMINI_API_KEY) {
+        console.error("[gemini] ERROR: GEMINI_API_KEY is missing from environment variables.");
+        return null;
     }
-    return model;
+
+    try {
+        if (!genAI) {
+            console.log("[gemini] Initializing GoogleGenerativeAI with key...");
+            genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+            model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+            console.log("[gemini] Model 'gemini-2.0-flash' initialized successfully.");
+        }
+        return model;
+    } catch (error) {
+        console.error("[gemini] ERROR during model initialization:", error);
+        return null;
+    }
 }
 
 export async function generateJobCityContent(roleName: string, cityName: string) {
     const currentModel = getModel();
-    if (!currentModel) return null;
+    if (!currentModel) {
+        console.warn(`[gemini] Skipping generation for ${roleName} in ${cityName}: Model not initialized.`);
+        return null;
+    }
 
+    // ... (rest of search/prompt logic)
     const prompt = `
         You are an expert career counselor and SEO strategist. 
         Create a high-quality, engaging overview for a job seeker looking for ${roleName} roles in ${cityName}.
@@ -39,13 +53,15 @@ export async function generateJobCityContent(roleName: string, cityName: string)
     `;
 
     try {
+        console.log(`[gemini] Calling API for: ${roleName} - ${cityName}`);
         const result = await currentModel.generateContent(prompt);
         const text = result.response.text();
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (!jsonMatch) throw new Error("Failed to parse Gemini response as JSON");
+        console.log(`[gemini] Successfully generated content for ${roleName} in ${cityName}`);
         return JSON.parse(jsonMatch[0]);
     } catch (error) {
-        console.error("Gemini Generation Error:", error);
+        console.error("[gemini] API call or parse failure:", error);
         return null;
     }
 }
