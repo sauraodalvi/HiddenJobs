@@ -1,17 +1,19 @@
 import React from 'react';
+import { getBaseUrl } from "@/lib/domain";
 
 export const GlobalSchema = () => {
+    const baseUrl = getBaseUrl();
     const schema = {
         "@context": "https://schema.org",
         "@graph": [
             {
                 "@type": "Organization",
-                "@id": "https://hiddenjobs.vercel.app/#organization",
+                "@id": `${baseUrl}/#organization`,
                 "name": "HiddenJobs",
-                "url": "https://hiddenjobs.vercel.app",
+                "url": baseUrl,
                 "logo": {
                     "@type": "ImageObject",
-                    "url": "https://hiddenjobs.vercel.app/logo.png"
+                    "url": `${baseUrl}/logo.png`
                 },
                 "description": "Premium search engine for uncovering unlisted jobs in high-growth companies tracking direct-to-ATS openings.",
                 "sameAs": [
@@ -21,21 +23,21 @@ export const GlobalSchema = () => {
             },
             {
                 "@type": "WebSite",
-                "@id": "https://hiddenjobs.vercel.app/#website",
-                "url": "https://hiddenjobs.vercel.app",
+                "@id": `${baseUrl}/#website`,
+                "url": baseUrl,
                 "name": "HiddenJobs",
-                "publisher": { "@id": "https://hiddenjobs.vercel.app/#organization" },
+                "publisher": { "@id": `${baseUrl}/#organization` },
                 "potentialAction": {
                     "@type": "SearchAction",
-                    "target": "https://hiddenjobs.vercel.app/explore?q={search_term_string}",
+                    "target": `${baseUrl}/explore?q={search_term_string}`,
                     "query-input": "required name=search_term_string"
                 }
             },
             {
                 "@type": "Person",
-                "name": "Alex Rivera",
-                "jobTitle": "Lead ATS Researcher",
-                "worksFor": { "@id": "https://hiddenjobs.vercel.app/#organization" },
+                "name": "Saurao Dalvi",
+                "jobTitle": "Creator & Engineer",
+                "worksFor": { "@id": `${baseUrl}/#organization` },
                 "description": "Specialist in Greenhouse and Lever ATS indexing strategies."
             }
         ]

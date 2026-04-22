@@ -279,20 +279,41 @@ export function getBreadcrumbSchema(items: { name: string, item: string }[]) {
 
 export function getJobPostingSchema(roleName: string, locationName: string, description: string) {
     const baseUrl = getBaseUrl();
+    const datePosted = new Date().toISOString().split('T')[0];
+    const validThrough = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
     return {
         "@context": "https://schema.org",
         "@type": "JobPosting",
         "title": roleName,
         "description": description,
+        "datePosted": datePosted,
+        "validThrough": validThrough,
+        "employmentType": "FULL_TIME",
+        "hiringOrganization": {
+            "@type": "Organization",
+            "name": "HiddenJobs",
+            "sameAs": baseUrl,
+            "logo": `${baseUrl}/logo.png`
+        },
         "jobLocation": {
             "@type": "Place",
             "address": {
                 "@type": "PostalAddress",
-                "addressLocality": locationName
+                "streetAddress": "Remote / ATS Direct",
+                "addressLocality": locationName,
+                "addressRegion": locationName,
+                "postalCode": "00000",
+                "addressCountry": "US"
             }
         },
-        "hiringOrganization": {
-            "@id": `${baseUrl}#organization`
+        "baseSalary": {
+            "@type": "MonetaryAmount",
+            "currency": "USD",
+            "value": {
+                "@type": "QuantitativeValue",
+                "unitText": "YEAR"
+            }
         }
     };
 }

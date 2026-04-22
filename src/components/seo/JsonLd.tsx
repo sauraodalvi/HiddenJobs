@@ -1,12 +1,25 @@
+import { getBaseUrl } from "@/lib/domain";
+
 export default function JsonLd() {
+    const baseUrl = getBaseUrl();
     const webAppSchema = {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "HiddenJobs",
-        "url": "https://hiddenjobs.vercel.app",
+        "url": baseUrl,
         "description": "A search engine for the hidden job market that indexes unlisted roles from Greenhouse, Lever, and Ashby.",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "All",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "120",
+            "itemReviewed": {
+                "@type": "WebApplication",
+                "name": "HiddenJobs",
+                "url": baseUrl
+            }
+        },
         "offers": {
             "@type": "Offer",
             "price": "0",

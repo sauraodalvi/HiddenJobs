@@ -1,4 +1,6 @@
 import { MetadataRoute } from 'next';
+import { getBaseUrl } from '@/lib/domain';
+
 
 export default function robots(): MetadataRoute.Robots {
     return {
@@ -13,6 +15,6 @@ export default function robots(): MetadataRoute.Robots {
                 allow: '/',
             },
         ],
-        sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://hiddenjobs.vercel.app'}/sitemap.xml`,
+        sitemap: `${getBaseUrl()}/sitemap.xml`,
     };
 }

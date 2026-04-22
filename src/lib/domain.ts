@@ -6,17 +6,22 @@
  * 3. Fallback to a default if nothing else is available
  */
 export function getBaseUrl(request?: Request): string {
-    // 1. Explicitly configured site URL
+    // 1. Explicitly configured site URL (Highest priority)
     if (process.env.NEXT_PUBLIC_SITE_URL) {
         return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
     }
 
-    // 2. Vercel deployment URL
+    // 2. Netlify specific URL
+    if (process.env.URL) {
+        return process.env.URL.replace(/\/$/, '');
+    }
+
+    // 3. Vercel deployment URL
     if (process.env.VERCEL_URL) {
         return `https://${process.env.VERCEL_URL}`;
     }
 
-    // 3. Request-based host detection (most accurate for failover)
+    // 4. Request-based host detection (most accurate for failover)
     if (request) {
         const host = request.headers.get('host');
         if (host) {
@@ -25,6 +30,6 @@ export function getBaseUrl(request?: Request): string {
         }
     }
 
-    // 4. Default fallbacks (prioritize Netlify as main link if nothing else works)
+    // 5. Default fallback
     return 'https://hiddenjobs.netlify.app';
 }
