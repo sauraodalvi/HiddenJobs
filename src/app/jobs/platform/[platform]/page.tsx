@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${getBaseUrl()}/jobs/platform/${platformSlug}`,
+            canonical: `${await getBaseUrl()}/jobs/platform/${platformSlug}`,
         },
         robots: seo.robots || 'index, follow',
     };
@@ -45,7 +45,7 @@ export default async function PlatformDirectoryPage({ params }: PageProps) {
     const { platform } = seo;
 
     // Structured Data
-    const breadcrumbs = getBreadcrumbSchema([
+    const breadcrumbs = await getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Jobs', item: '/jobs' },
         { name: platform.label, item: `/jobs/platform/${platformSlug}` }

@@ -1,8 +1,8 @@
 import React from 'react';
 import { getBaseUrl } from "@/lib/domain";
 
-export const GlobalSchema = () => {
-    const baseUrl = getBaseUrl();
+export const GlobalSchema = async () => {
+    const baseUrl = await getBaseUrl();
     const schema = {
         "@context": "https://schema.org",
         "@graph": [

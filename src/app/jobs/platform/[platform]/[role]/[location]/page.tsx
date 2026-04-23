@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: `${seo.role.name} Roles in ${seo.location.name} on ${platformLabel} | HiddenJobs`,
         description: `Browse ${seo.role.name} job opportunities in ${seo.location.name} specifically indexed from ${platformLabel}. ${seo.description}`,
         alternates: {
-            canonical: `${getBaseUrl()}/jobs/platform/${platform}/${role}/${location}`,
+            canonical: `${await getBaseUrl()}/jobs/platform/${platform}/${role}/${location}`,
         },
     };
 }
@@ -43,7 +43,7 @@ export default async function PlatformJobPage({ params }: Props) {
     const platformLabel = DIRECTORY_PLATFORMS.find(p => p.slug === platform)?.label || platform;
 
     // Structured Data for AEO/GEO
-    const breadcrumbs = getBreadcrumbSchema([
+    const breadcrumbs = await getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Jobs', item: '/jobs' },
         { name: `By Platform`, item: '/jobs/platform' },
@@ -51,7 +51,7 @@ export default async function PlatformJobPage({ params }: Props) {
         { name: `${seo.role.name} in ${seo.location.name}`, item: `/jobs/platform/${platform}/${role}/${location}` }
     ]);
 
-    const jobSchema = getJobPostingSchema(seo.role.name, seo.location.name, seo.description);
+    const jobSchema = await getJobPostingSchema(seo.role.name, seo.location.name, seo.description);
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">

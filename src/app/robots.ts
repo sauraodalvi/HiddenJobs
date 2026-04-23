@@ -2,7 +2,8 @@ import { MetadataRoute } from 'next';
 import { getBaseUrl } from '@/lib/domain';
 
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+    const baseUrl = await getBaseUrl();
     return {
         rules: [
             {
@@ -11,10 +12,19 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: ['/api/', '/admin/'],
             },
             {
-                userAgent: ['GPTBot', 'CCBot', 'Google-Extended'],
+                userAgent: [
+                    'GPTBot',
+                    'CCBot',
+                    'Google-Extended',
+                    'PerplexityBot',
+                    'anthropic-ai',
+                    'Claude-Web',
+                    'Applebot-Extended',
+                    'OAI-SearchBot'
+                ],
                 allow: '/',
             },
         ],
-        sitemap: `${getBaseUrl()}/sitemap.xml`,
+        sitemap: `${baseUrl}/sitemap.xml`,
     };
 }

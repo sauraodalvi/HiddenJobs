@@ -5,11 +5,12 @@ import { DIRECTORY_PLATFORMS, DIRECTORY_LOCATIONS, DIRECTORY_ROLES } from '@/lib
 import { getBaseUrl } from '@/lib/domain';
 import { desc } from 'drizzle-orm';
 
-export const dynamic = 'force-static';
+// export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 export const revalidate = 86400; // 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = getBaseUrl();
+    const baseUrl = await getBaseUrl();
 
     // 1. Core pages (always present)
     const routes = ['', '/jobs', '/explore', '/about'].map((route: string) => ({

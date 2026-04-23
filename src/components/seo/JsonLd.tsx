@@ -1,7 +1,7 @@
 import { getBaseUrl } from "@/lib/domain";
 
-export default function JsonLd() {
-    const baseUrl = getBaseUrl();
+export default async function JsonLd() {
+    const baseUrl = await getBaseUrl();
     const webAppSchema = {
         "@context": "https://schema.org",
         "@type": "WebApplication",

@@ -12,7 +12,7 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 import { getBaseUrl } from "@/lib/domain";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = getBaseUrl();
+  const baseUrl = await getBaseUrl();
 
   return {
     title: {

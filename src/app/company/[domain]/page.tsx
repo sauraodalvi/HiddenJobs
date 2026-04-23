@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${getBaseUrl()}/company/${domain}`,
+            canonical: `${await getBaseUrl()}/company/${domain}`,
         },
     };
 }
@@ -48,7 +48,7 @@ export default async function CompanyHubPage({ params }: PageProps) {
     const seo = getCompanySeoMetadata(domain);
 
     // Structured Data
-    const breadcrumbs = getBreadcrumbSchema([
+    const breadcrumbs = await getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Companies', item: '/jobs' },
         { name: seo.companyName, item: `/company/${domain}` }

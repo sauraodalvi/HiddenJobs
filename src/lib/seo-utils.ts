@@ -250,8 +250,8 @@ export function generateSeoDork(platformDomain: string, roleName: string, locati
 
 import { getBaseUrl } from "./domain";
 
-export function getBreadcrumbSchema(items: { name: string, item: string }[]) {
-    const baseUrl = getBaseUrl();
+export async function getBreadcrumbSchema(items: { name: string, item: string }[]) {
+    const baseUrl = await getBaseUrl();
     return {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -264,8 +264,8 @@ export function getBreadcrumbSchema(items: { name: string, item: string }[]) {
     };
 }
 
-export function getJobPostingSchema(roleName: string, locationName: string, description: string) {
-    const baseUrl = getBaseUrl();
+export async function getJobPostingSchema(roleName: string, locationName: string, description: string) {
+    const baseUrl = await getBaseUrl();
     const datePosted = new Date().toISOString().split('T')[0];
     const validThrough = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 

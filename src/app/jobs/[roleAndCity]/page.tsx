@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${getBaseUrl()}/jobs/${roleAndCity}`,
+            canonical: `${await getBaseUrl()}/jobs/${roleAndCity}`,
         },
         robots: seo.robots || 'index, follow',
     };
@@ -79,13 +79,13 @@ export default async function JobPage({ params }: Props) {
     if (!seo) notFound();
 
     // Structured Data for AEO/GEO
-    const breadcrumbs = getBreadcrumbSchema([
+    const breadcrumbs = await getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Jobs', item: '/jobs' },
         { name: `${seo.role.name} in ${seo.location.name}`, item: `/jobs/${roleAndCity}` }
     ]);
 
-    const jobSchema = getJobPostingSchema(seo.role.name, seo.location.name, seo.description);
+    const jobSchema = await getJobPostingSchema(seo.role.name, seo.location.name, seo.description);
     const faqSchema = seo.faqs ? getFaqSchema(seo.faqs) : null;
 
     return (
