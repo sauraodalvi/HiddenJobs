@@ -86,12 +86,11 @@ export default function RootLayout({
           `}
         </Script>
         {/* Google AdSense */}
-        <Script
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1547704332368072"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        ></script>
       </head>
       <body className={`${inter.variable} ${jetbrains.variable} font-sans`} suppressHydrationWarning>
         <ThemeProvider
