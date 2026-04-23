@@ -65,6 +65,9 @@ export async function generateMetadata(): Promise<Metadata> {
         'max-snippet': -1,
       },
     },
+    other: {
+      "google-adsense-account": "ca-pub-1547704332368072"
+    },
   };
 }
 
