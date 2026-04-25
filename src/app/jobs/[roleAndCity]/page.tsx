@@ -11,6 +11,7 @@ import { desc } from 'drizzle-orm';
 import { Sparkles, Check } from 'lucide-react';
 import Link from 'next/link';
 import { getBaseUrl } from '@/lib/domain';
+import { AffiliateRail } from '@/components/affiliate/AffiliateRail';
 
 interface Props {
     params: Promise<{
@@ -170,6 +171,11 @@ export default async function JobPage({ params }: Props) {
                     </div>
                 </Suspense>
 
+                {/* Contextual Affiliate Banner - Highest Intent (Resume/Prep) */}
+                <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-8">
+                    <AffiliateRail variant="apply" role={seo.role.name} />
+                </div>
+
                 {/* AEO FAQ Section */}
                 {seo.faqs && (
                     <section className="mt-32 max-w-4xl mx-auto">
@@ -184,6 +190,11 @@ export default async function JobPage({ params }: Props) {
                         </div>
                     </section>
                 )}
+
+                {/* Contextual Affiliate Banner - Mid Intent (Research/Learning) */}
+                <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-8">
+                    <AffiliateRail variant="research" />
+                </div>
             </main>
             <Footer />
         </div>

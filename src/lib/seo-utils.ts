@@ -293,14 +293,6 @@ export async function getJobPostingSchema(roleName: string, locationName: string
                 "postalCode": "00000",
                 "addressCountry": "US"
             }
-        },
-        "baseSalary": {
-            "@type": "MonetaryAmount",
-            "currency": "USD",
-            "value": {
-                "@type": "QuantitativeValue",
-                "unitText": "YEAR"
-            }
         }
     };
 }

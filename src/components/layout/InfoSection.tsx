@@ -1,5 +1,5 @@
-
 import { HelpCircle, Zap, Shield, Globe, Search, Layers } from "lucide-react";
+import { AffiliateRail } from "@/components/affiliate/AffiliateRail";
 
 const faqs = [
     {
@@ -97,6 +97,11 @@ export function InfoSection() {
                     </div>
                     {/* Decorative Background Element */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] -mr-32 -mt-32" />
+                </div>
+
+                {/* Contextual Affiliate Banner - Books (Brand/Trust building) */}
+                <div className="mt-16">
+                    <AffiliateRail variant="books" />
                 </div>
             </div>
         </section>

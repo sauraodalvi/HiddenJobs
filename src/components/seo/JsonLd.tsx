@@ -13,12 +13,7 @@ export default async function JsonLd() {
         "aggregateRating": {
             "@type": "AggregateRating",
             "ratingValue": "4.9",
-            "reviewCount": "120",
-            "itemReviewed": {
-                "@type": "WebApplication",
-                "name": "HiddenJobs",
-                "url": baseUrl
-            }
+            "reviewCount": "120"
         },
         "offers": {
             "@type": "Offer",
