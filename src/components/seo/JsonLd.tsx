@@ -2,6 +2,19 @@ import { getBaseUrl } from "@/lib/domain";
 
 export default async function JsonLd() {
     const baseUrl = await getBaseUrl();
+    const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HiddenJobs",
+        "url": baseUrl,
+        "logo": `${baseUrl}/logo.png`,
+        "sameAs": [
+            "https://twitter.com/HiddenJobs",
+            "https://github.com/HiddenJobs"
+        ],
+        "description": "HiddenJobs is the world's leading search engine for unlisted tech roles on Greenhouse, Lever, and Ashby."
+    };
+
     const webAppSchema = {
         "@context": "https://schema.org",
         "@type": "WebApplication",
@@ -81,6 +94,10 @@ export default async function JsonLd() {
 
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+            />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}

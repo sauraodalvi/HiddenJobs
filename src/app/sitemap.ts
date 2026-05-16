@@ -5,8 +5,7 @@ import { DIRECTORY_PLATFORMS, DIRECTORY_LOCATIONS, DIRECTORY_ROLES } from '@/lib
 import { getBaseUrl } from '@/lib/domain';
 import { desc } from 'drizzle-orm';
 
-// export const dynamic = 'force-static';
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 export const revalidate = 86400; // 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -26,8 +25,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     try {
-        const dbCities = await db.select().from(cities);
-        const dbRoles = await db.select().from(jobRoles);
+        // Parallelize DB queries for speed
+        const [dbCities, dbRoles] = await Promise.all([
+            db.select().from(cities).orderBy(desc(cities.population)).limit(500),
+            db.select().from(jobRoles).limit(200)
+        ]);
 
         // 2. Location Hubs (Only if jobs > 0)
         const locationHubs = Array.isArray(dbCities)
@@ -50,11 +52,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             : [];
 
         // 4. Job Combo Pages (Programmatic SEO)
-        // Only include top 100 cities with jobs and top 150 roles
+        // High Intent: Top 50 cities and Top 100 roles (5000 pages)
         const topCities = Array.isArray(dbCities)
-            ? dbCities.filter((c: any) => (c.jobCount || 0) > 0).slice(0, 100)
+            ? dbCities.filter((c: any) => (c.jobCount || 0) > 0).slice(0, 50)
             : [];
-        const topRoles = Array.isArray(dbRoles) ? dbRoles.slice(0, 150) : [];
+        const topRoles = Array.isArray(dbRoles) ? dbRoles.slice(0, 100) : [];
 
         const jobRoutes: MetadataRoute.Sitemap = [];
 
@@ -69,7 +71,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             }
         }
 
-        // 5. Platform-Specific Pages
+        // 5. Platform-Specific Pages (Focus on major platforms and top markets)
         for (const platform of DIRECTORY_PLATFORMS) {
             jobRoutes.push({
                 url: `${baseUrl}/jobs/platform/${platform.slug}`,
@@ -78,9 +80,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 priority: 0.9,
             });
 
-            // Platform combos (Capped for crawl budget)
-            for (const city of topCities.slice(0, 20)) {
-                for (const role of topRoles.slice(0, 30)) {
+            // Platform combos (Capped for crawl budget: Top 10 cities x Top 20 roles = 200 per platform)
+            for (const city of topCities.slice(0, 10)) {
+                for (const role of topRoles.slice(0, 20)) {
                     jobRoutes.push({
                         url: `${baseUrl}/jobs/platform/${platform.slug}/${role.slug}/${city.slug}`,
                         lastModified: new Date(),
@@ -99,7 +101,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             }
         });
 
-        Array.from(companyDomains).forEach((domain: string) => {
+        Array.from(companyDomains).slice(0, 500).forEach((domain: string) => {
             jobRoutes.push({
                 url: `${baseUrl}/company/${domain}`,
                 lastModified: new Date(),

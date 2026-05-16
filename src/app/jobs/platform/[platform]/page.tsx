@@ -26,11 +26,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!seo) return { title: 'Not Found' };
 
+    const baseUrl = await getBaseUrl();
+
     return {
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${await getBaseUrl()}/jobs/platform/${platformSlug}`,
+            canonical: `${baseUrl}/jobs/platform/${platformSlug}`,
         },
         robots: seo.robots || 'index, follow',
     };

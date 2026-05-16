@@ -13,6 +13,8 @@ import Link from 'next/link';
 import { getBaseUrl } from '@/lib/domain';
 import { AffiliateRail } from '@/components/affiliate/AffiliateRail';
 
+import { CareerIntelligence } from '@/components/seo/CareerIntelligence';
+
 interface Props {
     params: Promise<{
         roleAndCity: string;
@@ -46,18 +48,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { roleAndCity } = await params;
     const parts = roleAndCity.split('-in-');
 
-    if (parts.length !== 2) return { title: 'Jobs | HiddenJobs' };
+    if (parts.length !== 2) return { title: 'Jobs' };
 
     const [roleSlug, locationSlug] = parts;
     const seo = await getSeoMetadata(roleSlug, locationSlug);
 
-    if (!seo) return { title: 'Jobs | HiddenJobs' };
+    if (!seo) return { title: 'Jobs' };
+
+    const baseUrl = await getBaseUrl();
 
     return {
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${await getBaseUrl()}/jobs/${roleAndCity}`,
+            canonical: `${baseUrl}/jobs/${roleAndCity}`,
         },
         robots: seo.robots || 'index, follow',
     };
@@ -110,70 +114,83 @@ export default async function JobPage({ params }: Props) {
                 )}
 
                 <header className="mb-16 text-center max-w-4xl mx-auto">
-                    <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl mb-6">
+                    <div className="flex justify-center mb-6">
+                         <div className="px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
+                            Verified Unlisted Market
+                         </div>
+                    </div>
+                    <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-7xl mb-8 leading-[1.1]">
                         Explore <span className="text-primary">{seo.role.name}</span> Roles in <span className="text-primary">{seo.location.name}</span>
                     </h1>
-                    <p className="mt-6 text-xl leading-relaxed text-slate-500 dark:text-slate-400">
+                    <p className="mt-6 text-xl leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
                         {seo.description}
                     </p>
                 </header>
 
-                {/* AI Overview Section for GEO - Visually Enhanced */}
-                {seo.aiOverview && (
-                    <section className="max-w-4xl mx-auto mb-20 bg-white dark:bg-slate-800 p-10 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl relative overflow-hidden group">
-                        {/* Status bar */}
-                        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary/50 to-blue-600/50" />
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
+                    {/* Main Content */}
+                    <div className="lg:col-span-8 space-y-20">
+                        {/* AI Overview Section for GEO - Visually Enhanced */}
+                        {seo.aiOverview && (
+                            <article className="bg-white dark:bg-slate-800 p-10 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl relative overflow-hidden group">
+                                {/* Status bar */}
+                                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-blue-600 to-indigo-600" />
 
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="p-3 bg-primary/10 rounded-2xl">
-                                <Sparkles className="w-6 h-6 text-primary" />
-                            </div>
-                            <div>
-                                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Market Intelligence</h2>
-                                <p className="text-[10px] font-black tracking-widest text-slate-400 uppercase opacity-70">AI-Generated Insights for {seo.location.name}</p>
-                            </div>
-                        </div>
+                                <header className="flex items-center justify-between mb-8">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-3 bg-primary/10 rounded-2xl">
+                                            <Sparkles className="w-6 h-6 text-primary" />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Market Intelligence</h2>
+                                            <p className="text-[10px] font-black tracking-widest text-slate-400 uppercase opacity-70 italic">Verified for {seo.location.name}</p>
+                                        </div>
+                                    </div>
+                                    <aside className="hidden sm:block">
+                                         <cite className="text-[10px] font-mono text-slate-400 uppercase not-italic">Source: Internal Index v2.4</cite>
+                                    </aside>
+                                </header>
 
-                        <div
-                            className="prose prose-slate dark:prose-invert max-w-none text-lg text-slate-600 dark:text-slate-300 leading-relaxed space-y-4 marker:text-primary"
-                            dangerouslySetInnerHTML={{ __html: seo.aiOverview }}
-                        />
+                                <div
+                                    className="prose prose-slate dark:prose-invert max-w-none text-lg text-slate-600 dark:text-slate-300 leading-relaxed space-y-4 marker:text-primary"
+                                    dangerouslySetInnerHTML={{ __html: seo.aiOverview }}
+                                />
 
-                        {/* Subtle interactive element */}
-                        <div className="mt-8 pt-8 border-t border-slate-100 dark:border-white/5 flex items-center justify-between">
-                            <div className="flex flex-col gap-1">
-                                <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                                    <Check className="w-3 h-3 text-emerald-500" />
-                                    Last Scanned: {new Date(seo.updatedAt).toLocaleDateString()}
-                                </div>
-                                <div className="text-[10px] text-slate-400 font-medium italic">
-                                    Curated by HiddenJobs Analysis Team
-                                </div>
-                            </div>
-                            <Link
-                                href="/#pricing"
-                                className="text-[10px] font-black text-primary hover:underline uppercase tracking-widest"
-                            >
-                                Get Deeper Market Data →
-                            </Link>
-                        </div>
-                    </section>
-                )}
+                                <footer className="mt-8 pt-8 border-t border-slate-100 dark:border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                    <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                        <Check className="w-3 h-3 text-emerald-500" />
+                                        Data Freshness: {new Date(seo.updatedAt).toLocaleDateString()}
+                                    </div>
+                                    <Link
+                                        href="/#pricing"
+                                        className="text-[10px] font-black text-primary hover:underline uppercase tracking-widest"
+                                    >
+                                        Access Global Market Data →
+                                    </Link>
+                                </footer>
+                                
+                                {/* Visual Accent */}
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-3xl -mr-32 -mt-32 pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
+                            </article>
+                        )}
 
-                <Suspense fallback={
-                    <div className="w-full h-48 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-3xl" />
-                }>
-                    <div className="mt-12">
-                        <ResultsSection
-                            initialRole={seo.role.name}
-                            initialLocation={seo.location.name}
-                        />
+                        <Suspense fallback={
+                            <div className="w-full h-48 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-3xl" />
+                        }>
+                            <ResultsSection
+                                initialRole={seo.role.name}
+                                initialLocation={seo.location.name}
+                            />
+                        </Suspense>
                     </div>
-                </Suspense>
 
-                {/* Contextual Affiliate Banner - Highest Intent (Resume/Prep) */}
-                <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-8">
-                    <AffiliateRail variant="apply" role={seo.role.name} />
+                    {/* Sidebar */}
+                    <aside className="lg:col-span-4 space-y-8">
+                        <CareerIntelligence />
+                        <div className="sticky top-24">
+                            <AffiliateRail variant="apply" role={seo.role.name} />
+                        </div>
+                    </aside>
                 </div>
 
                 {/* AEO FAQ Section */}

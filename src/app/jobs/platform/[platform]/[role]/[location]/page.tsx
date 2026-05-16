@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { getSeoMetadata, getBreadcrumbSchema, getJobPostingSchema } from '@/lib/seo-utils';
+import { getSeoMetadata, getBreadcrumbSchema, getJobPostingSchema, getFallbackSeoMetadata } from '@/lib/seo-utils';
 import { notFound } from 'next/navigation';
 import { ResultsSection } from '@/components/results/ResultsSection';
 import { Header } from '@/components/layout/Header';
@@ -19,24 +19,31 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { platform, role, location } = await params;
-    const seo = await getSeoMetadata(role, location);
+    let seo = await getSeoMetadata(role, location);
+    if (!seo) {
+        seo = await getFallbackSeoMetadata(role, location);
+    }
 
-    if (!seo) return { title: 'Jobs | HiddenJobs' };
+    if (!seo) return { title: 'Jobs' };
 
     const platformLabel = DIRECTORY_PLATFORMS.find(p => p.slug === platform)?.label || platform;
+    const baseUrl = await getBaseUrl();
 
     return {
-        title: `${seo.role.name} Roles in ${seo.location.name} on ${platformLabel} | HiddenJobs`,
+        title: `${seo.role.name} Roles in ${seo.location.name} on ${platformLabel}`,
         description: `Browse ${seo.role.name} job opportunities in ${seo.location.name} specifically indexed from ${platformLabel}. ${seo.description}`,
         alternates: {
-            canonical: `${await getBaseUrl()}/jobs/platform/${platform}/${role}/${location}`,
+            canonical: `${baseUrl}/jobs/platform/${platform}/${role}/${location}`,
         },
     };
 }
 
 export default async function PlatformJobPage({ params }: Props) {
     const { platform, role, location } = await params;
-    const seo = await getSeoMetadata(role, location);
+    let seo = await getSeoMetadata(role, location);
+    if (!seo) {
+        seo = await getFallbackSeoMetadata(role, location);
+    }
 
     if (!seo) notFound();
 

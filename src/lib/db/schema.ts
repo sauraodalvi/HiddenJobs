@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp, integer, boolean, uniqueIndex, doublePrecision } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, integer, boolean, uniqueIndex, index, doublePrecision } from "drizzle-orm/pg-core";
 
 // Cities table - storing millions of global locations
 export const cities = pgTable("cities", {
@@ -15,6 +15,7 @@ export const cities = pgTable("cities", {
 }, (table) => {
     return {
         slugIdx: uniqueIndex("city_slug_idx").on(table.slug),
+        popIdx: index("city_pop_idx").on(table.population), // Optimization for sitemap sorting
     };
 });
 
