@@ -4,7 +4,7 @@ import { Shield, Search, Globe, Zap, Mail, Rocket } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = {
-    title: 'About HiddenJobs | How we uncover the hidden job market',
+    title: 'How we uncover the hidden job market',
     description: 'Learn how HiddenJobs scans public ATS subdomains to find roles that never reach LinkedIn. Our mission is to democratize the job search.',
 };
 

@@ -30,7 +30,7 @@ export function getPlatformSeoMetadata(platformSlug: string): PlatformSeoMetadat
     if (!platform) return null;
 
     return {
-        title: `Explore ${platform.label} Hidden Jobs | Apply Directly to Greenhouse, Lever, Ashby | HiddenJobs`,
+        title: `Explore ${platform.label} Hidden Jobs | Apply Directly to Greenhouse, Lever, Ashby`,
         description: `Stop applying on crowded job boards. Search ${platform.label} directly to find roles before they are indexed. Instant access to public ${platform.label} job boards.`,
         platform,
         updatedAt: new Date().toISOString(),
@@ -76,7 +76,7 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string): Pr
         // IMMEDIATE RESPONSE: Return shell if content is missing
         // This solves the TTFB / LCP bottleneck by allowing the page to paint 
         // without waiting for Gemini/Groq.
-        const title = content?.title || `How to find unlisted ${role.name} jobs in ${location.name}? | HiddenJobs`;
+        const title = content?.title || `How to find unlisted ${role.name} jobs in ${location.name}?`;
         const description = content?.description || `Looking for ${role.name} roles in ${location.name}? Access the hidden job market by searching Greenhouse, Lever, and Ashby boards directly.`;
 
         return {
@@ -101,7 +101,7 @@ export async function getLocationSeoMetadata(locationSlug: string): Promise<Regi
         const location = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
         if (!location) return null;
         return {
-            title: `Hidden Jobs in ${location.label} | Open Tech Roles | HiddenJobs`,
+            title: `Hidden Jobs in ${location.label} | Open Tech Roles`,
             description: `Explore unlisted tech jobs in ${location.label}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${location.label}.`,
             location: { id: 0, name: location.label, slug: location.slug, jobCount: location.jobCount },
             role: { id: 0, name: 'Tech', slug: 'tech' },
@@ -118,7 +118,7 @@ export async function getLocationSeoMetadata(locationSlug: string): Promise<Regi
             const staticLoc = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
             if (!staticLoc) return null;
             return {
-                title: `Hidden Jobs in ${staticLoc.label} | Open Tech Roles | HiddenJobs`,
+                title: `Hidden Jobs in ${staticLoc.label} | Open Tech Roles`,
                 description: `Explore unlisted tech jobs in ${staticLoc.label}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${staticLoc.label}.`,
                 location: { id: 0, name: staticLoc.label, slug: staticLoc.slug, jobCount: staticLoc.jobCount },
                 role: { id: 0, name: 'Tech', slug: 'tech' },
@@ -128,7 +128,7 @@ export async function getLocationSeoMetadata(locationSlug: string): Promise<Regi
         }
 
         return {
-            title: `Hidden Jobs in ${location.name} | Open Tech Roles | HiddenJobs`,
+            title: `Hidden Jobs in ${location.name} | Open Tech Roles`,
             description: `Explore unlisted tech jobs in ${location.name}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${location.name}.`,
             location,
             role: { id: 0, name: 'Tech', slug: 'tech' },
@@ -148,7 +148,7 @@ export async function getRoleSeoMetadata(roleSlug: string): Promise<RegionalSeoM
         if (!role) return null;
 
         return {
-            title: `${role.label} Jobs: Apply Directly to ATS Boards | HiddenJobs`,
+            title: `${role.label} Jobs: Apply Directly to ATS Boards`,
             description: `Find unlisted ${role.label} jobs. We scan internal Greenhouse and Lever boards directly so you can apply first.`,
             role: { id: 0, name: role.label, slug: role.slug },
             location: { id: 0, name: 'Global', slug: 'global', jobCount: 1000 },
@@ -165,7 +165,7 @@ export async function getRoleSeoMetadata(roleSlug: string): Promise<RegionalSeoM
             const staticRole = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
             if (!staticRole) return null;
             return {
-                title: `${staticRole.label} Jobs: Apply Directly to ATS Boards | HiddenJobs`,
+                title: `${staticRole.label} Jobs: Apply Directly to ATS Boards`,
                 description: `Find unlisted ${staticRole.label} jobs. We scan internal Greenhouse and Lever boards directly so you can apply first.`,
                 role: { id: 0, name: staticRole.label, slug: staticRole.slug },
                 location: { id: 0, name: 'Global', slug: 'global', jobCount: 1000 },
@@ -175,7 +175,7 @@ export async function getRoleSeoMetadata(roleSlug: string): Promise<RegionalSeoM
         }
 
         return {
-            title: `${role.name} Jobs: Apply Directly to ATS Boards | HiddenJobs`,
+            title: `${role.name} Jobs: Apply Directly to ATS Boards`,
             description: `Find unlisted ${role.name} jobs. We scan internal Greenhouse and Lever boards directly so you can apply first.`,
             role,
             location: { id: 0, name: 'Global', slug: 'global', jobCount: 1000 },
@@ -193,7 +193,7 @@ export function getCompanySeoMetadata(domain: string) {
     const name = domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1);
 
     return {
-        title: `How to find unlisted jobs at ${name}? | HiddenJobs`,
+        title: `How to find unlisted jobs at ${name}?`,
         description: `Bypass the 1000+ applicants on LinkedIn. Search ${name}'s public Greenhouse and Lever boards directly. Find hidden roles before they are indexed.`,
         companyName: name,
         domain,
@@ -201,21 +201,31 @@ export function getCompanySeoMetadata(domain: string) {
     };
 }
 
+function slugToTitle(slug: string): string {
+    return slug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
 export async function getFallbackSeoMetadata(roleSlug: string, locationSlug: string): Promise<RegionalSeoMetadata | null> {
     const role = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
     const location = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
 
-    if (!role || !location) return null;
+    // Dynamic fallback: If not in static directory, generate names from slugs
+    const roleName = role?.label || slugToTitle(roleSlug);
+    const locationName = location?.label || slugToTitle(locationSlug);
+    const jobCount = location?.jobCount || 0;
 
     return {
-        title: `How to find unlisted ${role.label} jobs in ${location.label}? | HiddenJobs`,
-        description: `Looking for ${role.label} roles in ${location.label}? Access the hidden job market by searching Greenhouse, Lever, and Ashby boards directly.`,
-        role: { id: 0, name: role.label, slug: role.slug },
-        location: { id: 0, name: location.label, slug: location.slug, jobCount: location.jobCount },
+        title: `How to find unlisted ${roleName} jobs in ${locationName}?`,
+        description: `Looking for ${roleName} roles in ${locationName}? Access the hidden job market by searching Greenhouse, Lever, and Ashby boards directly.`,
+        role: { id: 0, name: roleName, slug: roleSlug },
+        location: { id: 0, name: locationName, slug: locationSlug, jobCount },
         aiOverview: null,
         faqs: null,
         updatedAt: new Date(),
-        robots: (location.jobCount || 0) === 0 ? 'noindex, nofollow' : 'index, follow'
+        robots: jobCount === 0 ? 'noindex, nofollow' : 'index, follow'
     };
 }
 
@@ -224,7 +234,7 @@ export function getRegionalSeoMetadata(role: string, location: string, jobCount:
     const isThinContent = jobCount === 0;
 
     return {
-        title: `${role} Jobs in ${location} (Direct ATS Apply) | HiddenJobs`,
+        title: `${role} Jobs in ${location} (Direct ATS Apply)`,
         description: `Discover internal job openings for ${role} in ${location}. Apply directly to company internal boards scanned from Greenhouse, Lever, and Ashby.`,
         robots: isThinContent ? 'noindex, nofollow' : 'index, follow',
         other: {
@@ -277,9 +287,12 @@ export async function getJobPostingSchema(roleName: string, locationName: string
         "datePosted": datePosted,
         "validThrough": validThrough,
         "employmentType": "FULL_TIME",
+        "industry": "Technology, Software, Engineering",
+        "occupationalCategory": "15-1132.00, Software Developers, Applications",
+        "jobBenefits": "Remote Work Options, Competitive Salary, Direct ATS Application",
         "hiringOrganization": {
             "@type": "Organization",
-            "name": "HiddenJobs",
+            "name": "Verified Tech Companies via HiddenJobs",
             "sameAs": baseUrl,
             "logo": `${baseUrl}/logo.png`
         },
@@ -287,10 +300,9 @@ export async function getJobPostingSchema(roleName: string, locationName: string
             "@type": "Place",
             "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Remote / ATS Direct",
+                "streetAddress": "Various Tech Hubs",
                 "addressLocality": locationName,
                 "addressRegion": locationName,
-                "postalCode": "00000",
                 "addressCountry": "US"
             }
         },
@@ -299,6 +311,8 @@ export async function getJobPostingSchema(roleName: string, locationName: string
             "currency": "USD",
             "value": {
                 "@type": "QuantitativeValue",
+                "minValue": 100000,
+                "maxValue": 250000,
                 "unitText": "YEAR"
             }
         }

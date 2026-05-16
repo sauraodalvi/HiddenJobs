@@ -6,7 +6,7 @@ import { getDirectoryData } from '@/app/actions/geo';
 import { DIRECTORY_ROLES } from '@/lib/constants';
 
 export const metadata = {
-    title: 'Job Directories | HiddenJobs',
+    title: 'Job Directories',
     description: 'Browse hidden jobs by platform, role, and location. Explore unlisted opportunities on Greenhouse, Lever, and Ashby.',
 };
 

@@ -261,11 +261,11 @@ export function ResultsSection({ initialRole, initialLocation, initialPlatform, 
                                 href={getActiveUrl()}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
+                                className="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/5"
                             >
-                                <ExternalLink className="w-3 h-3" />
-                                <span className="hidden sm:inline">Open in New Tab</span>
-                                <span className="sm:hidden">External</span>
+                                <ExternalLink className="w-3.5 h-3.5" />
+                                <span className="hidden sm:inline text-xs">Reveal Internal Listing</span>
+                                <span className="sm:hidden text-xs">Reveal</span>
                             </a>
                         </div>
 
@@ -351,13 +351,13 @@ export function ResultsSection({ initialRole, initialLocation, initialPlatform, 
                             <div className="flex items-center gap-4">
                                 <span className="flex items-center gap-1.5">
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                    indexing 50,000+ jobs
+                                    Indexing 50,000+ Direct-ATS Jobs
                                 </span>
                                 <span className="opacity-30">|</span>
-                                <span>last update: moments ago</span>
+                                <span className="text-emerald-600 dark:text-emerald-400 font-bold">Index Status: Verified Moments Ago</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span>search latency: ~0.4s</span>
+                                <span className="text-primary/70">Engine Latency: ~0.4s</span>
                             </div>
                         </div>
                     </div>

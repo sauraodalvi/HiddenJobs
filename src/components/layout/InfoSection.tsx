@@ -1,5 +1,5 @@
-
 import { HelpCircle, Zap, Shield, Globe, Search, Layers } from "lucide-react";
+import { AffiliateRail } from "@/components/affiliate/AffiliateRail";
 
 const faqs = [
     {
@@ -76,8 +76,8 @@ export function InfoSection() {
                             <h3 className="text-lg font-bold mb-3 text-slate-900 dark:text-white group-hover:text-primary transition-colors">
                                 {faq.question}
                             </h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed italic">
-                                "{faq.answer}"
+                            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                                {faq.answer}
                             </p>
                         </article>
                     ))}
@@ -91,12 +91,18 @@ export function InfoSection() {
                             <div className="text-sm uppercase tracking-widest font-bold opacity-60">of Tech Jobs</div>
                         </div>
                         <div className="h-10 w-[1px] bg-white/10 hidden md:block" />
-                        <p className="text-lg opacity-90 font-medium leading-relaxed italic">
+                        <p className="text-lg opacity-90 font-medium leading-relaxed">
                             "Most high-growth startups only list on their official Greenhouse or Lever boards to avoid 'spam' applications. If you aren't looking there, you aren't looking."
+                            <span className="block mt-4 text-xs font-bold text-blue-400 uppercase tracking-widest">— HiddenJobs Methodology (48h Speed Margin)</span>
                         </p>
                     </div>
                     {/* Decorative Background Element */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] -mr-32 -mt-32" />
+                </div>
+
+                {/* Contextual Affiliate Banner - Books (Brand/Trust building) */}
+                <div className="mt-16">
+                    <AffiliateRail variant="books" />
                 </div>
             </div>
         </section>
