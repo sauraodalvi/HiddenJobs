@@ -15,7 +15,7 @@ export function useSearchFilters() {
 
     // State values derived from URL
     const filters = useMemo(() => {
-        const isCustomRole = searchParams.has('custom');
+        const isCustomRole = searchParams?.has('custom') ?? false;
         const customRole = searchParams.get('custom') ?? '';
 
         return {

@@ -6,8 +6,8 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import JsonLd from "@/components/seo/JsonLd";
 import Script from "next/script";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
 
 import { getBaseUrl } from "@/lib/domain";
 

@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const baseUrl = await getBaseUrl();
 
     return {
-        title: `${seo.role.name} Roles in ${seo.location.name} on ${platformLabel}`,
+        title: `${seo.role.name} Jobs in ${seo.location.name} (${platformLabel} Unlisted)`,
         description: `Browse ${seo.role.name} job opportunities in ${seo.location.name} specifically indexed from ${platformLabel}. ${seo.description}`,
         alternates: {
             canonical: `${baseUrl}/jobs/platform/${platform}/${role}/${location}`,

@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
-      <GlobalSchema />
       <Header />
 
       <main className="relative pt-20 pb-32 dot-grid">
@@ -33,16 +32,21 @@ export default function Home() {
             Access the 60% of tech roles that never reach public boards. Direct-to-ATS scraping for Greenhouse, Lever, and Ashby.
           </p>
 
-          {/* Main Interaction Area (The Island & Results) */}
-          <Suspense fallback={
-            <div className="w-full space-y-12 animate-in fade-in duration-1000">
+          <GlobalSchema />
+
+          {/* Main Interaction Area (The Island & Results) - Split Suspense for independent streaming */}
+          <div className="space-y-8">
+            <Suspense fallback={
               <div className="w-full h-32 bg-gray-100 dark:bg-slate-800/50 rounded-2xl max-w-3xl mx-auto animate-pulse" />
+            }>
+              <FilterSection />
+            </Suspense>
+            <Suspense fallback={
               <div className="w-full h-[600px] bg-gray-50 dark:bg-slate-900/30 rounded-3xl animate-pulse" />
-            </div>
-          }>
-            <FilterSection />
-            <ResultsSection />
-          </Suspense>
+            }>
+              <ResultsSection />
+            </Suspense>
+          </div>
 
           {/* New SEO/AEO/GEO Section */}
           <InfoSection />
