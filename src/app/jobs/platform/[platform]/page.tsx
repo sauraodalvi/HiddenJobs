@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
 import { getPlatformSeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
 import { Header } from '@/components/layout/Header';
@@ -42,7 +42,9 @@ export default async function PlatformDirectoryPage({ params }: PageProps) {
     const { platform: platformSlug } = await params;
     const seo = getPlatformSeoMetadata(platformSlug);
 
-    if (!seo) notFound();
+    if (!seo) {
+        permanentRedirect('/jobs/platform');
+    }
 
     const { platform } = seo;
 

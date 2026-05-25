@@ -8,6 +8,13 @@ import { InfoSection } from "@/components/layout/InfoSection";
 import { Footer } from "@/components/layout/Footer";
 import { AboutHiddenMarket } from "@/components/seo/AboutHiddenMarket";
 import { GlobalSchema } from "@/components/seo/GlobalSchema";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export default function Home() {
   return (

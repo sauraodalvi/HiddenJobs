@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { getSeoMetadata, getBreadcrumbSchema, getJobPostingSchema, getFallbackSeoMetadata } from '@/lib/seo-utils';
-import { notFound } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 import { ResultsSection } from '@/components/results/ResultsSection';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -45,7 +45,9 @@ export default async function PlatformJobPage({ params }: Props) {
         seo = await getFallbackSeoMetadata(role, location);
     }
 
-    if (!seo) notFound();
+    if (!seo) {
+        permanentRedirect('/jobs/platform');
+    }
 
     const platformLabel = DIRECTORY_PLATFORMS.find(p => p.slug === platform)?.label || platform;
 

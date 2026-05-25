@@ -71,7 +71,9 @@ export default async function JobPage({ params }: Props) {
     const { roleAndCity } = await params;
     const parts = roleAndCity.split('-in-');
 
-    if (parts.length !== 2) notFound();
+    if (parts.length !== 2) {
+        notFound();
+    }
 
     const [roleSlug, locationSlug] = parts;
     let seo = await getSeoMetadata(roleSlug, locationSlug);
@@ -81,7 +83,9 @@ export default async function JobPage({ params }: Props) {
         seo = await getFallbackSeoMetadata(roleSlug, locationSlug);
     }
 
-    if (!seo) notFound();
+    if (!seo) {
+        notFound();
+    }
 
     // Structured Data for AEO/GEO
     const breadcrumbs = await getBreadcrumbSchema([

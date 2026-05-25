@@ -169,6 +169,7 @@ export const DIRECTORY_ROLES = [
   { slug: 'reliability-engineer', label: 'Site Reliability Engineer' },
   { slug: 'security-engineer', label: 'Security Engineer' },
   { slug: 'cloud-architect', label: 'Cloud Architect' },
+  { slug: 'devops-engineer', label: 'DevOps Engineer' },
 
   // Frontend/Mobile
   { slug: 'frontend-engineer', label: 'Frontend Engineer' },
@@ -202,21 +203,25 @@ export const DIRECTORY_ROLES = [
   { slug: 'growth-pm', label: 'Growth Product Manager' },
   { slug: 'platform-pm', label: 'Platform Product Manager' },
   { slug: 'technical-pm', label: 'Technical Product Manager' },
+  { slug: 'technical-product-manager', label: 'Technical Product Manager' },
   { slug: 'staff-product-manager', label: 'Staff Product Manager' },
   { slug: 'director-of-product', label: 'Director of Product' },
   { slug: 'vp-product', label: 'VP of Product' },
   { slug: 'associate-pm', label: 'Associate Product Manager' },
+  { slug: 'associate-product-manager', label: 'Associate Product Manager' },
 
   { slug: 'product-designer', label: 'Product Designer' },
   { slug: 'senior-product-designer', label: 'Senior Product Designer' },
   { slug: 'ux-designer', label: 'UX Designer' },
   { slug: 'ux-researcher', label: 'UX Researcher' },
   { slug: 'brand-designer', label: 'Brand Designer' },
+  { slug: 'design-manager', label: 'Design Manager' },
   { slug: 'ux-writer', label: 'UX Writer' },
 
   // --- Ops, Marketing & Sales ---
   { slug: 'data-analyst', label: 'Data Analyst' },
   { slug: 'business-analyst', label: 'Business Analyst' },
+  { slug: 'business-operations', label: 'Business Operations' },
   { slug: 'growth-marketer', label: 'Growth Marketer' },
   { slug: 'product-marketing-manager', label: 'Product Marketing Manager' },
   { slug: 'content-strategist', label: 'Content Strategist' },

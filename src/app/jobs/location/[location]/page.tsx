@@ -35,7 +35,9 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
     const { location: locationSlug } = await params;
     const seo = await getLocationSeoMetadata(locationSlug);
 
-    if (!seo) notFound();
+    if (!seo) {
+        notFound();
+    }
 
     const { location } = seo;
 

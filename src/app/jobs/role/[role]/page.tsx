@@ -35,7 +35,9 @@ export default async function RoleDirectoryPage({ params }: PageProps) {
     const { role: roleSlug } = await params;
     const seo = await getRoleSeoMetadata(roleSlug);
 
-    if (!seo) notFound();
+    if (!seo) {
+        notFound();
+    }
 
     const { role } = seo;
 
