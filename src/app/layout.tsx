@@ -27,6 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: '/icon',
       apple: '/apple-icon',
     },
+    manifest: '/manifest.json',
     metadataBase: new URL(baseUrl),
     verification: {
       google: "56R-JruPxjmoOonvhlzkMpNgJqO9-PG-AEJsjPXX_pw",
@@ -96,6 +97,9 @@ export default function RootLayout({
         ></script>
       </head>
       <body className={`${inter.variable} ${jetbrains.variable} font-sans`} suppressHydrationWarning>
+        <Script id="sw-register" strategy="afterInteractive">
+          {`if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}`}
+        </Script>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
