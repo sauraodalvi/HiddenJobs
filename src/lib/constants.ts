@@ -1,7 +1,7 @@
 
 export const ATS_PLATFORMS = [
   { name: 'Greenhouse', domain: 'boards.greenhouse.io', logoDomain: 'greenhouse.io', isPro: false },
-  { name: 'Lever', domain: 'jobs.lever.co', logoDomain: 'lever.co', isPro: false },
+  { name: 'Lever', domain: 'lever.co', logoDomain: 'lever.co', isPro: false },
   { name: 'Workday', domain: 'myworkdayjobs.com', logoDomain: 'workday.com', isPro: false },
   { name: 'SmartRecruiters', domain: 'jobs.smartrecruiters.com', logoDomain: 'smartrecruiters.com', isPro: false },
   { name: 'BambooHR', domain: 'bamboohr.com', logoDomain: 'bamboohr.com', isPro: false },
@@ -275,7 +275,7 @@ export const DIRECTORY_LOCATIONS = [
 
 export const DIRECTORY_PLATFORMS = [
   { slug: 'greenhouse', label: 'Greenhouse', domain: 'boards.greenhouse.io' },
-  { slug: 'lever', label: 'Lever', domain: 'jobs.lever.co' },
+  { slug: 'lever', label: 'Lever', domain: 'lever.co' },
   { slug: 'ashby', label: 'Ashby', domain: 'jobs.ashbyhq.com' },
   { slug: 'workday', label: 'Workday', domain: 'myworkdayjobs.com' },
   { slug: 'smartrecruiters', label: 'SmartRecruiters', domain: 'jobs.smartrecruiters.com' },
