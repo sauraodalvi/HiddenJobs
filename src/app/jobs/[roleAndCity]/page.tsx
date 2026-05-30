@@ -45,26 +45,35 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { roleAndCity } = await params;
-    const parts = roleAndCity.split('-in-');
+    try {
+        const { roleAndCity } = await params;
+        const parts = roleAndCity.split('-in-');
 
-    if (parts.length !== 2) return { title: 'Jobs' };
+        if (parts.length !== 2) return { title: 'Jobs' };
 
-    const [roleSlug, locationSlug] = parts;
-    const seo = await getSeoMetadata(roleSlug, locationSlug);
+        const [roleSlug, locationSlug] = parts;
+        let seo = await getSeoMetadata(roleSlug, locationSlug);
+        
+        if (!seo) {
+            seo = await getFallbackSeoMetadata(roleSlug, locationSlug);
+        }
 
-    if (!seo) return { title: 'Jobs' };
+        if (!seo) return { title: 'Jobs' };
 
-    const baseUrl = await getBaseUrl();
+        const baseUrl = await getBaseUrl();
 
-    return {
-        title: seo.title,
-        description: seo.description,
-        alternates: {
-            canonical: `${baseUrl}/jobs/${roleAndCity}`,
-        },
-        robots: seo.robots || 'index, follow',
-    };
+        return {
+            title: seo.title,
+            description: seo.description,
+            alternates: {
+                canonical: `${baseUrl}/jobs/${roleAndCity}`,
+            },
+            robots: seo.robots || 'index, follow',
+        };
+    } catch (error) {
+        console.error('[generateMetadata] Error:', error);
+        return { title: 'Jobs | HiddenJobs' };
+    }
 }
 
 export default async function JobPage({ params }: Props) {

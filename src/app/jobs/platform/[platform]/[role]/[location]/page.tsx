@@ -18,24 +18,29 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { platform, role, location } = await params;
-    let seo = await getSeoMetadata(role, location);
-    if (!seo) {
-        seo = await getFallbackSeoMetadata(role, location);
+    try {
+        const { platform, role, location } = await params;
+        let seo = await getSeoMetadata(role, location);
+        if (!seo) {
+            seo = await getFallbackSeoMetadata(role, location);
+        }
+
+        if (!seo) return { title: 'Jobs' };
+
+        const platformLabel = DIRECTORY_PLATFORMS.find(p => p.slug === platform)?.label || platform;
+        const baseUrl = await getBaseUrl();
+
+        return {
+            title: `${seo.role.name} Jobs in ${seo.location.name} (${platformLabel} Unlisted)`,
+            description: `Browse ${seo.role.name} job opportunities in ${seo.location.name} specifically indexed from ${platformLabel}. ${seo.description}`,
+            alternates: {
+                canonical: `${baseUrl}/jobs/platform/${platform}/${role}/${location}`,
+            },
+        };
+    } catch (error) {
+        console.error('[PlatformJobPage generateMetadata] Error:', error);
+        return { title: 'Platform Jobs | HiddenJobs' };
     }
-
-    if (!seo) return { title: 'Jobs' };
-
-    const platformLabel = DIRECTORY_PLATFORMS.find(p => p.slug === platform)?.label || platform;
-    const baseUrl = await getBaseUrl();
-
-    return {
-        title: `${seo.role.name} Jobs in ${seo.location.name} (${platformLabel} Unlisted)`,
-        description: `Browse ${seo.role.name} job opportunities in ${seo.location.name} specifically indexed from ${platformLabel}. ${seo.description}`,
-        alternates: {
-            canonical: `${baseUrl}/jobs/platform/${platform}/${role}/${location}`,
-        },
-    };
 }
 
 export default async function PlatformJobPage({ params }: Props) {
