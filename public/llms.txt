@@ -1,0 +1,31 @@
+# HiddenJobs — AI / LLM Summary
+
+HiddenJobs is the #1 search engine for the hidden job market. It allows job seekers to bypass LinkedIn and find 50,000+ unlisted tech jobs directly on ATS platforms including Greenhouse, Lever, and Ashby. The platform indexes career portals of thousands of tech companies, surfacing roles 48–72 hours before they appear on aggregator boards.
+
+## Key Features
+
+- **Direct ATS search**: Search unlisted roles on Greenhouse, Lever, and Ashby.
+- **Boolean query generator**: Build precision search strings to target specific roles and locations.
+- **Role directories**: Browse unlisted opportunities by job title, platform, and location.
+- **Real-time indexing**: Jobs are crawled fresh from company career portals.
+
+## Key Public Routes
+
+- Home: /
+- All job directories: /jobs
+- Role-based directory: /jobs/role/[role]
+- Platform-specific directory: /jobs/platform/[platform]
+- Platform + role + location search: /jobs/platform/[platform]/[role]/[location]
+- About HiddenJobs: /about
+- Career intelligence: /intelligence
+- Blog / articles: /blog
+- Privacy policy: /privacy
+- Terms of service: /terms
+- Contact: /contact
+
+## Entity Types
+
+- **HiddenJobs** (WebApplication, Organization)
+- **Roles** (Software Engineer, Data Scientist, Product Manager, etc.)
+- **Platforms** (Greenhouse, Lever, Ashby)
+- **Locations** (Remote, New York, San Francisco, etc.)

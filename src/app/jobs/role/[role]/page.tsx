@@ -6,6 +6,9 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Briefcase, ChevronRight, MapPin, Search } from 'lucide-react';
 import Link from 'next/link';
+import { AIAnswerBlock } from '@/components/seo/AIAnswerBlock';
+import { AuthorBio } from '@/components/seo/AuthorBio';
+import { ExpertReviewedBadge } from '@/components/seo/ExpertReviewedBadge';
 
 interface PageProps {
     params: Promise<{
@@ -145,6 +148,33 @@ export default async function RoleDirectoryPage({ params }: PageProps) {
                         </div>
                     </div>
                     <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 blur-[120px] -mr-48 -mt-48" />
+                </div>
+
+                {/* AI Overview / Featured Snippet Block */}
+                <div className="mt-20 space-y-6">
+                    <div className="flex items-center gap-3">
+                        <ExpertReviewedBadge />
+                        <span className="text-xs text-slate-400 uppercase tracking-wider font-bold">GEO Optimized</span>
+                    </div>
+                    <AIAnswerBlock
+                        question={`Why should ${role.name}s use HiddenJobs instead of LinkedIn?`}
+                        answer={`LinkedIn job posts for ${role.name}s often receive 500+ applications within hours. HiddenJobs bypasses public boards entirely, indexing unlisted roles directly from company ATS portals like Greenhouse and Lever. This gives you a critical speed advantage — apply when competition is under 20 candidates.`}
+                        listItems={[
+                            `Access ${role.name} roles 48-72 hours before they hit LinkedIn`,
+                            "Apply directly on the company career portal — no Easy Apply noise",
+                            "Precision boolean queries tailored for your target role",
+                        ]}
+                    />
+                </div>
+
+                {/* E-E-A-T Author Bio */}
+                <div className="mt-20">
+                    <AuthorBio
+                        name="Saurao Dalvi"
+                        avatarUrl="/og-image.png"
+                        credentials="Creator & Engineer, HiddenJobs"
+                        bio="Saurao Dalvi is the engineer and product creator behind HiddenJobs, a platform dedicated to making the hidden tech job market transparent. With deep expertise in ATS platforms, Next.js, and AI-powered search, Saurao built HiddenJobs to give every job seeker the same speed advantage that insiders have."
+                    />
                 </div>
             </main>
 
