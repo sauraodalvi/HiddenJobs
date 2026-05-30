@@ -1,2 +1,3 @@
-# Redirection logic has been moved to src/middleware.ts for more control.
-# Forced Edge-level redirects are disabled to allow both domains to concurrently serve the app.
+# Vercel fallback: if Netlify returns a 500, proxy to Vercel deployment
+# Netlify will serve Vercel's response seamlessly for users
+/* https://hidden-apply.vercel.app/:splat 200! 500

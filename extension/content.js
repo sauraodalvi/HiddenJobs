@@ -549,6 +549,13 @@ function injectFloatingButton() {
 injectFloatingButton();
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // Silently ignore messages from other extensions (e.g. WXT-based extensions)
+    // that broadcast to all content scripts on the page.
+    const knownActions = Object.values(ACTIONS);
+    if (!request || !request.action || !knownActions.includes(request.action)) {
+        return false;
+    }
+
     console.log(`[Ghost] Received request: ${request.action}`);
 
     if (request.action === ACTIONS.SCAN_FORM) {
