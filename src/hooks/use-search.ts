@@ -28,7 +28,7 @@ export function useSearchFilters() {
             include: getParam('include', ''),
             experience: getParam('experience', ''),
             country: getParam('country', ''),
-            time: getParam('time', '30'),
+            time: getParam('time', '365'),
             from: getParam('from', ''),
             to: getParam('to', ''),
             exactTitle: getParam('exact', 'false') === 'true',

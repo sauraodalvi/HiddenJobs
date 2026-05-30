@@ -125,11 +125,11 @@ export const buildDorkComponents = ({
 
     // A. Work Mode (Always included if selected)
     if (location === 'remote') {
-        locationParts.push('("remote" OR "work from home" OR "wfh" OR "anywhere")');
+        locationParts.push('"remote" OR "work from home" OR "wfh" OR "anywhere"');
     } else if (location === 'hybrid') {
-        locationParts.push('("hybrid" OR "flexible" OR "return to office")');
+        locationParts.push('"hybrid" OR "flexible" OR "return to office"');
     } else if (location === 'onsite') {
-        locationParts.push('("on-site" OR "office-based" OR "in-office" -remote)');
+        locationParts.push('"on-site" OR "office-based" OR "in-office" -remote');
     }
 
     // B. Geo-location (Always included if typed)
@@ -152,12 +152,12 @@ export const buildDorkComponents = ({
     let experienceQuery = '';
     const exp = (props.experience || '').toLowerCase();
 
-    if (exp === 'intern') experienceQuery = '("Intern" OR "Internship" OR "Co-op")';
-    else if (exp === 'junior') experienceQuery = '("Junior" OR "Jr" OR "Entry Level" OR "Graduate")';
-    else if (exp === 'mid') experienceQuery = '("Mid-level" OR "Mid Level" OR "Associate")';
-    else if (exp === 'senior') experienceQuery = '("Senior" OR "Sr" OR "Lead" OR "Experienced")';
-    else if (exp === 'staff') experienceQuery = '("Staff" OR "Principal" OR "Distinguished")';
-    else if (exp === 'manager') experienceQuery = '("Manager" OR "Head" OR "Director" OR "VP")';
+    if (exp === 'intern') experienceQuery = '"Intern" OR "Internship" OR "Co-op"';
+    else if (exp === 'junior') experienceQuery = '"Junior" OR "Jr" OR "Entry Level" OR "Graduate"';
+    else if (exp === 'mid') experienceQuery = '"Mid-level" OR "Mid Level" OR "Associate"';
+    else if (exp === 'senior') experienceQuery = '"Senior" OR "Sr" OR "Lead" OR "Experienced"';
+    else if (exp === 'staff') experienceQuery = '"Staff" OR "Principal" OR "Distinguished"';
+    else if (exp === 'manager') experienceQuery = '"Manager" OR "Head" OR "Director" OR "VP"';
 
     // --- 5. Company & Salary (Multi-company inurl strategy) ---
     let companyQuery = '';
@@ -265,7 +265,7 @@ export const buildDorkComponents = ({
         timeLabel = `Custom`;
     } else {
         // Logic: after:YYYY-MM-DD
-        const days = Number(time || '30');
+        const days = Number(time || '365');
         // If 0.5 (12 hours) -> use today (0 days ago)
         const checkDays = days < 1 ? 0 : days;
 

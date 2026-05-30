@@ -145,7 +145,7 @@ export const COUNTRY_MAPPINGS: Record<string, string> = {
 };
 
 export const ENGLISH_KEYWORDS = {
-  include: '("English speaking" OR "English fluent" OR "Work in English")',
+  include: '"English speaking" OR "English fluent" OR "Work in English"',
   exclude: '-"German" -"French" -"Spanish" -"Dutch" -"Italian" -"Portuguese" -"Chinese" -"Japanese" -"Russian" -"Arabic"'
 };
 
