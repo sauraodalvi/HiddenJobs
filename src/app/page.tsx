@@ -2,6 +2,7 @@
 import { Suspense } from "react";
 import { FilterSection } from "@/components/filters/FilterSection";
 import { ResultsSection } from "@/components/results/ResultsSection";
+import { SavedSearches } from "@/components/search/SavedSearches";
 import { Header } from "@/components/layout/Header";
 import { InfoSection } from "@/components/layout/InfoSection";
 
@@ -71,6 +72,9 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          {/* Saved Searches */}
+          <SavedSearches />
 
           {/* Main Interaction Area (The Island & Results) - Split Suspense for independent streaming */}
           <div className="space-y-8">
