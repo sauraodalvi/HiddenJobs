@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ROLE_PRESETS, DIRECTORY_LOCATIONS } from "@/lib/constants";
 import { Search, MapPin, Clock, Terminal, ChevronDown, Check, Globe, SlidersHorizontal, RotateCcw, Activity, Zap, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ const ROLE_CATEGORIES = {
 
 export function MapSidebar({ onFlyTo }: MapSidebarProps) {
     const { filters, updateFilters } = useSearchFilters();
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
     const [showTimeDropdown, setShowTimeDropdown] = useState(false);
@@ -206,16 +208,26 @@ export function MapSidebar({ onFlyTo }: MapSidebarProps) {
                     <div className="pt-2 flex gap-3">
                         <button
                             onClick={() => {
-                                updateFilters({ role: filters.role, specificLocation: filters.specificLocation });
+                                const role = filters.role?.trim().toLowerCase().replace(/\s+/g, '-') || '';
+                                const location = filters.specificLocation?.trim().toLowerCase().replace(/\s+/g, '-') || '';
+
                                 setShowRoleSuggestions(false);
                                 setShowCityDropdown(false);
                                 setShowTimeDropdown(false);
                                 setIsOpen(false);
+
+                                if (role && location) {
+                                    router.push(`/jobs/${role}-in-${location}`);
+                                } else if (location) {
+                                    router.push(`/jobs/location/${location}`);
+                                } else if (role) {
+                                    router.push(`/jobs/role/${role}`);
+                                }
                             }}
                             className="flex-1 bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-4 md:py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-slate-900/10"
                         >
                             <Zap className="w-4 h-4 text-primary fill-primary" />
-                            Confirm View
+                            Search Now
                         </button>
                         <button
                             onClick={() => {

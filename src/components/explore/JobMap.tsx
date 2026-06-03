@@ -1,7 +1,8 @@
 
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -47,6 +48,7 @@ export default function JobMap({
     showSidebar = true
 }: JobMapProps) {
     const { generateLinks, filters, updateFilters } = useSearchFilters();
+    const router = useRouter();
     const [mapCenter, setMapCenter] = useState<[number, number]>(center || [30, 0]);
     const [showViewer, setShowViewer] = useState(false);
     const [markers, setMarkers] = useState<any[]>([]);
@@ -113,10 +115,11 @@ export default function JobMap({
         });
     };
 
-    const handleCityClick = (loc: any) => {
-        setMapCenter([loc.coords.lat, loc.coords.lng]);
-        updateFilters({ location: 'specific', specificLocation: loc.label });
-    };
+    const handleCityClick = useCallback((loc: any) => {
+        if (loc.slug) {
+            router.push(`/jobs/location/${loc.slug}`);
+        }
+    }, [router]);
 
     const handleFlyTo = (lat: number, lng: number) => {
         setMapCenter([lat, lng]);
