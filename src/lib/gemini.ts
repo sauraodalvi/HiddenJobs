@@ -53,15 +53,20 @@ export async function generateJobCityContent(roleName: string, cityName: string)
     `;
 
     try {
-        console.log(`[gemini] Calling API for: ${roleName} - ${cityName}`);
         const result = await currentModel.generateContent(prompt);
         const text = result.response.text();
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (!jsonMatch) throw new Error("Failed to parse Gemini response as JSON");
-        console.log(`[gemini] Successfully generated content for ${roleName} in ${cityName}`);
         return JSON.parse(jsonMatch[0]);
     } catch (error) {
-        console.error("[gemini] API call or parse failure:", error);
+        const msg = String(error);
+        if (msg.includes('429') || msg.includes('quota')) {
+            console.warn(`[gemini] Quota exhausted for ${roleName} in ${cityName}, using static fallback`);
+        } else if (msg.includes('SAFETY')) {
+            console.warn(`[gemini] Content blocked for ${roleName} in ${cityName}`);
+        } else {
+            console.warn(`[gemini] Generation failed for ${roleName} in ${cityName}:`, error);
+        }
         return null;
     }
 }

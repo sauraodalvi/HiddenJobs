@@ -7,7 +7,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DIRECTORY_LOCATIONS, ATS_PLATFORMS } from '@/lib/constants';
-import { cn, getCompanyLogo, getLogoFallback, getFinalFallback, getCompanyLogoHtml } from '@/lib/utils';
+import { cn, getCompanyLogo, getLogoFallback, getCompanyLogoHtml } from '@/lib/utils';
 import { Search, MapPin, ExternalLink, Globe, Zap, ArrowRight, X } from 'lucide-react';
 import { useSearchFilters } from '@/hooks/use-search';
 import { MapSidebar } from './MapSidebar';
@@ -191,12 +191,8 @@ export default function JobMap({
                                                                 alt={domain}
                                                                 onError={(e) => {
                                                                     const target = e.target as HTMLImageElement;
-                                                                    if (target.src === getCompanyLogo(domain)) {
-                                                                        target.src = getLogoFallback(domain);
-                                                                    } else if (target.src === getLogoFallback(domain)) {
-                                                                        target.src = getFinalFallback(domain);
-                                                                        target.onerror = null;
-                                                                    }
+                                                                    target.src = getLogoFallback(domain);
+                                                                    target.onerror = null;
                                                                 }}
                                                             />
                                                         </div>

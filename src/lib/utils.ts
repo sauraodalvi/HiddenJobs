@@ -325,17 +325,15 @@ export const assembleDork = (domain: string, components: DorkComponents) => {
  */
 export const getCompanyLogo = (domain: string) => {
     if (!domain) return `https://ui-avatars.com/api/?name=?&background=6366f1&color=fff`;
-    // We return DDG as primary, but UI should handle fallback to Google then UI-Avatars
-    return `https://icons.duckduckgo.com/ip3/${domain}.ico`;
-};
-
-export const getLogoFallback = (domain: string) => {
-    // Stage 2: Google Favicon Service
     return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 };
 
+export const getLogoFallback = (domain: string) => {
+    const char = domain?.split('.')[0]?.charAt(0).toUpperCase() || 'J';
+    return `https://ui-avatars.com/api/?name=${char}&background=6366f1&color=fff&bold=true&font-size=0.6`;
+};
+
 export const getFinalFallback = (domain: string) => {
-    // Stage 3: Initial-based Avatar
     const char = domain?.split('.')[0]?.charAt(0).toUpperCase() || 'J';
     return `https://ui-avatars.com/api/?name=${char}&background=6366f1&color=fff&bold=true&font-size=0.6`;
 };
@@ -344,9 +342,8 @@ export const getFinalFallback = (domain: string) => {
  * HTML string version for Leaflet Templates
  */
 export const getCompanyLogoHtml = (domain: string, size: number = 24, className: string = "") => {
-    const primary = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
-    const secondary = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-    const final = `https://ui-avatars.com/api/?name=${domain.split('.')[0]?.charAt(0).toUpperCase() || 'J'}&background=6366f1&color=fff&bold=true`;
+    const primary = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+    const fallback = `https://ui-avatars.com/api/?name=${domain.split('.')[0]?.charAt(0).toUpperCase() || 'J'}&background=6366f1&color=fff&bold=true`;
 
     return `
         <img 
@@ -355,7 +352,7 @@ export const getCompanyLogoHtml = (domain: string, size: number = 24, className:
             height="${size}" 
             class="${className}"
             style="border-radius: 4px; background: white; object-fit: contain;"
-            onerror="if(this.src!=='${secondary}'){this.src='${secondary}'}else{this.src='${final}';this.onerror=null;}"
+            onerror="if(this.src!=='${fallback}'){this.src='${fallback}';this.onerror=null;}"
             alt=""
         />
     `;
