@@ -6,8 +6,8 @@ import { Moon, Sun, MapPin } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
-const NAV_LINKS = [
-    { href: "https://thestare.in/", label: "Become Product Manager", external: true },
+const NAV_LINKS: { href: string; label: string }[] = [
+    { href: "/blog", label: "Blog" },
     { href: "/explore", label: "Explore" },
     { href: "/about", label: "About" },
     { href: "/jobs", label: "Directory" },
@@ -46,19 +46,8 @@ export function Header() {
                     </div>
                 </div>
 
-                <div className="flex items-center space-x-6">
-                    {NAV_LINKS.map((link) => (
-                        link.external ? (
-                            <a
-                                key={link.href}
-                                href={link.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-                            >
-                                {link.label}
-                            </a>
-                        ) : (
+                    <div className="flex items-center space-x-6">
+                        {NAV_LINKS.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
@@ -66,34 +55,7 @@ export function Header() {
                             >
                                 {link.label}
                             </Link>
-                        )
-                    ))}
-
-                    <a
-                        href="https://saurao.gumroad.com/l/BuymeaCoffee"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-bold text-primary hover:text-primary/80 transition-all flex items-center gap-1.5"
-                    >
-                        Donate
-                    </a>
-
-                    <div className="flex items-center">
-                        <div className="w-px h-4 bg-slate-200 dark:bg-slate-800 mx-4" />
-                        <div className="w-10 h-10 flex items-center justify-center">
-                            {mounted ? (
-                                <button
-                                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                                    className="p-2 text-slate-500 hover:text-primary transition-colors focus:outline-none"
-                                    aria-label="Toggle theme"
-                                >
-                                    {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                                </button>
-                            ) : (
-                                <div className="w-5 h-5" /> // Exact icon size placeholder
-                            )}
-                        </div>
-                    </div>
+                        ))}
                 </div>
             </div>
         </nav>

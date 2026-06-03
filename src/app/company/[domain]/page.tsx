@@ -6,9 +6,10 @@ import { getCompanySeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ResultsSection } from '@/components/results/ResultsSection';
-import { Building2, ChevronRight, Globe, Shield, Check } from 'lucide-react';
+import { Building2, Globe, Shield, Check } from 'lucide-react';
 import Link from 'next/link';
 import { getBaseUrl } from '@/lib/domain';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 
 interface PageProps {
     params: Promise<{
@@ -82,11 +83,18 @@ export default async function CompanyHubPage({ params }: PageProps) {
                 />
 
                 <div className="max-w-5xl mx-auto mb-16">
-                    <nav className="flex items-center space-x-2 text-sm text-slate-500 mb-8">
-                        <Link href="/" className="hover:text-primary transition-colors">Home</Link>
-                        <ChevronRight className="w-4 h-4" />
-                        <span className="font-bold text-slate-900 dark:text-white">{seo.companyName}</span>
-                    </nav>
+                    <Breadcrumbs items={[
+                        { label: 'Jobs', href: '/jobs' },
+                        { label: seo.companyName },
+                    ]} />
+
+                    {/* Featured Snippet Definition */}
+                    <div className="mb-16 p-6 bg-orange-50 dark:bg-orange-900/20 rounded-2xl border border-orange-100 dark:border-orange-900/30">
+                        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2">What are hidden jobs at {seo.companyName}?</h2>
+                        <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Hidden jobs at {seo.companyName} are roles posted directly to their ATS that never appear on LinkedIn or Indeed. HiddenJobs lets you search {seo.companyName}&apos;s career infrastructure directly to find unlisted opportunities before the competition.
+                        </p>
+                    </div>
 
                     <div className="flex flex-col md:flex-row md:items-center gap-8 mb-12">
                         <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-xl">

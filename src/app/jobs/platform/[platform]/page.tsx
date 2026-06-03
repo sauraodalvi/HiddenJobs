@@ -4,7 +4,8 @@ import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib
 import { getPlatformSeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { Search, ChevronRight, Briefcase, MapPin, ExternalLink, Sparkles, Check } from 'lucide-react';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { Search, Briefcase, MapPin, ExternalLink, Check, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { getBaseUrl } from '@/lib/domain';
 
@@ -81,6 +82,11 @@ export default async function PlatformDirectoryPage({ params }: PageProps) {
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
                 />
+
+                <Breadcrumbs items={[
+                    { label: 'Jobs', href: '/jobs' },
+                    { label: platform.label, href: `/jobs/platform/${platformSlug}` },
+                ]} />
 
                 <div className="mb-16">
                     <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-bold mb-6">

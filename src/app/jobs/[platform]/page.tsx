@@ -12,32 +12,33 @@ import { Sparkles, Check } from 'lucide-react';
 import Link from 'next/link';
 import { getBaseUrl } from '@/lib/domain';
 import { AffiliateRail } from '@/components/affiliate/AffiliateRail';
-
 import { CareerIntelligence } from '@/components/seo/CareerIntelligence';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { ShareButtons } from '@/components/common/ShareButtons';
+import { RelatedContent } from '@/components/seo/RelatedContent';
 
 interface Props {
     params: Promise<{
-        roleAndCity: string;
+        platform: string;
     }>;
 }
 
 export async function generateStaticParams() {
-    // Pre-render the top 100 combinations by population to ensure fast loading for major markets
     try {
         const topCities = await db.select().from(cities).orderBy(desc(cities.population)).limit(10);
         const topRoles = await db.select().from(jobRoles).limit(10);
 
         if (!Array.isArray(topCities) || !Array.isArray(topRoles)) return [];
 
-        const params = [];
+        const result = [];
         for (const city of topCities) {
             for (const role of topRoles) {
-                params.push({
-                    roleAndCity: `${role.slug}-in-${city.slug}`,
+                result.push({
+                    platform: `${role.slug}-in-${city.slug}`,
                 });
             }
         }
-        return params;
+        return result;
     } catch (error) {
         console.error('[generateStaticParams] DB error, skipping pre-render:', error);
         return [];
@@ -46,7 +47,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     try {
-        const { roleAndCity } = await params;
+        const { platform: roleAndCity } = await params;
         const parts = roleAndCity.split('-in-');
 
         if (parts.length !== 2) return { title: 'Jobs' };
@@ -77,7 +78,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function JobPage({ params }: Props) {
-    const { roleAndCity } = await params;
+    const { platform: roleAndCity } = await params;
     const parts = roleAndCity.split('-in-');
 
     if (parts.length !== 2) {
@@ -125,6 +126,23 @@ export default async function JobPage({ params }: Props) {
                         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
                     />
                 )}
+
+                <Breadcrumbs items={[
+                    { label: 'Jobs', href: '/jobs' },
+                    { label: `${seo.role.name} in ${seo.location.name}` },
+                ]} />
+
+                <div className="flex justify-center my-8">
+                    <ShareButtons title={`${seo.role.name} Jobs in ${seo.location.name}`} url={`/jobs/${roleAndCity}`} />
+                </div>
+
+                {/* Featured Snippet Definition */}
+                <div className="mb-16 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl border border-purple-100 dark:border-purple-900/30 max-w-4xl mx-auto">
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2">What are {seo.role.name} roles in {seo.location.name}?</h2>
+                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        {seo.role.name} roles in {seo.location.name} are positions at tech companies with offices in the {seo.location.name} area that are posted directly to ATS platforms like Greenhouse and Lever — bypassing mass job boards. HiddenJobs gives you direct search access to these unlisted opportunities, often 48-72 hours before they hit LinkedIn.
+                    </p>
+                </div>
 
                 <header className="mb-16 text-center max-w-4xl mx-auto">
                     <div className="flex justify-center mb-6">
@@ -220,6 +238,19 @@ export default async function JobPage({ params }: Props) {
                         </div>
                     </section>
                 )}
+
+                {/* Related Content */}
+                <div className="mt-32">
+                    <RelatedContent
+                        currentRoleSlug={roleSlug}
+                        currentLocationSlug={locationSlug}
+                    />
+                </div>
+
+                {/* Social Share */}
+                <div className="mt-16 flex justify-center">
+                    <ShareButtons title={`${seo.role.name} Jobs in ${seo.location.name}`} url={`/jobs/${roleAndCity}`} />
+                </div>
 
                 {/* Contextual Affiliate Banner - Mid Intent (Research/Learning) */}
                 <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-8">

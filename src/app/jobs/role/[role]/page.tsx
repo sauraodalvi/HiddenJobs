@@ -1,10 +1,11 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
-import { getRoleSeoMetadata } from '@/lib/seo-utils';
+import { getRoleSeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { Briefcase, ChevronRight, MapPin, Search } from 'lucide-react';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { Briefcase, MapPin, Search, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { AIAnswerBlock } from '@/components/seo/AIAnswerBlock';
 import { AuthorBio } from '@/components/seo/AuthorBio';
@@ -44,19 +45,31 @@ export default async function RoleDirectoryPage({ params }: PageProps) {
 
     const { role } = seo;
 
+    const breadcrumbs = await getBreadcrumbSchema([
+        { name: 'Home', item: '/' },
+        { name: 'Jobs', item: '/jobs' },
+        { name: role.name, item: `/jobs/role/${roleSlug}` }
+    ]);
+
+    const roleFaqs = [
+        { question: `How to find unlisted ${role.name} jobs?`, answer: `Search for ${role.name} roles directly on Greenhouse, Lever, and Ashby ATS boards using HiddenJobs to access listings that never appear on LinkedIn.` },
+        { question: `Why do ${role.name} roles have fewer applicants on ATS boards?`, answer: `Because these roles aren't syndicated to mass job boards, they receive 80-90% fewer applications — giving early applicants a massive advantage.` },
+        { question: `Where do most ${role.name} roles get posted first?`, answer: `Companies post ${role.name} openings to their internal ATS first, often 48-72 hours before they appear on LinkedIn or other job boards.` }
+    ];
+    const faqSchema = getFaqSchema(roleFaqs);
+
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
             <Header />
 
             <main className="max-w-5xl mx-auto px-6 py-20 pb-32">
-                {/* Breadcrumbs */}
-                <nav className="flex items-center space-x-2 text-sm text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2">
-                    <Link href="/" className="hover:text-primary transition-colors">Home</Link>
-                    <ChevronRight className="w-4 h-4 shrink-0" />
-                    <Link href="/jobs" className="hover:text-primary transition-colors">Jobs</Link>
-                    <ChevronRight className="w-4 h-4 shrink-0" />
-                    <span className="capitalize">{role.name}</span>
-                </nav>
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+
+                <Breadcrumbs items={[
+                    { label: 'Jobs', href: '/jobs' },
+                    { label: role.name },
+                ]} />
 
                 <div className="mb-16">
                     <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-sm font-bold mb-6">
@@ -127,6 +140,14 @@ export default async function RoleDirectoryPage({ params }: PageProps) {
                     </div>
                 </div>
 
+                {/* Featured Snippet Definition */}
+                <div className="mb-16 p-6 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2">What are unlisted {role.name} jobs?</h2>
+                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Unlisted {role.name} jobs are openings posted to company ATS platforms like Greenhouse and Lever that are never promoted on LinkedIn or Indeed. HiddenJobs indexes these direct listings so you can find and apply to {role.name} roles before the competition.
+                    </p>
+                </div>
+
                 {/* GEO/AEO Content Block */}
                 <div className="mt-32 p-12 rounded-3xl bg-slate-900 text-white relative overflow-hidden shadow-2xl">
                     <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-16">
@@ -166,6 +187,19 @@ export default async function RoleDirectoryPage({ params }: PageProps) {
                         ]}
                     />
                 </div>
+
+                {/* FAQ Section */}
+                <section className="mt-32 max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-black mb-12 text-slate-900 dark:text-white text-center">Frequently Asked Questions about {role.name} Jobs</h2>
+                    <div className="grid gap-6">
+                        {roleFaqs.map((faq, i) => (
+                            <div key={i} className="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{faq.question}</h3>
+                                <p className="text-slate-500 dark:text-slate-400 leading-relaxed text-lg">{faq.answer}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
                 {/* E-E-A-T Author Bio */}
                 <div className="mt-20">
