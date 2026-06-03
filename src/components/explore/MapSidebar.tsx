@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { ROLE_PRESETS, DIRECTORY_LOCATIONS } from "@/lib/constants";
-import { Search, MapPin, Clock, Terminal, ChevronDown, Check, Globe, SlidersHorizontal, RotateCcw, Activity, Zap } from "lucide-react";
+import { Search, MapPin, Clock, Terminal, ChevronDown, Check, Globe, SlidersHorizontal, RotateCcw, Activity, Zap, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSearchFilters } from "@/hooks/use-search";
 
@@ -249,4 +249,3 @@ export function MapSidebar({ onFlyTo }: MapSidebarProps) {
     );
 }
 
-import { X } from "lucide-react";
