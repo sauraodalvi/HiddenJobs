@@ -8,8 +8,8 @@ export async function POST(req: NextRequest) {
         const rawBody = await req.text();
         const secret = process.env.LEMON_SQUEEZY_WEBHOOK_SECRET || "";
         const hmac = crypto.createHmac("sha256", secret);
-        const digest = Buffer.from(hmac.update(rawBody).digest("hex"), "utf8");
-        const signature = Buffer.from(req.headers.get("x-signature") || "", "utf8");
+        const digest = Buffer.from(hmac.update(rawBody).digest("hex"), "hex");
+        const signature = Buffer.from(req.headers.get("x-signature") || "", "hex");
 
         if (!crypto.timingSafeEqual(digest, signature)) {
             return new NextResponse("Invalid signature", { status: 401 });

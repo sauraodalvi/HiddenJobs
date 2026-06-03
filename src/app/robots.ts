@@ -22,7 +22,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
                     'Applebot-Extended',
                     'OAI-SearchBot'
                 ],
-                allow: '/',
+                disallow: '/',
             },
         ],
         sitemap: `${baseUrl}/sitemap.xml`,

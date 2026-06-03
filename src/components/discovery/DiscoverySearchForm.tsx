@@ -69,7 +69,7 @@ export function DiscoverySearchForm({
                     >
                         <option value="boards.greenhouse.io">Greenhouse</option>
                         <option value="jobs.lever.co">Lever</option>
-                        <option value="ashbyhq.com">Ashby</option>
+                        <option value="jobs.ashbyhq.com">Ashby</option>
                         <option value="myworkdayjobs.com">Workday</option>
                         <option value="jobs.smartrecruiters.com">SmartRecruiters</option>
                         <option value="apply.workable.com">Workable</option>

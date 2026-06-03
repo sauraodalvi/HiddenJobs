@@ -68,7 +68,7 @@ export function FilterSection() {
         setLocalSalaryMin(filters.salaryMin);
         setLocalSalaryMax(filters.salaryMax);
         setLocalEnglishOnly(filters.englishOnly);
-    }, [filters.role, filters.isCustomRole, filters.location, filters.specificLocation, filters.company]);
+    }, [filters.role, filters.isCustomRole, filters.customRole, filters.location, filters.specificLocation, filters.exclude, filters.include, filters.experience, filters.time, filters.country, filters.exactTitle, filters.excludeLocation, filters.from, filters.to, filters.company, filters.salaryMin, filters.salaryMax, filters.englishOnly]);
 
     const roleOptions = Object.keys(ROLE_PRESETS);
 

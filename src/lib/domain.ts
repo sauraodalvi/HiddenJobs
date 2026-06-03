@@ -40,6 +40,11 @@ export async function getBaseUrl(request?: Request): Promise<string> {
         return `https://${process.env.VERCEL_URL}`;
     }
 
-    // 5. Default fallback
+    // 5. Configured fallback URL (cross-platform failover)
+    if (process.env.NEXT_PUBLIC_FALLBACK_URL) {
+        return process.env.NEXT_PUBLIC_FALLBACK_URL.replace(/\/$/, '');
+    }
+
+    // 6. Hard default
     return 'https://hiddenjobs.netlify.app';
 }

@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import JsonLd from "@/components/seo/JsonLd";
+import { FailoverDetector } from "@/components/common/FailoverDetector";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -108,6 +109,7 @@ export default function RootLayout({
         >
           {children}
           <JsonLd />
+          <FailoverDetector />
         </ThemeProvider>
       </body>
     </html>

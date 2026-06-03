@@ -1,5 +1,5 @@
 
-const { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } = require('./src/lib/constants');
+const { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } = require('../src/lib/constants');
 
 function validateSitemap() {
     const baseUrl = 'https://hiddenjobs.netlify.app';

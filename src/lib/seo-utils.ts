@@ -2,7 +2,7 @@ import { db } from "./db";
 import { cities, jobRoles, seoContent } from "./db/schema";
 import { eq, and } from "drizzle-orm";
 import { buildDorkComponents, assembleDork } from "./utils";
-import { generateJobCityContent } from "./gemini";
+
 
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from "./constants";
 
@@ -66,7 +66,7 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string): Pr
         if (!role || !location) return null;
 
         // 2. Fetch cached SEO content
-        let [content] = await db.select().from(seoContent).where(
+        const [content] = await db.select().from(seoContent).where(
             and(
                 eq(seoContent.roleId, role.id),
                 eq(seoContent.cityId, location.id)
