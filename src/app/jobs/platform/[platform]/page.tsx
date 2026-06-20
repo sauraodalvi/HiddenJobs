@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Search, Briefcase, MapPin, ExternalLink, Check, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import { getBaseUrl } from '@/lib/domain';
+import { getCanonicalBaseUrl } from '@/lib/domain';
 
 interface PageProps {
     params: Promise<{
@@ -25,15 +25,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const { platform: platformSlug } = await params;
     const seo = getPlatformSeoMetadata(platformSlug);
 
-    if (!seo) return { title: 'Not Found' };
+    if (!seo) return { title: 'Not Found', robots: { index: false, follow: false } };
 
-    const baseUrl = await getBaseUrl();
+    const canonicalBase = getCanonicalBaseUrl();
 
     return {
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${baseUrl}/jobs/platform/${platformSlug}`,
+            canonical: `${canonicalBase}/jobs/platform/${platformSlug}`,
         },
         robots: seo.robots || 'index, follow',
     };

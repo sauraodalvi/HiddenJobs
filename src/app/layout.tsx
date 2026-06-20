@@ -10,10 +10,10 @@ import Script from "next/script";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
 
-import { getBaseUrl } from "@/lib/domain";
+import { getCanonicalBaseUrl } from "@/lib/domain";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = await getBaseUrl();
+export function generateMetadata(): Metadata {
+  const baseUrl = getCanonicalBaseUrl();
 
   return {
     title: {

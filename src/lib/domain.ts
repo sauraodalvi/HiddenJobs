@@ -1,8 +1,34 @@
 import { headers } from 'next/headers';
 
 /**
- * Returns the current base URL for the application.
- * Priority: 
+ * The canonical production domain used for self-referencing canonical tags,
+ * sitemap entries, and structured data. This function NEVER reads request headers
+ * — it only uses environment variables or the hard-coded production fallback.
+ *
+ * Use this in:
+ *   - generateMetadata() alternates.canonical
+ *   - sitemap.ts URLs
+ *   - JSON-LD schema URLs
+ *
+ * REQUIRED: Set NEXT_PUBLIC_SITE_URL=https://hiddenjobs.netlify.app in both
+ * Netlify AND Vercel environment variables to ensure consistent canonicals.
+ */
+export function getCanonicalBaseUrl(): string {
+    // 1. Explicitly configured canonical site URL (must be production domain)
+    if (process.env.NEXT_PUBLIC_SITE_URL) {
+        return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
+    }
+
+    // 2. Hard production default — update this if domain changes
+    return 'https://hiddenjobs.netlify.app';
+}
+
+/**
+ * Returns the current base URL for the application at runtime.
+ * Uses request headers for dynamic host detection (e.g., for API responses).
+ *
+ * DO NOT use this for canonical tags or sitemap entries — use getCanonicalBaseUrl() instead.
+ * Priority:
  * 1. Request headers (dynamic)
  * 2. NEXT_PUBLIC_SITE_URL environment variable
  * 3. Netlify specific URL

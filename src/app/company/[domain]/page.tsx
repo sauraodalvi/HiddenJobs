@@ -8,7 +8,7 @@ import { Footer } from '@/components/layout/Footer';
 import { ResultsSection } from '@/components/results/ResultsSection';
 import { Building2, Globe, Shield, Check } from 'lucide-react';
 import Link from 'next/link';
-import { getBaseUrl } from '@/lib/domain';
+import { getCanonicalBaseUrl } from '@/lib/domain';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 
 interface PageProps {
@@ -35,12 +35,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const { domain } = await params;
     const seo = getCompanySeoMetadata(domain);
 
+    const canonicalBase = getCanonicalBaseUrl();
+
     return {
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${await getBaseUrl()}/company/${domain}`,
+            canonical: `${canonicalBase}/company/${domain}`,
         },
+        robots: 'index, follow',
     };
 }
 

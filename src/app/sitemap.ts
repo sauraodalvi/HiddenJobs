@@ -2,117 +2,133 @@ import { MetadataRoute } from 'next';
 import { db } from '@/lib/db';
 import { cities, jobRoles } from '@/lib/db/schema';
 import { DIRECTORY_PLATFORMS, DIRECTORY_LOCATIONS, DIRECTORY_ROLES } from '@/lib/constants';
-import { getBaseUrl } from '@/lib/domain';
-import { desc } from 'drizzle-orm';
+import { getCanonicalBaseUrl } from '@/lib/domain';
+import { desc, gt, InferSelectModel } from 'drizzle-orm';
 
-// export const dynamic = 'force-dynamic';
+type City = InferSelectModel<typeof cities>;
+type JobRole = InferSelectModel<typeof jobRoles>;
+
+// Force static generation — sitemap should never trigger a 5xx from headers()
+export const dynamic = 'force-static';
 export const revalidate = 86400; // 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = await getBaseUrl();
+    // CRITICAL: Use canonical URL, never request-derived URL
+    // This prevents sitemap entries from pointing to preview/Vercel URLs
+    const baseUrl = getCanonicalBaseUrl();
 
-    // 1. Core pages (always present)
-    const routes = ['', '/jobs', '/explore', '/about', '/pricing', '/privacy', '/terms', '/job-map'].map((route: string) => ({
-        url: `${baseUrl}${route}`,
+    // ── 1. Core static pages (always indexed) ────────────────────────────────
+    const coreRoutes: MetadataRoute.Sitemap = [
+        { url: `${baseUrl}/`, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
+        { url: `${baseUrl}/jobs`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+        { url: `${baseUrl}/explore`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+        { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+        { url: `${baseUrl}/pricing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+        { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+        { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+        { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+        // NOTE: /job-map excluded — requires JavaScript/WebGL, Google cannot render it
+        // NOTE: /test-env, /test-search excluded — internal pages, should not be indexed
+    ];
+
+    // ── 2. Platform hub pages (always indexed — high-value) ──────────────────
+    const platformRoutes: MetadataRoute.Sitemap = DIRECTORY_PLATFORMS.map(platform => ({
+        url: `${baseUrl}/jobs/platform/${platform.slug}`,
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
-        priority: 1,
+        priority: 0.9,
+    }));
+
+    // ── 3. Role hub pages (always indexed — high-value) ──────────────────────
+    const roleRoutes: MetadataRoute.Sitemap = DIRECTORY_ROLES.map(role => ({
+        url: `${baseUrl}/jobs/role/${role.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.85,
+    }));
+
+    // ── 4. Location hub pages (only locations with jobs > 0) ─────────────────
+    const locationRoutes: MetadataRoute.Sitemap = DIRECTORY_LOCATIONS
+        .filter(loc => (loc.jobCount || 0) > 0 || loc.slug === 'remote')
+        .map(loc => ({
+            url: `${baseUrl}/jobs/location/${loc.slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: loc.slug === 'remote' ? 0.9 : 0.85,
+        }));
+
+    // ── 5. Company hub pages (curated list from constants) ───────────────────
+    const companyDomains = new Set<string>();
+    DIRECTORY_LOCATIONS.forEach(loc => {
+        if (loc.companies) {
+            loc.companies.forEach(d => companyDomains.add(d));
+        }
+    });
+    const companyRoutes: MetadataRoute.Sitemap = Array.from(companyDomains).map(domain => ({
+        url: `${baseUrl}/company/${domain}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
     }));
 
     // Guard: skip DB routes if DATABASE_URL is not configured
     if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('YOUR_DATABASE_URL')) {
-        return routes;
+        return [...coreRoutes, ...platformRoutes, ...roleRoutes, ...locationRoutes, ...companyRoutes];
     }
 
+    // ── 6. Job combo pages from DB (only high-value, indexed pages) ──────────
+    // RULE: Only include pages where jobCount > 0 (noindex pages must not appear in sitemap)
+    // RULE: Never include /jobs/platform/[platform]/[role]/[location] — those are redirects
+    const jobComboRoutes: MetadataRoute.Sitemap = [];
+
     try {
-        // Parallelize DB queries for speed
-        const [dbCities, dbRoles] = await Promise.all([
-            db.select().from(cities).orderBy(desc(cities.population)).limit(500),
-            db.select().from(jobRoles).limit(200)
+        // Parallelize DB queries for speed, with a 5s timeout safety net
+        const timeout = new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('DB timeout')), 5000)
+        );
+
+        const dbQuery = Promise.all([
+            db.select().from(cities).where(gt(cities.population, 0)).orderBy(desc(cities.population)).limit(50),
+            db.select().from(jobRoles).limit(100),
         ]);
 
-        // 2. Location Hubs (Only if jobs > 0)
-        const locationHubs = Array.isArray(dbCities)
-            ? dbCities.filter((c: any) => (c.jobCount || 0) > 0).map((city: any) => ({
-                url: `${baseUrl}/jobs/location/${city.slug}`,
-                lastModified: new Date(),
-                changeFrequency: 'weekly' as const,
-                priority: 0.9,
-            }))
+        const [dbCities, dbRoles] = await Promise.race([dbQuery, timeout]) as [City[], JobRole[]];
+
+        // Only include city-role combos where city has jobs
+        const indexableCities = Array.isArray(dbCities)
+            ? dbCities.filter((c: any) => (c.jobCount || 0) > 0)
             : [];
 
-        // 3. Role Hubs (Always include standardized roles)
-        const roleHubs = Array.isArray(dbRoles)
-            ? dbRoles.map((role: any) => ({
-                url: `${baseUrl}/jobs/role/${role.slug}`,
-                lastModified: new Date(),
-                changeFrequency: 'weekly' as const,
-                priority: 0.9,
-            }))
-            : [];
+        const topRoles = Array.isArray(dbRoles) ? dbRoles : [];
 
-        // 4. Job Combo Pages (Programmatic SEO)
-        // High Intent: Top 50 cities and Top 100 roles (5000 pages)
-        const topCities = Array.isArray(dbCities)
-            ? dbCities.filter((c: any) => (c.jobCount || 0) > 0).slice(0, 50)
-            : [];
-        const topRoles = Array.isArray(dbRoles) ? dbRoles.slice(0, 100) : [];
+        // Cap at 5000 job combos total to respect crawl budget
+        let count = 0;
+        const MAX_JOB_COMBOS = 5000;
 
-        const jobRoutes: MetadataRoute.Sitemap = [];
-
-        for (const city of topCities) {
+        for (const city of indexableCities) {
+            if (count >= MAX_JOB_COMBOS) break;
             for (const role of topRoles) {
-                jobRoutes.push({
+                if (count >= MAX_JOB_COMBOS) break;
+                jobComboRoutes.push({
                     url: `${baseUrl}/jobs/${role.slug}-in-${city.slug}`,
                     lastModified: new Date(),
                     changeFrequency: 'weekly' as const,
-                    priority: (city.population || 0) > 1000000 ? 0.8 : 0.6,
+                    priority: (city.population || 0) > 1_000_000 ? 0.8 : 0.65,
                 });
+                count++;
             }
         }
-
-        // 5. Platform-Specific Pages (Focus on major platforms and top markets)
-        for (const platform of DIRECTORY_PLATFORMS) {
-            jobRoutes.push({
-                url: `${baseUrl}/jobs/platform/${platform.slug}`,
-                lastModified: new Date(),
-                changeFrequency: 'daily' as const,
-                priority: 0.9,
-            });
-
-            // Platform combos (Capped for crawl budget: Top 10 cities x Top 20 roles = 200 per platform)
-            for (const city of topCities.slice(0, 10)) {
-                for (const role of topRoles.slice(0, 20)) {
-                    jobRoutes.push({
-                        url: `${baseUrl}/jobs/platform/${platform.slug}/${role.slug}/${city.slug}`,
-                        lastModified: new Date(),
-                        changeFrequency: 'weekly' as const,
-                        priority: 0.7,
-                    });
-                }
-            }
-        }
-
-        // 6. Company Hub Pages (Tier 2 Scaling)
-        const companyDomains = new Set<string>();
-        DIRECTORY_LOCATIONS.forEach((loc: any) => {
-            if ((loc.jobCount || 0) > 0 && loc.companies) {
-                loc.companies.forEach((d: string) => companyDomains.add(d));
-            }
-        });
-
-        Array.from(companyDomains).slice(0, 500).forEach((domain: string) => {
-            jobRoutes.push({
-                url: `${baseUrl}/company/${domain}`,
-                lastModified: new Date(),
-                changeFrequency: 'weekly' as const,
-                priority: 0.8,
-            });
-        });
-
-        return [...routes, ...locationHubs, ...roleHubs, ...jobRoutes];
     } catch (error) {
-        console.error('[sitemap] DB error:', error);
-        return routes;
+        // DB unavailable or timed out — return static routes only, never 500
+        console.error('[sitemap] DB error, using static routes only:', error);
     }
+
+    return [
+        ...coreRoutes,
+        ...platformRoutes,
+        ...roleRoutes,
+        ...locationRoutes,
+        ...companyRoutes,
+        ...jobComboRoutes,
+    ];
 }

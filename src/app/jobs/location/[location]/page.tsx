@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { MapPin, Briefcase, Search, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import { getBaseUrl } from '@/lib/domain';
+import { getCanonicalBaseUrl } from '@/lib/domain';
 
 interface PageProps {
     params: Promise<{
@@ -25,11 +25,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const { location: locationSlug } = await params;
     const seo = await getLocationSeoMetadata(locationSlug);
 
-    if (!seo) return { title: 'Not Found' };
+    if (!seo) return { title: 'Not Found', robots: { index: false, follow: false } };
+
+    const canonicalBase = getCanonicalBaseUrl();
 
     return {
         title: seo.title,
         description: seo.description,
+        alternates: {
+            canonical: `${canonicalBase}/jobs/location/${locationSlug}`,
+        },
+        robots: seo.robots || 'index, follow',
     };
 }
 
@@ -95,7 +101,7 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
                             {DIRECTORY_PLATFORMS.map(platform => (
                                 <Link
                                     key={platform.slug}
-                                    href={`/jobs/platform/${platform.slug}/software-engineer/${locationSlug}`}
+                                    href={`/jobs/platform/${platform.slug}`}
                                     className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
                                 >
                                     <div className="flex items-center justify-between">
@@ -122,7 +128,7 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
                             {DIRECTORY_ROLES.slice(0, 15).map(role => (
                                 <Link
                                     key={role.slug}
-                                    href={`/jobs/platform/greenhouse/${role.slug}/${locationSlug}`}
+                                    href={`/jobs/role/${role.slug}`}
                                     className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
                                 >
                                     <div className="flex items-center justify-between">

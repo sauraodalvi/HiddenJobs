@@ -1,10 +1,19 @@
 import { db } from "./db";
 import { cities, jobRoles, seoContent } from "./db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, InferSelectModel } from "drizzle-orm";
 import { buildDorkComponents, assembleDork } from "./utils";
-
-
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from "./constants";
+
+type SeoContentRow = InferSelectModel<typeof seoContent>;
+
+/** Timeout sentinel to safely cut off slow DB queries without losing types */
+const DB_TIMEOUT_MS = 5000;
+
+function dbTimeout(): Promise<never> {
+    return new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('DB query timed out')), DB_TIMEOUT_MS)
+    );
+}
 
 export interface PlatformSeoMetadata {
     title: string;
@@ -58,24 +67,35 @@ export async function getSeoMetadata(roleSlug: string, locationSlug: string): Pr
         };
     }
 
-    // 1. Fetch Role and Location from DB
+    // 1. Fetch Role and Location from DB (with timeout)
     try {
-        const [role] = await db.select().from(jobRoles).where(eq(jobRoles.slug, roleSlug));
-        const [location] = await db.select().from(cities).where(eq(cities.slug, locationSlug));
+        const [roleResult, locationResult] = await Promise.race([
+            Promise.all([
+                db.select().from(jobRoles).where(eq(jobRoles.slug, roleSlug)),
+                db.select().from(cities).where(eq(cities.slug, locationSlug)),
+            ]),
+            dbTimeout().then(() => { throw new Error('DB timeout'); }),
+        ]);
+
+        const role = roleResult.length > 0 ? roleResult[0] : null;
+        const location = locationResult.length > 0 ? locationResult[0] : null;
 
         if (!role || !location) return null;
 
-        // 2. Fetch cached SEO content
-        const [content] = await db.select().from(seoContent).where(
-            and(
-                eq(seoContent.roleId, role.id),
-                eq(seoContent.cityId, location.id)
-            )
-        );
+        // 2. Fetch cached SEO content (with timeout)
+        const contentRows: SeoContentRow[] = await Promise.race([
+            db.select().from(seoContent).where(
+                and(
+                    eq(seoContent.roleId, role.id),
+                    eq(seoContent.cityId, location.id)
+                )
+            ),
+            dbTimeout().then(() => [] as SeoContentRow[]),
+        ]);
+
+        const content = contentRows.length > 0 ? contentRows[0] : undefined;
 
         // IMMEDIATE RESPONSE: Return shell if content is missing
-        // This solves the TTFB / LCP bottleneck by allowing the page to paint 
-        // without waiting for Gemini/Groq.
         const title = content?.title || `${role.name} Jobs in ${location.name} (Direct ATS)`;
         const description = content?.description || `Looking for ${role.name} roles in ${location.name}? Access the hidden job market by searching Greenhouse, Lever, and Ashby boards directly.`;
 

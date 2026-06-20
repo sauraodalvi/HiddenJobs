@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { AIAnswerBlock } from '@/components/seo/AIAnswerBlock';
 import { AuthorBio } from '@/components/seo/AuthorBio';
 import { ExpertReviewedBadge } from '@/components/seo/ExpertReviewedBadge';
+import { getCanonicalBaseUrl } from '@/lib/domain';
 
 interface PageProps {
     params: Promise<{
@@ -27,11 +28,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const { role: roleSlug } = await params;
     const seo = await getRoleSeoMetadata(roleSlug);
 
-    if (!seo) return { title: 'Not Found' };
+    if (!seo) return { title: 'Not Found', robots: { index: false, follow: false } };
+
+    const canonicalBase = getCanonicalBaseUrl();
 
     return {
         title: seo.title,
         description: seo.description,
+        alternates: {
+            canonical: `${canonicalBase}/jobs/role/${roleSlug}`,
+        },
+        robots: seo.robots || 'index, follow',
     };
 }
 
@@ -94,10 +101,10 @@ export default async function RoleDirectoryPage({ params }: PageProps) {
                             <h2 className="text-2xl font-bold dark:text-white">Top Locations for {role.name}s</h2>
                         </div>
                         <div className="grid gap-4">
-                            {DIRECTORY_LOCATIONS.map(loc => (
+                            {DIRECTORY_LOCATIONS.filter(loc => (loc.jobCount || 0) > 0 || loc.slug === 'remote').map(loc => (
                                 <Link
                                     key={loc.slug}
-                                    href={`/jobs/platform/greenhouse/${roleSlug}/${loc.slug}`}
+                                    href={`/jobs/location/${loc.slug}`}
                                     className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
                                 >
                                     <div className="flex items-center justify-between">

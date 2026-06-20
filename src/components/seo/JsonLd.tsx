@@ -1,18 +1,56 @@
-import { getBaseUrl } from "@/lib/domain";
+import { getCanonicalBaseUrl } from "@/lib/domain";
 
-export default async function JsonLd() {
-    const baseUrl = await getBaseUrl();
+// Use canonical URL for all schema — ensures consistent JSON-LD across deployments
+export default function JsonLd() {
+    const baseUrl = getCanonicalBaseUrl();
+
     const organizationSchema = {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "HiddenJobs",
         "url": baseUrl,
-        "logo": `${baseUrl}/logo.png`,
+        "logo": {
+            "@type": "ImageObject",
+            "url": `${baseUrl}/logo.png`,
+            "width": "192",
+            "height": "192"
+        },
         "sameAs": [
             "https://twitter.com/HiddenJobs",
             "https://github.com/HiddenJobs"
         ],
-        "description": "HiddenJobs is the world's leading search engine for unlisted tech roles on Greenhouse, Lever, and Ashby."
+        "description": "HiddenJobs is the world's leading search engine for unlisted tech roles on Greenhouse, Lever, and Ashby ATS platforms.",
+        "foundingDate": "2024",
+        "knowsAbout": [
+            "Greenhouse ATS",
+            "Lever ATS",
+            "Ashby ATS",
+            "Hidden Job Market",
+            "Tech Recruiting",
+            "Software Engineer Jobs"
+        ]
+    };
+
+    // WebSite schema with SearchAction enables Google Sitelinks Search Box
+    const websiteSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "HiddenJobs",
+        "url": baseUrl,
+        "description": "Search 50,000+ unlisted tech jobs directly on ATS platforms like Greenhouse, Lever, and Ashby. Bypass LinkedIn.",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": `${baseUrl}/?q={search_term_string}`
+            },
+            "query-input": "required name=search_term_string"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "HiddenJobs",
+            "url": baseUrl
+        }
     };
 
     const webAppSchema = {
@@ -41,7 +79,8 @@ export default async function JsonLd() {
         ],
         "author": {
             "@type": "Organization",
-            "name": "HiddenJobs"
+            "name": "HiddenJobs",
+            "url": baseUrl
         }
     };
 
@@ -54,7 +93,7 @@ export default async function JsonLd() {
                 "name": "What is the 'Hidden Job Market'?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "The hidden job market refers to the roughly 60-70% of roles that are never posted on public job boards like LinkedIn or Indeed. These roles live directly on company careers pages."
+                    "text": "The hidden job market refers to the roughly 60-70% of roles that are never posted on public job boards like LinkedIn or Indeed. These roles live directly on company careers pages and ATS platforms like Greenhouse and Lever."
                 }
             },
             {
@@ -62,7 +101,15 @@ export default async function JsonLd() {
                 "name": "How does HiddenJobs find these jobs?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "HiddenJobs uses advanced boolean search techniques to target the technical directories of ATS platforms directly, bypassing noisy job boards."
+                    "text": "HiddenJobs uses advanced boolean search techniques to target the technical directories of ATS platforms directly, bypassing noisy job boards and giving you access to roles 48-72 hours before they appear on LinkedIn."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is HiddenJobs free to use?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, HiddenJobs has a free tier that allows searching across major ATS platforms. Premium features unlock advanced filters, saved searches, and alert notifications."
                 }
             }
         ]
@@ -72,22 +119,27 @@ export default async function JsonLd() {
         "@context": "https://schema.org",
         "@type": "HowTo",
         "name": "How to find hidden jobs in tech",
+        "description": "Step-by-step guide to finding unlisted tech jobs using HiddenJobs",
         "step": [
             {
                 "@type": "HowToStep",
-                "text": "Select your target role and desired location."
+                "name": "Select your role",
+                "text": "Select your target role and desired location from the HiddenJobs search interface."
             },
             {
                 "@type": "HowToStep",
-                "text": "Generate a precision boolean query."
+                "name": "Generate a boolean query",
+                "text": "Generate a precision boolean search query optimized for ATS platforms."
             },
             {
                 "@type": "HowToStep",
+                "name": "View direct ATS links",
                 "text": "View direct links to company ATS platforms like Greenhouse and Lever."
             },
             {
                 "@type": "HowToStep",
-                "text": "Apply directly on the company careers portal."
+                "name": "Apply directly",
+                "text": "Apply directly on the company careers portal — no middleman, no LinkedIn noise."
             }
         ]
     };
@@ -97,6 +149,10 @@ export default async function JsonLd() {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
             />
             <script
                 type="application/ld+json"

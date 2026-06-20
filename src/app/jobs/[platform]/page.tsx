@@ -10,7 +10,7 @@ import { cities, jobRoles } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
 import { Sparkles, Check } from 'lucide-react';
 import Link from 'next/link';
-import { getBaseUrl } from '@/lib/domain';
+import { getCanonicalBaseUrl } from '@/lib/domain';
 import { AffiliateRail } from '@/components/affiliate/AffiliateRail';
 import { CareerIntelligence } from '@/components/seo/CareerIntelligence';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         const { platform: roleAndCity } = await params;
         const parts = roleAndCity.split('-in-');
 
-        if (parts.length !== 2) return { title: 'Jobs' };
+        if (parts.length !== 2) return { title: 'Jobs', robots: { index: false, follow: false } };
 
         const [roleSlug, locationSlug] = parts;
         let seo = await getSeoMetadata(roleSlug, locationSlug);
@@ -59,15 +59,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             seo = await getFallbackSeoMetadata(roleSlug, locationSlug);
         }
 
-        if (!seo) return { title: 'Jobs' };
+        if (!seo) return { title: 'Jobs', robots: { index: false, follow: false } };
 
-        const baseUrl = await getBaseUrl();
+        const canonicalBase = getCanonicalBaseUrl();
 
         return {
             title: seo.title,
             description: seo.description,
             alternates: {
-                canonical: `${baseUrl}/jobs/${roleAndCity}`,
+                canonical: `${canonicalBase}/jobs/${roleAndCity}`,
             },
             robots: seo.robots || 'index, follow',
         };
