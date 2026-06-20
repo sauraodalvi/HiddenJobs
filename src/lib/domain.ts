@@ -14,12 +14,8 @@ import { headers } from 'next/headers';
  * Netlify AND Vercel environment variables to ensure consistent canonicals.
  */
 export function getCanonicalBaseUrl(): string {
-    // 1. Explicitly configured canonical site URL (must be production domain)
-    if (process.env.NEXT_PUBLIC_SITE_URL) {
-        return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
-    }
-
-    // 2. Hard production default — update this if domain changes
+    // Always enforce the production domain for canonicals, sitemaps, and JSON-LD structured data.
+    // This prevents sitemap validation errors when building on platforms like Vercel with different hostnames.
     return 'https://hiddenjobs.netlify.app';
 }
 
