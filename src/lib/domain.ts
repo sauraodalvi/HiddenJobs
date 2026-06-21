@@ -14,8 +14,29 @@ import { headers } from 'next/headers';
  * Netlify AND Vercel environment variables to ensure consistent canonicals.
  */
 export function getCanonicalBaseUrl(): string {
-    // Always enforce the production domain for canonicals, sitemaps, and JSON-LD structured data.
-    // This prevents sitemap validation errors when building on platforms like Vercel with different hostnames.
+    // Dynamically detect deployment environment for canonicals
+    // This allows both Netlify and Vercel sites to serve their own canonical URLs to get AdSense approval on both.
+    
+    // Check if Vercel deployment
+    if (process.env.VERCEL || process.env.VERCEL_URL || (process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.includes('vercel'))) {
+        if (process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.includes('vercel')) {
+            return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
+        }
+        // Vercel deployment URL
+        if (process.env.VERCEL_URL) {
+            // Note: VERCEL_URL doesn't include https://
+            return `https://${process.env.VERCEL_URL.replace(/\/$/, '')}`;
+        }
+        return 'https://hiddenjobs.vercel.app';
+    }
+
+    // Default or Netlify environment
+    if (process.env.NEXT_PUBLIC_SITE_URL) {
+        return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
+    }
+    if (process.env.URL) {
+        return process.env.URL.replace(/\/$/, '');
+    }
     return 'https://hiddenjobs.netlify.app';
 }
 

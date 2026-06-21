@@ -1,14 +1,15 @@
-
 import { Suspense } from "react";
 import { FilterSection } from "@/components/filters/FilterSection";
 import { ResultsSection } from "@/components/results/ResultsSection";
 import { SavedSearches } from "@/components/search/SavedSearches";
 import { Header } from "@/components/layout/Header";
 import { InfoSection } from "@/components/layout/InfoSection";
-
 import { Footer } from "@/components/layout/Footer";
 import { AboutHiddenMarket } from "@/components/seo/AboutHiddenMarket";
 import { GlobalSchema } from "@/components/seo/GlobalSchema";
+import { BLOG_POSTS } from "@/content/blog";
+import Link from "next/link";
+import { ArrowRight, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -92,6 +93,60 @@ export default function Home() {
 
           {/* New SEO/AEO/GEO Section */}
           <InfoSection />
+
+          {/* Latest Career Resources and Guides section (below fold) */}
+          <section className="mt-20 border-t border-slate-100 dark:border-slate-800 pt-20 text-left max-w-4xl mx-auto px-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+              <div>
+                <h2 className="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <BookOpen className="w-8 h-8 text-primary" />
+                  Latest Career Intelligence & Guides
+                </h2>
+                <p className="text-sm text-slate-500 mt-1">Written and verified by our E-E-A-T recruiting and system architecture experts.</p>
+              </div>
+              <Link href="/blog" className="inline-flex items-center gap-1.5 text-sm font-black text-primary hover:underline uppercase tracking-wider">
+                All Guides <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              {BLOG_POSTS.slice(0, 4).map(post => (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  className="group block bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 hover:border-primary transition-all shadow-sm"
+                >
+                  <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-1 rounded-full">
+                    {post.tags[0]}
+                  </span>
+                  <h3 className="font-bold text-slate-900 dark:text-white mt-4 group-hover:text-primary transition-colors line-clamp-1">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">
+                    {post.description}
+                  </p>
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400 dark:text-slate-500 mt-4 border-t border-slate-50 dark:border-slate-800/50 pt-3">
+                    <span>{post.date}</span>
+                    <span>•</span>
+                    <span>By {post.author}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-12 bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 rounded-[32px] p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="space-y-1">
+                <h4 className="font-bold text-slate-900 dark:text-white text-lg">Looking for Advanced Boolean Blueprints?</h4>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Unlock custom copy-paste search dorks and our detailed ATS comparison catalog.</p>
+              </div>
+              <Link
+                href="/resources"
+                className="w-full sm:w-auto px-6 py-3.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest text-center hover:scale-105 transition-all shadow-md"
+              >
+                Access Playbook
+              </Link>
+            </div>
+          </section>
 
         </div>
 
