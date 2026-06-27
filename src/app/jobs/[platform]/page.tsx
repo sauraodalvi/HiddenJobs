@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { getSeoMetadata, getBreadcrumbSchema, getJobPostingSchema, getFallbackSeoMetadata, getFaqSchema } from '@/lib/seo-utils';
+import { getSeoMetadata, getBreadcrumbSchema, getFallbackSeoMetadata, getFaqSchema } from '@/lib/seo-utils';
 import { notFound } from 'next/navigation';
 import { ResultsSection } from '@/components/results/ResultsSection';
 import { Header } from '@/components/layout/Header';
@@ -104,7 +104,6 @@ export default async function JobPage({ params }: Props) {
         { name: `${seo.role.name} in ${seo.location.name}`, item: `/jobs/${roleAndCity}` }
     ]);
 
-    const jobSchema = await getJobPostingSchema(seo.role.name, seo.location.name, seo.description);
     const faqSchema = seo.faqs ? getFaqSchema(seo.faqs) : null;
 
     return (
@@ -115,10 +114,6 @@ export default async function JobPage({ params }: Props) {
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
-                />
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jobSchema) }}
                 />
                 {faqSchema && (
                     <script

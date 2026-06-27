@@ -13,6 +13,7 @@ HiddenJobs is the #1 search engine for the hidden job market. It allows job seek
 
 - Home: /
 - All job directories: /jobs
+- ATS search query generator: /tools/ats-search-query-generator
 - Role-based directory: /jobs/role/[role]
 - Platform-specific directory: /jobs/platform/[platform]
 - Platform + role + location search: /jobs/platform/[platform]/[role]/[location]

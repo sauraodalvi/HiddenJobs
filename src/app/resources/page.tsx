@@ -248,6 +248,12 @@ export default function ResourcesPage() {
                             Browse Directories
                         </Link>
                         <Link
+                            href="/tools/ats-search-query-generator"
+                            className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl active:scale-95"
+                        >
+                            Generate Query
+                        </Link>
+                        <Link
                             href="/#pricing"
                             className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl active:scale-95"
                         >

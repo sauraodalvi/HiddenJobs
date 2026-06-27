@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { getSeoMetadata, getBreadcrumbSchema, getJobPostingSchema, getFallbackSeoMetadata } from '@/lib/seo-utils';
+import { getSeoMetadata, getBreadcrumbSchema, getFallbackSeoMetadata } from '@/lib/seo-utils';
 import { permanentRedirect } from 'next/navigation';
 import { ResultsSection } from '@/components/results/ResultsSection';
 import { Header } from '@/components/layout/Header';
@@ -65,8 +65,6 @@ export default async function PlatformJobPage({ params }: Props) {
         { name: `${seo.role.name} in ${seo.location.name}`, item: `/jobs/platform/${platform}/${role}/${location}` }
     ]);
 
-    const jobSchema = await getJobPostingSchema(seo.role.name, seo.location.name, seo.description);
-
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
             <Header />
@@ -76,11 +74,6 @@ export default async function PlatformJobPage({ params }: Props) {
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
                 />
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jobSchema) }}
-                />
-
                 <header className="mb-16 text-center max-w-4xl mx-auto">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">
                         {platformLabel} Exclusive

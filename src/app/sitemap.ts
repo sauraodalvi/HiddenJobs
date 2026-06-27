@@ -27,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
         { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
         { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+        { url: `${baseUrl}/tools/ats-search-query-generator`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85 },
         // NOTE: /job-map excluded — requires JavaScript/WebGL, Google cannot render it
         // NOTE: /test-env, /test-search excluded — internal pages, should not be indexed
     ];

@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 
 const NAV_LINKS: { href: string; label: string }[] = [
+    { href: "/tools/ats-search-query-generator", label: "Tools" },
     { href: "/blog", label: "Blog" },
     { href: "/explore", label: "Explore" },
     { href: "/about", label: "About" },
