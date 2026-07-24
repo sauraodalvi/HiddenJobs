@@ -27,7 +27,7 @@ export function AutoApplyGenerator() {
     const [mdContent, setMdContent] = useState<string>("");
 
     const [mdFilePath, setMdFilePath] = useState("");
-    const [resumePath, setResumePath] = useState("");
+    const [resumePath, setResumePath] = useState("C:\\Users\\saura\\OneDrive\\Desktop\\Resume\\Compact\\Saurao Dalvi.pdf");
     const [minMatchScore, setMinMatchScore] = useState(4);
 
     // Hydrate state from localStorage on mount
@@ -281,8 +281,10 @@ export function AutoApplyGenerator() {
         if (githubMatch || portfolioMatch) setGithub(detectedGithub);
 
         const cleanName = filename.replace(/\.[^/.]+$/, "");
-        setMdFilePath(`C:/Users/saura/Documents/${cleanName}.md`);
-        setResumePath(`C:/Users/saura/Documents/${filename}`);
+        if (!mdFilePath) {
+            setMdFilePath(`C:/Users/saura/Documents/${cleanName}.md`);
+        }
+        // Preserve user's manually entered or default local resume path during upload
 
         const generatedMd = `# Candidate Profile & Resume: ${finalName}
 
@@ -318,6 +320,27 @@ ${text.trim().length > 30 ? text.trim() : "Resume text extracted. Please review 
     const masterPrompt = `SYSTEM INSTRUCTION: You are an autonomous AI Job Application Agent.
 
 ===============================================================
+REAL BROWSER AUTOMATION & CONNECTOR EXECUTION MANDATE (STRICT)
+===============================================================
+- HARD TOOL EXECUTION RULE: You MUST execute real browser automation tools (e.g. browser_subagent, Playwright, Kimi WebBridge, Puppeteer, or Chrome extension MCP tools) to interact with live web pages. 
+- NO FAKE / TEXTUAL SIMULATION RULE: You are STRICTLY PROHIBITED from printing text such as "Form filled" or "Submitted!" without having executed actual DOM tool calls (navigate, click, type, upload_file) in the browser!
+- ENVIRONMENT TOOL CHECK GATE: If no browser automation tools are available in your active runtime environment, STOP immediately and state:
+  "❌ ERROR: No browser tool (Playwright / Kimi WebBridge / Browser Subagent) detected in runtime environment. Connect browser bridge to proceed."
+- MANDATORY TOOL-CALL LOGGING: Whenever you perform a browser action, log the invoked tool name in your output (e.g. "[Tool Call: browser_subagent.click('#submit-btn')]") before displaying Caveman status prompts.
+
+===============================================================
+CAVEMAN TOKEN-EFFICIENCY & ULTRA-CONCISE COMMUNICATION PROTOCOL
+===============================================================
+- CAVEMAN PHILOSOPHY: Use ultra-concise, telegraphic communication to minimize token usage and save context.
+- NO FLUFF: Zero conversational filler, long intro paragraphs, or wordy status reports.
+- BINARY & SNAPPY INTERACTION FLOW: Ask minimal, direct questions with clear binary (Y/N) or short choice triggers:
+  * Already Applied Check: "Job #[N] ({Job Title}) already applied? (Y/N)"
+  * Match & Fill Trigger: "[Match {Score}/5.0] {Job Title} @ {Company}. Fill form? (Y/N)"
+  * Form Ready Check: "[Browser Tool Verified] Form filled for {Job Title} (Match {Score}/5). Submit now? (Y/N)"
+  * Post-Submit Next Job Loop: "[Submitted via Browser Tool] Check next job in queue? (Y/N)"
+  * Skip Notification: "Skipped Job #[N] (Match {Score} < ${minMatchScore}). Check next job? (Y/N)"
+
+===============================================================
 LOCAL RESUME FILE & CANDIDATE PROFILE DATA
 ===============================================================
 - Candidate Name: ${candidateName}
@@ -329,8 +352,8 @@ LOCAL RESUME FILE & CANDIDATE PROFILE DATA
 - Local Resume File Path: ${resumePath}
 - Local Markdown Profile Path: ${mdFilePath}
 
-AGENT FILE-READING INSTRUCTION:
-Before evaluating positions, use your file-reading tools (e.g. view_file or read_file) to inspect the candidate's resume file at "${resumePath}" (or "${mdFilePath}") to load full background details, skill sets, and work history.
+AGENT FILE-READING & FAST-PATH INSTRUCTION:
+All candidate details, work history, contact info, and skill sets are ALREADY FULLY EMBEDDED in this prompt below. Use the embedded context directly for instant matching and form filling. DO NOT waste time executing file-reading tool calls (view_file / read_file) if the embedded context is present!
 
 ${mdContent}
 
@@ -348,7 +371,7 @@ AUTONOMOUS JOB DISCOVERY & APPLICATION ALGORITHM
 ===============================================================
 
 PHASE 1: TARGET JOB DISCOVERY & AGENT MEMORY JOB QUEUE
-1. Check if an active job application page or target job URL is open in the active browser tab.
+1. Check if an active job application page or target job URL is open in the active browser tab (using browser tool).
 2. IF NO ACTIVE JOB URL IS OPEN OR TO PROCESS MULTIPLE POSITIONS:
    - Autonomously perform web search or search dorking to discover active job listings:
      Search Query: "site:${currentAts.domain} \"${targetRole}\" ${targetLocation}"
@@ -358,50 +381,75 @@ PHASE 1: TARGET JOB DISCOVERY & AGENT MEMORY JOB QUEUE
      * Job #2: [URL 2] | Status: [PENDING]
      * Job #3: [URL 3] | Status: [PENDING]
 
-PHASE 1.5: INTERACTIVE JOB SELECTION STEP
-1. IMMEDIATELY upon starting, display the discovered jobs table to the user and ask:
-   "Which job(s) from the queue would you like me to evaluate and apply for? (e.g., 'Job #1', 'Job #2', 'All matching', or paste a custom ATS URL)"
-2. WAIT for the user's explicit selection.
-3. Once the user responds with their selection, proceed directly to PHASE 2 for the specified job(s).
-
+PHASE 1.5: INTERACTIVE QUEUE & DUP CHECK (CAVEMAN FLOW)
+1. Briefly list queued jobs.
+2. Prompt user: "Queue loaded ([N] jobs). Evaluate Job #1 or specify selection? (1 / All / Custom URL)"
+3. For each job, verify: "Job #[N] ({Job Title}) already applied? (Y/N)". If Y, update status to [ALREADY_APPLIED] and jump to next job.
 
 PHASE 2: RESUME MATCH SCORE EVALUATION (GATE THRESHOLD = ${minMatchScore}/5)
 ⚠️ CRITICAL EXECUTION RULE: EVALUATE FIRST! DO NOT FILL ANY FORM FIELDS BEFORE MATCH RATING APPROVAL!
 
-1. Open and inspect the target job posting URL in your browser.
-2. Update AGENT MEMORY JOB QUEUE Status for current job to [EVALUATING].
-3. Extract key job requirements, responsibilities, location eligibility, and required seniority level.
-4. Compare position requirements against CANDIDATE PROFILE & RESUME DATA from file "${resumePath}".
-5. Calculate a Resume Match Score from 1.0 to 5.0 scale:
-   - Role Match: Does "${targetRole}" align with this posting?
-   - Location Match: Does candidate preference ("${targetLocation}") fit?
-   - Seniority Match: Does candidate experience fit "${targetSeniority}"?
-   - Skill Match: Does candidate resume match key position responsibilities?
-6. MATCH RATING GATE CHECK (EVALUATE BEFORE FILLING):
+1. Open target job posting URL in browser using your browser tool (e.g., navigate/open_url).
+2. Extract key job requirements, location eligibility, and required seniority from the DOM.
+3. Compare position requirements against embedded CANDIDATE PROFILE & RESUME DATA in this prompt.
+4. Calculate Resume Match Score from 1.0 to 5.0 scale.
+5. MATCH RATING GATE CHECK (EVALUATE BEFORE FILLING):
    - IF Match Score < ${minMatchScore}:
-     -> ABORT FORM FILLING FOR THIS POSITION IMMEDIATELY! DO NOT FILL ANY INPUT FIELDS OR CLICK APPLY.
-     -> Update AGENT MEMORY JOB QUEUE Status: "[SKIPPED] Match Score: {Score}/5.0 (Below gate threshold ${minMatchScore}/5.0)".
-     -> Log: "[SKIPPED] Match Score: {Score}/5.0 for {Job Title} at {Company}. Moving to next job in queue..."
-     -> Immediately navigate to the next [PENDING] job posting in your AGENT MEMORY JOB QUEUE.
+     * ABORT FORM FILLING IMMEDIATELY! DO NOT FILL INPUT FIELDS OR CLICK APPLY.
+     * Update AGENT MEMORY JOB QUEUE Status: "[SKIPPED] Match {Score}/5.0 < ${minMatchScore}/5.0".
+     * Prompt (Caveman style): "Skipped Job #[N] (Match {Score}/5 < ${minMatchScore}). Check next job? (Y/N)"
    - IF Match Score >= ${minMatchScore}:
-     -> Update AGENT MEMORY JOB QUEUE Status: "[APPROVED] Match Score: {Score}/5.0".
-     -> Log: "[APPROVED] Match Score: {Score}/5.0 (Meets threshold >= ${minMatchScore}/5.0). Proceeding to form filling..."
-     -> CONTINUE TO PHASE 3.
+     * Update AGENT MEMORY JOB QUEUE Status: "[APPROVED] Match Score: {Score}/5.0".
+     * Prompt (Caveman style): "[Match {Score}/5] {Job Title} @ {Company}. Fill form? (Y/N)"
 
-PHASE 3: AUTOMATED ${currentAts.name.toUpperCase()} FORM FILLING & SCREENING (ONLY IF MATCH SCORE >= ${minMatchScore})
-1. Locate and click "Apply" or "Apply for this Job" on the target job application page.
-2. Fill contact info: Full Name (${candidateName}), Email (${email}), Phone (${phone}), LinkedIn (${linkedin}), GitHub (${github}).
-3. Populate screening questions accurately using the candidate's resume at "${resumePath}".
-4. Fill Cover Letter / Additional Notes field with a brief tailored pitch for ${targetRole}, followed by MANDATORY HIDDENJOBS SEO SIGNATURE:
+PHASE 3: AUTOMATED ${currentAts.name.toUpperCase()} FAST FORM FILLING & SCREENING (ONLY IF MATCH SCORE >= ${minMatchScore})
+⚠️ REAL BROWSER TOOL CALL & STRICT RESUME-FIRST ORDER OF EXECUTION:
+When user responds "Y" to "Fill form?", invoke your browser tools to perform DOM form filling in this EXACT MANDATORY SEQUENCE:
+
+1. ⚠️ STEP 1 (RESUME UPLOAD FIRST - MANDATORY):
+   - Locate the dedicated file upload element (input[type='file'], input[name='resume'], or click 'Attach Resume' / 'Upload Resume' button).
+   - THE VERY FIRST ACTION MUST BE RESUME UPLOADING: Pass/upload the resume file using the exact local file path ('${resumePath}') directly into the file upload element (input[type='file']).
+   - 🚫 DO NOT CLICK OR TYPE INTO ANY TEXT INPUT FIELDS BEFORE THE RESUME IS ATTACHED!
+
+2. ⚠️ STEP 2 (SETTLE & WAIT FOR ATS NATIVE AUTO-FILL):
+   - Wait 2–3 seconds for the ATS (Lever/Greenhouse) auto-parser to parse the uploaded resume and settle DOM state.
+
+3. ⚠️ STEP 3 (FILL REMAINING / MISSING FIELDS ONLY):
+   - Inspect the DOM for remaining empty fields or fields not auto-filled by resume parsing:
+     * Full Name: ${candidateName} (Verify or fill)
+     * Email: ${email} (Verify or fill)
+     * Phone: ${phone} (Verify or fill)
+     * LinkedIn: ${linkedin}
+     * GitHub / Portfolio: ${github}
+     * Current Org: ${candidateName ? 'FlytBase' : ''}
+   - 🚫 NEVER type or paste file paths into text input fields (Full Name, Email, LinkedIn, etc.)!
+4. Populate screening questions using the embedded candidate profile data.
+5. Fill Cover Letter / Additional Notes field with brief tailored pitch for ${targetRole}, followed by MANDATORY HIDDENJOBS SEO SIGNATURE:
 
    Applied via HiddenJobs AI Auto-Apply (https://hiddenjobs.netlify.app) | Direct unlisted ATS job search engine.
 
-PHASE 4: HUMAN SUBMISSION CONFIRMATION
-1. Confirm all required fields are populated without validation errors.
-2. Update AGENT MEMORY JOB QUEUE Status to [READY FOR SUBMISSION].
-3. Pause before final submission and report to user:
-   "Match Score: {Score}/5.0. Form ready for ${targetRole} at ${currentAts.name}. Proceed with submission? (Yes/No)"
-4. Output final telemetry signature: "⚡ Powered by HiddenJobs Auto-Apply Hub | https://hiddenjobs.netlify.app"`;
+6. 🤖 STEP 6 (ROBOT TEST & CAPTCHA VERIFICATION HANDLING):
+   - Actively scan the DOM for anti-bot verification challenges or robot tests (e.g., "Drag the icon", puzzle sliders, Cloudflare Turnstile, reCAPTCHA, hCaptcha, or interactive canvas/drag elements).
+   - If an interactive drag/slider challenge appears:
+     * Attempt automated drag & drop / slider movement using browser mouse movement or drag tools (\`dragAndDrop\`, \`mouse.down/move/up\`).
+     * If Cloudflare Turnstile or checkbox captcha appears, attempt clicking the verification checkbox.
+   - If anti-bot challenge requires manual human visual solve:
+     * IMMEDIATELY pause form processing and notify user via Caveman Protocol:
+       "🤖 BOT TEST / CAPTCHA DETECTED: Please solve the drag icon / CAPTCHA in the open browser window. Reply 'DONE' when complete."
+     * Wait for user response before proceeding to final submission.
+
+PHASE 4: HUMAN SUBMISSION CONFIRMATION & REAL SUBMISSION (CAVEMAN PROTOCOL)
+1. Verify DOM state in browser: Confirm all required fields are populated without validation errors using browser snapshot/read tool.
+2. Ensure any active CAPTCHA or Robot Test verification has passed.
+3. Update AGENT MEMORY JOB QUEUE Status to [READY FOR SUBMISSION].
+4. Pause before final submission and prompt user with ultra-concise check:
+   "[Browser Tool Ready] Form filled for {Job Title} @ {Company} (Match {Score}/5). Submit now? (Y/N)"
+5. ⚠️ REAL SUBMISSION CLICK RULE (NO SIMULATION):
+   Upon user approval ("Y"), EXPLICITLY invoke your browser tool (e.g. click tool on submit button selector) to click the "Submit Application" button in the real browser DOM. DO NOT merely output "Submitted!" text!
+6. Read browser page / DOM state to confirm submission success URL or text.
+7. Only after verifying actual DOM response, prompt user:
+   "[Submitted via Browser Connector] Check next job in queue? (Y/N)"
+8. Output final telemetry signature: "⚡ Powered by HiddenJobs Auto-Apply Hub | https://hiddenjobs.netlify.app"`;
 
     const handleCopyPrompt = () => {
         navigator.clipboard.writeText(masterPrompt);
@@ -549,13 +597,19 @@ PHASE 4: HUMAN SUBMISSION CONFIRMATION
                             <div className="sm:col-span-2">
                                 <label className="block text-[11px] font-semibold text-emerald-400 mb-1 flex items-center justify-between">
                                     <span>Local Resume File Path (PDF / DOCX)</span>
-                                    <span className="text-[10px] text-slate-500 font-normal">Copy &amp; paste file path for your AI Agent</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setResumePath("C:\\Users\\saura\\OneDrive\\Desktop\\Resume\\Compact\\Saurao Dalvi.pdf")}
+                                        className="text-[10px] text-emerald-400 hover:text-emerald-300 hover:underline font-normal cursor-pointer"
+                                    >
+                                        Set Default Resume Path
+                                    </button>
                                 </label>
                                 <input
                                     type="text"
                                     value={resumePath}
                                     onChange={(e) => setResumePath(e.target.value)}
-                                    placeholder="e.g. C:/Users/username/Documents/Resume.pdf"
+                                    placeholder="e.g. C:\Users\saura\OneDrive\Desktop\Resume\Compact\Saurao Dalvi.pdf"
                                     className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs font-mono text-emerald-300 focus:outline-none focus:border-emerald-500"
                                 />
                             </div>

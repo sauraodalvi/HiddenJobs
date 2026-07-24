@@ -30,8 +30,8 @@ export default function AutoApplyPage() {
                     </p>
                 </header>
 
-                {/* 4 Feature Badges */}
-                <section className="mb-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {/* 5 Feature Badges */}
+                <section className="mb-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
                     <div className="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-3">
                         <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500">
                             <Star className="w-5 h-5 fill-amber-400" />
@@ -47,8 +47,18 @@ export default function AutoApplyPage() {
                             <FileText className="w-5 h-5" />
                         </div>
                         <div>
-                            <h4 className="font-bold text-slate-900 dark:text-white text-xs">Local Markdown Resume</h4>
+                            <h4 className="font-bold text-slate-900 dark:text-white text-xs">Local Resume MD</h4>
                             <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Reads CANDIDATE_PROFILE.md</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-500">
+                            <Zap className="w-5 h-5 text-cyan-400" />
+                        </div>
+                        <div>
+                            <h4 className="font-bold text-slate-900 dark:text-white text-xs">Caveman Token-Saver</h4>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Snappy, minimal token flow</p>
                         </div>
                     </div>
 
@@ -58,7 +68,7 @@ export default function AutoApplyPage() {
                         </div>
                         <div>
                             <h4 className="font-bold text-slate-900 dark:text-white text-xs">Human-in-the-Loop</h4>
-                            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Pauses before final submission</p>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Pauses before submission</p>
                         </div>
                     </div>
 
@@ -67,8 +77,8 @@ export default function AutoApplyPage() {
                             <Zap className="w-5 h-5" />
                         </div>
                         <div>
-                            <h4 className="font-bold text-slate-900 dark:text-white text-xs">HiddenJobs Signature</h4>
-                            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">SEO backlink in application notes</p>
+                            <h4 className="font-bold text-slate-900 dark:text-white text-xs">HiddenJobs SEO</h4>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Backlink signature added</p>
                         </div>
                     </div>
                 </section>
@@ -106,9 +116,9 @@ export default function AutoApplyPage() {
 
                         <div className="bg-slate-50 dark:bg-slate-800/60 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 relative overflow-hidden group hover:border-emerald-500/50 transition-all">
                             <div className="w-9 h-9 rounded-xl bg-blue-500 text-white font-black text-sm flex items-center justify-center mb-4 shadow-md shadow-blue-500/20">4</div>
-                            <h3 className="font-bold text-slate-900 dark:text-white text-base mb-2">Paste & Run in AI Agent</h3>
+                            <h3 className="font-bold text-slate-900 dark:text-white text-base mb-2">Run Caveman AI Agent</h3>
                             <p className="text-xs text-slate-500 dark:text-slate-400 font-normal leading-relaxed">
-                                Paste prompt into Cursor, OpenCode, Claude Code, or Kimi WebBridge. Confirm & submit!
+                                Paste prompt into OpenCode/Cursor. Agent runs ultra-concise token loop: "Applied? Next job? (Y/N)".
                             </p>
                         </div>
                     </div>
