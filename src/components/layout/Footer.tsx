@@ -72,15 +72,25 @@ export function Footer() {
 
                     {/* Resources */}
                     <div>
-                        <h4 className="font-bold text-slate-900 dark:text-white mb-6">Discovery</h4>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-6">Automation</h4>
                         <ul className="space-y-4">
+                            <li>
+                                <Link href="/auto-apply" className="text-sm text-primary font-bold hover:underline transition-colors hover:translate-x-1 inline-block">
+                                    ⚡ AI Auto-Apply Hub
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/tools/ats-search-query-generator" className="text-sm text-slate-500 hover:text-primary transition-colors hover:translate-x-1 inline-block">
+                                    Dork Query Generator
+                                </Link>
+                            </li>
                             <li>
                                 <Link href="/about" className="text-sm text-slate-500 hover:text-primary transition-colors hover:translate-x-1 inline-block">
                                     About HiddenJobs
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/jobs" className="text-sm text-primary hover:underline transition-colors font-bold flex items-center gap-1">
+                                <Link href="/jobs" className="text-sm text-slate-500 hover:underline transition-colors font-medium flex items-center gap-1">
                                     Browse All Directories
                                 </Link>
                             </li>
@@ -98,6 +108,6 @@ export function Footer() {
                     </div>
                 </div>
             </div>
-        </footer >
+        </footer>
     );
 }

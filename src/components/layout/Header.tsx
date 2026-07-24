@@ -1,12 +1,12 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
-import { Moon, Sun, MapPin } from "lucide-react";
+import { Moon, Sun, MapPin, Zap } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
-const NAV_LINKS: { href: string; label: string }[] = [
+const NAV_LINKS: { href: string; label: string; badge?: boolean }[] = [
+    { href: "/auto-apply", label: "⚡ Auto-Apply", badge: true },
     { href: "/tools/ats-search-query-generator", label: "Tools" },
     { href: "/blog", label: "Blog" },
     { href: "/explore", label: "Explore" },
@@ -47,16 +47,20 @@ export function Header() {
                     </div>
                 </div>
 
-                    <div className="flex items-center space-x-6">
-                        {NAV_LINKS.map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
+                <div className="flex items-center space-x-6">
+                    {NAV_LINKS.map((link) => (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className={`text-sm font-semibold transition-colors flex items-center gap-1.5 ${
+                                link.badge
+                                    ? "px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white font-bold"
+                                    : "text-slate-600 dark:text-slate-400 hover:text-primary"
+                            }`}
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
                 </div>
             </div>
         </nav>
