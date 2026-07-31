@@ -4,11 +4,16 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+  base: "/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "next/link": path.resolve(__dirname, "./src/lib/next-link-shim.tsx"),
       "next/navigation": path.resolve(__dirname, "./src/lib/next-nav-shim.ts"),
     },
+  },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
   },
 });
