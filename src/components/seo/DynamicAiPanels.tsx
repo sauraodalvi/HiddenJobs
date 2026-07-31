@@ -18,53 +18,16 @@ interface DynamicAiPanelsProps {
  * Handles the async generation of SEO content using the AI Bridge.
  * Uses a 'Reserved Layout' pattern to prevent CLS during streaming.
  */
-export async function DynamicAiPanels({
+export function DynamicAiPanels({
     roleName,
     cityName,
     platformLabel,
     initialOverview,
     initialFaqs
 }: DynamicAiPanelsProps) {
-
-    // If we already have cached content, render it immediately
-    let overview = initialOverview;
-    let faqsArr = initialFaqs;
-    let source: string | undefined;
-
-    if (!overview || !faqsArr || faqsArr.length === 0) {
-        console.log(`[DynamicAiPanels] Cache miss for ${roleName} in ${cityName}. Triggering Multi-LLM Bridge...`);
-        const aiData = await generateJobCityContentUnified(roleName, cityName);
-        overview = aiData.aiOverview;
-        faqsArr = aiData.faqs;
-        source = aiData.source;
-
-        // ASYNC PERSISTENCE: Cache result in DB so future hits are instant
-        try {
-            const [roleRec] = await db.select().from(jobRoles).where(eq(jobRoles.name, roleName));
-            const [cityRec] = await db.select().from(cities).where(eq(cities.name, cityName));
-
-            if (roleRec && cityRec) {
-                await db.insert(seoContent).values({
-                    roleId: roleRec.id,
-                    cityId: cityRec.id,
-                    title: `Hidden ${roleName} jobs in ${cityName} using ${platformLabel} | HiddenJobs`,
-                    description: aiData.metaDescription || `Access unlisted ${roleName} roles in ${cityName} through ${platformLabel}.`,
-                    aiOverview: overview,
-                    faqs: JSON.stringify(faqsArr)
-                }).onConflictDoUpdate({
-                    target: [seoContent.roleId, seoContent.cityId],
-                    set: {
-                        aiOverview: overview,
-                        faqs: JSON.stringify(faqsArr),
-                        updatedAt: new Date()
-                    }
-                });
-                console.log(`[DynamicAiPanels] Content cached for ${roleName} - ${cityName}`);
-            }
-        } catch (dbErr) {
-            console.error('[DynamicAiPanels] DB Cache error:', dbErr);
-        }
-    }
+    const overview = initialOverview || `<p>Discover direct-to-ATS openings for <strong>${roleName}</strong> in <strong>${cityName}</strong> across ${platformLabel}.</p>`;
+    const faqsArr = initialFaqs || [];
+    const source = 'static';
 
     return (
         <div className="space-y-20">

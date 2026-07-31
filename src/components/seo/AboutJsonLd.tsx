@@ -1,7 +1,8 @@
-import { getBaseUrl } from "@/lib/domain";
+import React from 'react';
+import { getCanonicalBaseUrl } from "@/lib/domain";
 
-export default async function AboutJsonLd() {
-    const baseUrl = await getBaseUrl();
+export default function AboutJsonLd() {
+    const baseUrl = typeof window !== 'undefined' && window.location.origin ? window.location.origin : getCanonicalBaseUrl();
 
     const personSchema = {
         "@context": "https://schema.org",
