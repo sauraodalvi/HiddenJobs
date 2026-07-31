@@ -14,31 +14,37 @@ import { headers } from 'next/headers';
  * Netlify AND Vercel environment variables to ensure consistent canonicals.
  */
 export function getCanonicalBaseUrl(): string {
-    // Dynamically detect deployment environment for canonicals
-    // This allows both Netlify and Vercel sites to serve their own canonical URLs to get AdSense approval on both.
-    
-    // Check if Vercel deployment
-    if (process.env.VERCEL || process.env.VERCEL_URL || (process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.includes('vercel'))) {
-        if (process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.includes('vercel')) {
-            return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
-        }
-        // Vercel deployment URL
+    // 0. Browser Runtime Detection (Allows Netlify, Vercel, and Lovable SPA builds to dynamically use current host)
+    if (typeof window !== 'undefined' && window.location.origin) {
+        return window.location.origin.replace(/\/$/, '');
+    }
+
+    // 1. Explicitly configured site URL environment variable
+    if (process.env.NEXT_PUBLIC_SITE_URL) {
+        return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
+    }
+
+    // 2. Vercel deployment detection
+    if (process.env.VERCEL || process.env.VERCEL_URL) {
         if (process.env.VERCEL_URL) {
-            // Note: VERCEL_URL doesn't include https://
             return `https://${process.env.VERCEL_URL.replace(/\/$/, '')}`;
         }
         return 'https://hiddenjobs.vercel.app';
     }
 
-    // Default or Netlify environment
-    if (process.env.NEXT_PUBLIC_SITE_URL) {
-        return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
-    }
+    // 3. Netlify environment detection
     if (process.env.URL) {
         return process.env.URL.replace(/\/$/, '');
     }
+
+    // 4. Default primary host (Netlify) -> 2nd fallback (Vercel) -> 3rd fallback (Lovable)
+    if (process.env.NEXT_PUBLIC_FALLBACK_URL) {
+        return process.env.NEXT_PUBLIC_FALLBACK_URL.replace(/\/$/, '');
+    }
+
     return 'https://hiddenjobs.netlify.app';
 }
+
 
 /**
  * Returns the current base URL for the application at runtime.
@@ -88,6 +94,7 @@ export async function getBaseUrl(request?: Request): Promise<string> {
         return process.env.NEXT_PUBLIC_FALLBACK_URL.replace(/\/$/, '');
     }
 
-    // 6. Hard default
+    // 6. Multi-tier hosting fallbacks: Netlify (1st) -> Vercel (2nd) -> Lovable (3rd: https://hiddenjobss.lovable.app)
     return 'https://hiddenjobs.netlify.app';
 }
+
