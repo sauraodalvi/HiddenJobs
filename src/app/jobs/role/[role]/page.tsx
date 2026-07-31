@@ -131,7 +131,7 @@ export default async function RoleDirectoryPage({ params }: PageProps) {
                             {DIRECTORY_PLATFORMS.map(platform => (
                                 <Link
                                     key={platform.slug}
-                                    href={`/jobs/platform/${platform.slug}/${roleSlug}/remote`}
+                                    href={`/jobs/${roleSlug}-in-remote`}
                                     className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
                                 >
                                     <div className="flex items-center justify-between">

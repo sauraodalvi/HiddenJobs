@@ -3,3 +3,15 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/jobs/platform/:platform/:role/:location"
+  to = "/jobs/:role-in-:location"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/jobs/:platform/:role/:location"
+  to = "/jobs/:role-in-:location"
+  status = 301
+  force = true

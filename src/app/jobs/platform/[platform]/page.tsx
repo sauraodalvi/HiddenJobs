@@ -114,7 +114,7 @@ export default async function PlatformDirectoryPage({ params }: PageProps) {
                             {DIRECTORY_ROLES.map(role => (
                                 <Link
                                     key={role.slug}
-                                    href={`/jobs/platform/${platformSlug}/${role.slug}/remote`}
+                                    href={`/jobs/${role.slug}-in-remote`}
                                     className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
                                 >
                                     <div className="flex items-center justify-between">
@@ -141,7 +141,7 @@ export default async function PlatformDirectoryPage({ params }: PageProps) {
                             {DIRECTORY_LOCATIONS.map(loc => (
                                 <Link
                                     key={loc.slug}
-                                    href={`/jobs/platform/${platformSlug}/software-engineer/${loc.slug}`}
+                                    href={`/jobs/software-engineer-in-${loc.slug}`}
                                     className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm active:scale-95"
                                 >
                                     <div className="flex items-center justify-between">

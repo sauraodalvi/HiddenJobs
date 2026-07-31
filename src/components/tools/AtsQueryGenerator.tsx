@@ -40,7 +40,7 @@ export function AtsQueryGenerator() {
     }, [experience, include, location, platform, role]);
 
     const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-    const directoryUrl = `/jobs/platform/${platform.slug}/${role.slug}/${location.slug}`;
+    const directoryUrl = `/jobs/${role.slug}-in-${location.slug}`;
 
     async function copyQuery() {
         await navigator.clipboard.writeText(query);
