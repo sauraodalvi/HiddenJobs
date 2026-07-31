@@ -1,18 +1,13 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
-import { getLocationSeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
-import { MapPin, Briefcase, Search, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
-import { getCanonicalBaseUrl } from '@/lib/domain';
+import { use } from 'react';
+import { getLocationSeoMetadata, getLocationSeoMetadataSync, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
 
 interface PageProps {
     params: Promise<{
         location: string;
-    }>;
+    }> | { location: string };
 }
 
 export async function generateStaticParams() {
@@ -22,8 +17,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const { location: locationSlug } = await params;
-    const seo = await getLocationSeoMetadata(locationSlug);
+    const resolvedParams = typeof (params as any)?.then === 'function' ? await params : params;
+    const seo = await getLocationSeoMetadata(resolvedParams.location);
 
     if (!seo) return { title: 'Not Found', robots: { index: false, follow: false } };
 
@@ -33,15 +28,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${canonicalBase}/jobs/location/${locationSlug}`,
+            canonical: `${canonicalBase}/jobs/location/${resolvedParams.location}`,
         },
         robots: seo.robots || 'index, follow',
     };
 }
 
-export default async function LocationDirectoryPage({ params }: PageProps) {
-    const { location: locationSlug } = await params;
-    const seo = await getLocationSeoMetadata(locationSlug);
+export default function LocationDirectoryPage({ params }: PageProps) {
+    const resolvedParams = typeof (params as any)?.then === 'function' ? use(params as Promise<{ location: string }>) : (params as { location: string });
+    const locationSlug = resolvedParams.location;
+    const seo = getLocationSeoMetadataSync(locationSlug);
 
     if (!seo) {
         notFound();
@@ -49,7 +45,7 @@ export default async function LocationDirectoryPage({ params }: PageProps) {
 
     const { location } = seo;
 
-    const breadcrumbs = await getBreadcrumbSchema([
+    const breadcrumbs = getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Jobs', item: '/jobs' },
         { name: location.name, item: `/jobs/location/${locationSlug}` }

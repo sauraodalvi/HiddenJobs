@@ -2,16 +2,17 @@ import { Header } from '@/components/layout/Header';
 import { ChevronRight, Briefcase, MapPin, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/Footer';
-import { getDirectoryData } from '@/app/actions/geo';
-import { DIRECTORY_ROLES } from '@/lib/constants';
+import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
 
 export const metadata = {
     title: 'Job Directories',
     description: 'Browse hidden jobs by platform, role, and location. Explore unlisted opportunities on Greenhouse, Lever, and Ashby.',
 };
 
-export default async function JobsDirectoryIndex() {
-    const { roles, cities, platforms } = await getDirectoryData();
+export default function JobsDirectoryIndex() {
+    const roles = DIRECTORY_ROLES.slice(0, 20);
+    const cities = DIRECTORY_LOCATIONS.slice(0, 20);
+    const platforms = DIRECTORY_PLATFORMS;
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">

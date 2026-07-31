@@ -228,11 +228,10 @@ function slugToTitle(slug: string): string {
         .join(' ');
 }
 
-export async function getFallbackSeoMetadata(roleSlug: string, locationSlug: string): Promise<RegionalSeoMetadata | null> {
+export function getFallbackSeoMetadataSync(roleSlug: string, locationSlug: string): RegionalSeoMetadata {
     const role = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
     const location = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
 
-    // Dynamic fallback: If not in static directory, generate names from slugs
     const roleName = role?.label || slugToTitle(roleSlug);
     const locationName = location?.label || slugToTitle(locationSlug);
     const jobCount = location?.jobCount || 0;
@@ -247,6 +246,46 @@ export async function getFallbackSeoMetadata(roleSlug: string, locationSlug: str
         updatedAt: new Date(),
         robots: jobCount === 0 ? 'noindex, nofollow' : 'index, follow'
     };
+}
+
+export function getLocationSeoMetadataSync(locationSlug: string): RegionalSeoMetadata | null {
+    const location = DIRECTORY_LOCATIONS.find(l => l.slug === locationSlug);
+    if (!location) {
+        const locationName = slugToTitle(locationSlug);
+        return {
+            title: `${locationName} Tech Jobs (Direct ATS)`,
+            description: `Explore unlisted tech jobs in ${locationName}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${locationName}.`,
+            location: { id: 0, name: locationName, slug: locationSlug, jobCount: 0 },
+            role: { id: 0, name: 'Tech', slug: 'tech' },
+            updatedAt: new Date(),
+            robots: 'index, follow'
+        };
+    }
+    return {
+        title: `${location.label} Tech Jobs (Direct ATS)`,
+        description: `Explore unlisted tech jobs in ${location.label}. Search Greenhouse, Lever, and Ashby job boards directly for roles in ${location.label}.`,
+        location: { id: 0, name: location.label, slug: location.slug, jobCount: location.jobCount },
+        role: { id: 0, name: 'Tech', slug: 'tech' },
+        updatedAt: new Date(),
+        robots: (location.jobCount || 0) === 0 ? 'noindex, nofollow' : 'index, follow'
+    };
+}
+
+export function getRoleSeoMetadataSync(roleSlug: string): RegionalSeoMetadata | null {
+    const role = DIRECTORY_ROLES.find(r => r.slug === roleSlug);
+    const roleName = role?.label || slugToTitle(roleSlug);
+    return {
+        title: `${roleName} Jobs (ATS Direct Apply)`,
+        description: `Find unlisted ${roleName} jobs. We scan internal Greenhouse and Lever boards directly so you can apply first.`,
+        role: { id: 0, name: roleName, slug: roleSlug },
+        location: { id: 0, name: 'Global', slug: 'global', jobCount: 1000 },
+        updatedAt: new Date(),
+        robots: 'index, follow'
+    };
+}
+
+export function getSeoMetadataSync(roleSlug: string, locationSlug: string): RegionalSeoMetadata {
+    return getFallbackSeoMetadataSync(roleSlug, locationSlug);
 }
 
 export function getRegionalSeoMetadata(role: string, location: string, jobCount: number = 0) {
@@ -278,10 +317,10 @@ export function generateSeoDork(platformDomain: string, roleName: string, locati
     return assembleDork(platformDomain, components);
 }
 
-import { getBaseUrl } from "./domain";
+import { getBaseUrl, getCanonicalBaseUrl } from "./domain";
 
-export async function getBreadcrumbSchema(items: { name: string, item: string }[]) {
-    const baseUrl = await getBaseUrl();
+export function getBreadcrumbSchema(items: { name: string, item: string }[]) {
+    const baseUrl = getCanonicalBaseUrl();
     return {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",

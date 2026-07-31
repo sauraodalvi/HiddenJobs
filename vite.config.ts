@@ -10,6 +10,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       "next/link": path.resolve(__dirname, "./src/lib/next-link-shim.tsx"),
       "next/navigation": path.resolve(__dirname, "./src/lib/next-nav-shim.ts"),
+      "next/dynamic": path.resolve(__dirname, "./src/lib/next-dynamic-shim.tsx"),
+      "next/headers": path.resolve(__dirname, "./src/lib/next-headers-shim.ts"),
     },
   },
   build: {

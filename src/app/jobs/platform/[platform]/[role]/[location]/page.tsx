@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { getSeoMetadata, getBreadcrumbSchema, getFallbackSeoMetadata } from '@/lib/seo-utils';
+import { Suspense, use } from 'react';
+import { getSeoMetadata, getSeoMetadataSync, getBreadcrumbSchema, getFallbackSeoMetadata, getFallbackSeoMetadataSync } from '@/lib/seo-utils';
 import { permanentRedirect } from 'next/navigation';
 import { ResultsSection } from '@/components/results/ResultsSection';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { getBaseUrl } from '@/lib/domain';
+import { getCanonicalBaseUrl } from '@/lib/domain';
 import { DIRECTORY_PLATFORMS } from '@/lib/constants';
 import { DynamicAiPanels, DynamicAiPanelsSkeleton } from '@/components/seo/DynamicAiPanels';
 
@@ -14,12 +14,17 @@ interface Props {
         platform: string;
         role: string;
         location: string;
-    }>;
+    }> | {
+        platform: string;
+        role: string;
+        location: string;
+    };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     try {
-        const { platform, role, location } = await params;
+        const resolvedParams = typeof (params as any)?.then === 'function' ? await params : params;
+        const { platform, role, location } = resolvedParams;
         let seo = await getSeoMetadata(role, location);
         if (!seo) {
             seo = await getFallbackSeoMetadata(role, location);
@@ -28,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         if (!seo) return { title: 'Jobs' };
 
         const platformLabel = DIRECTORY_PLATFORMS.find(p => p.slug === platform)?.label || platform;
-        const baseUrl = await getBaseUrl();
+        const baseUrl = getCanonicalBaseUrl();
 
         return {
             title: `${seo.role.name} Jobs in ${seo.location.name} (${platformLabel} Unlisted)`,
@@ -43,11 +48,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 }
 
-export default async function PlatformJobPage({ params }: Props) {
-    const { platform, role, location } = await params;
-    let seo = await getSeoMetadata(role, location);
+export default function PlatformJobPage({ params }: Props) {
+    const resolvedParams = typeof (params as any)?.then === 'function' ? use(params as Promise<{ platform: string; role: string; location: string }>) : (params as { platform: string; role: string; location: string });
+    const { platform, role, location } = resolvedParams;
+    let seo = getSeoMetadataSync(role, location);
     if (!seo) {
-        seo = await getFallbackSeoMetadata(role, location);
+        seo = getFallbackSeoMetadataSync(role, location);
     }
 
     if (!seo) {
@@ -57,7 +63,7 @@ export default async function PlatformJobPage({ params }: Props) {
     const platformLabel = DIRECTORY_PLATFORMS.find(p => p.slug === platform)?.label || platform;
 
     // Structured Data for AEO/GEO
-    const breadcrumbs = await getBreadcrumbSchema([
+    const breadcrumbs = getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Jobs', item: '/jobs' },
         { name: `By Platform`, item: '/jobs/platform' },
@@ -66,9 +72,6 @@ export default async function PlatformJobPage({ params }: Props) {
     ]);
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
-            <Header />
-
             <main className="container mx-auto px-4 py-16">
                 <script
                     type="application/ld+json"

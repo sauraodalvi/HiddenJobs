@@ -2,19 +2,19 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { DIRECTORY_LOCATIONS } from '@/lib/constants';
+import { use } from 'react';
 import { getCompanySeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
+import { getCanonicalBaseUrl } from '@/lib/domain';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { ResultsSection } from '@/components/results/ResultsSection';
 import { Building2, Globe, Shield, Check } from 'lucide-react';
-import Link from 'next/link';
-import { getCanonicalBaseUrl } from '@/lib/domain';
-import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 
 interface PageProps {
     params: Promise<{
         domain: string;
-    }>;
+    }> | { domain: string };
 }
 
 export async function generateStaticParams() {
@@ -32,8 +32,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const { domain } = await params;
-    const seo = getCompanySeoMetadata(domain);
+    const resolvedParams = typeof (params as any)?.then === 'function' ? await params : params;
+    const seo = getCompanySeoMetadata(resolvedParams.domain);
 
     const canonicalBase = getCanonicalBaseUrl();
 
@@ -41,18 +41,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${canonicalBase}/company/${domain}`,
+            canonical: `${canonicalBase}/company/${resolvedParams.domain}`,
         },
         robots: 'index, follow',
     };
 }
 
-export default async function CompanyHubPage({ params }: PageProps) {
-    const { domain } = await params;
+export default function CompanyHubPage({ params }: PageProps) {
+    const resolvedParams = typeof (params as any)?.then === 'function' ? use(params as Promise<{ domain: string }>) : (params as { domain: string });
+    const domain = resolvedParams.domain;
     const seo = getCompanySeoMetadata(domain);
 
     // Structured Data
-    const breadcrumbs = await getBreadcrumbSchema([
+    const breadcrumbs = getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Companies', item: '/jobs' },
         { name: seo.companyName, item: `/company/${domain}` }

@@ -1,18 +1,13 @@
 import { Metadata } from 'next';
 import { permanentRedirect } from 'next/navigation';
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
+import { use } from 'react';
 import { getPlatformSeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
-import { Search, Briefcase, MapPin, ExternalLink, Check, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
-import { getCanonicalBaseUrl } from '@/lib/domain';
 
 interface PageProps {
     params: Promise<{
         platform: string;
-    }>;
+    }> | { platform: string };
 }
 
 export async function generateStaticParams() {
@@ -22,8 +17,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const { platform: platformSlug } = await params;
-    const seo = getPlatformSeoMetadata(platformSlug);
+    const resolvedParams = typeof (params as any)?.then === 'function' ? await params : params;
+    const seo = getPlatformSeoMetadata(resolvedParams.platform);
 
     if (!seo) return { title: 'Not Found', robots: { index: false, follow: false } };
 
@@ -33,14 +28,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${canonicalBase}/jobs/platform/${platformSlug}`,
+            canonical: `${canonicalBase}/jobs/platform/${resolvedParams.platform}`,
         },
         robots: seo.robots || 'index, follow',
     };
 }
 
-export default async function PlatformDirectoryPage({ params }: PageProps) {
-    const { platform: platformSlug } = await params;
+export default function PlatformDirectoryPage({ params }: PageProps) {
+    const resolvedParams = typeof (params as any)?.then === 'function' ? use(params as Promise<{ platform: string }>) : (params as { platform: string });
+    const platformSlug = resolvedParams.platform;
     const seo = getPlatformSeoMetadata(platformSlug);
 
     if (!seo) {
@@ -50,7 +46,7 @@ export default async function PlatformDirectoryPage({ params }: PageProps) {
     const { platform } = seo;
 
     // Structured Data
-    const breadcrumbs = await getBreadcrumbSchema([
+    const breadcrumbs = getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Jobs', item: '/jobs' },
         { name: platform.label, item: `/jobs/platform/${platformSlug}` }

@@ -1,21 +1,13 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
-import { getRoleSeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
-import { Briefcase, MapPin, Search, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
-import { AIAnswerBlock } from '@/components/seo/AIAnswerBlock';
-import { AuthorBio } from '@/components/seo/AuthorBio';
-import { ExpertReviewedBadge } from '@/components/seo/ExpertReviewedBadge';
-import { getCanonicalBaseUrl } from '@/lib/domain';
+import { use } from 'react';
+import { getRoleSeoMetadata, getRoleSeoMetadataSync, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
 
 interface PageProps {
     params: Promise<{
         role: string;
-    }>;
+    }> | { role: string };
 }
 
 export async function generateStaticParams() {
@@ -25,8 +17,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const { role: roleSlug } = await params;
-    const seo = await getRoleSeoMetadata(roleSlug);
+    const resolvedParams = typeof (params as any)?.then === 'function' ? await params : params;
+    const seo = await getRoleSeoMetadata(resolvedParams.role);
 
     if (!seo) return { title: 'Not Found', robots: { index: false, follow: false } };
 
@@ -36,15 +28,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: seo.title,
         description: seo.description,
         alternates: {
-            canonical: `${canonicalBase}/jobs/role/${roleSlug}`,
+            canonical: `${canonicalBase}/jobs/role/${resolvedParams.role}`,
         },
         robots: seo.robots || 'index, follow',
     };
 }
 
-export default async function RoleDirectoryPage({ params }: PageProps) {
-    const { role: roleSlug } = await params;
-    const seo = await getRoleSeoMetadata(roleSlug);
+export default function RoleDirectoryPage({ params }: PageProps) {
+    const resolvedParams = typeof (params as any)?.then === 'function' ? use(params as Promise<{ role: string }>) : (params as { role: string });
+    const roleSlug = resolvedParams.role;
+    const seo = getRoleSeoMetadataSync(roleSlug);
 
     if (!seo) {
         notFound();
@@ -52,7 +45,7 @@ export default async function RoleDirectoryPage({ params }: PageProps) {
 
     const { role } = seo;
 
-    const breadcrumbs = await getBreadcrumbSchema([
+    const breadcrumbs = getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Jobs', item: '/jobs' },
         { name: role.name, item: `/jobs/role/${roleSlug}` }

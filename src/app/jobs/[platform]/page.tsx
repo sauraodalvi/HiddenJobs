@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { getSeoMetadata, getBreadcrumbSchema, getFallbackSeoMetadata, getFaqSchema } from '@/lib/seo-utils';
+import { Suspense, use } from 'react';
+import { getSeoMetadata, getSeoMetadataSync, getBreadcrumbSchema, getFallbackSeoMetadata, getFallbackSeoMetadataSync, getFaqSchema } from '@/lib/seo-utils';
 import { notFound } from 'next/navigation';
 import { ResultsSection } from '@/components/results/ResultsSection';
 import { Header } from '@/components/layout/Header';
@@ -20,7 +20,7 @@ import { RelatedContent } from '@/components/seo/RelatedContent';
 interface Props {
     params: Promise<{
         platform: string;
-    }>;
+    }> | { platform: string };
 }
 
 export async function generateStaticParams() {
@@ -47,7 +47,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     try {
-        const { platform: roleAndCity } = await params;
+        const resolvedParams = typeof (params as any)?.then === 'function' ? await params : params;
+        const roleAndCity = resolvedParams.platform;
         const parts = roleAndCity.split('-in-');
 
         if (parts.length !== 2) return { title: 'Jobs', robots: { index: false, follow: false } };
@@ -77,8 +78,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 }
 
-export default async function JobPage({ params }: Props) {
-    const { platform: roleAndCity } = await params;
+export default function JobPage({ params }: Props) {
+    const resolvedParams = typeof (params as any)?.then === 'function' ? use(params as Promise<{ platform: string }>) : (params as { platform: string });
+    const roleAndCity = resolvedParams.platform;
     const parts = roleAndCity.split('-in-');
 
     if (parts.length !== 2) {
@@ -86,11 +88,11 @@ export default async function JobPage({ params }: Props) {
     }
 
     const [roleSlug, locationSlug] = parts;
-    let seo = await getSeoMetadata(roleSlug, locationSlug);
+    let seo = getSeoMetadataSync(roleSlug, locationSlug);
 
     // Graceful fallback for valid role/location slugs missing specific DB content
     if (!seo) {
-        seo = await getFallbackSeoMetadata(roleSlug, locationSlug);
+        seo = getFallbackSeoMetadataSync(roleSlug, locationSlug);
     }
 
     if (!seo) {
@@ -98,16 +100,13 @@ export default async function JobPage({ params }: Props) {
     }
 
     // Structured Data for AEO/GEO
-    const breadcrumbs = await getBreadcrumbSchema([
+    const breadcrumbs = getBreadcrumbSchema([
         { name: 'Home', item: '/' },
         { name: 'Jobs', item: '/jobs' },
         { name: `${seo.role.name} in ${seo.location.name}`, item: `/jobs/${roleAndCity}` }
     ]);
 
     const faqSchema = seo.faqs ? getFaqSchema(seo.faqs) : null;
-
-    return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
             <Header />
 
             <main className="container mx-auto px-4 py-16">
