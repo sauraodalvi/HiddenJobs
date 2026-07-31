@@ -3,6 +3,12 @@ import { notFound } from 'next/navigation';
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
 import { use } from 'react';
 import { getLocationSeoMetadata, getLocationSeoMetadataSync, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { getCanonicalBaseUrl } from '@/lib/domain';
+import Link from 'next/link';
+import { MapPin, Search, Briefcase, ChevronRight } from 'lucide-react';
 
 interface PageProps {
     params: Promise<{

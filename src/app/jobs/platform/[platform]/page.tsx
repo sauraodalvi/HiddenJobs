@@ -1,8 +1,14 @@
 import { Metadata } from 'next';
 import { permanentRedirect } from 'next/navigation';
+import Link from 'next/link';
 import { DIRECTORY_ROLES, DIRECTORY_LOCATIONS, DIRECTORY_PLATFORMS } from '@/lib/constants';
 import { use } from 'react';
 import { getPlatformSeoMetadata, getBreadcrumbSchema, getFaqSchema } from '@/lib/seo-utils';
+import { getCanonicalBaseUrl } from '@/lib/domain';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { Search, Briefcase, ChevronRight, MapPin, Check, ExternalLink } from 'lucide-react';
 
 interface PageProps {
     params: Promise<{
