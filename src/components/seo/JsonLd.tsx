@@ -42,7 +42,7 @@ export default function JsonLd() {
             "@type": "SearchAction",
             "target": {
                 "@type": "EntryPoint",
-                "urlTemplate": `${baseUrl}/?q={search_term_string}`
+                "urlTemplate": `${baseUrl}/explore?q={search_term_string}`
             },
             "query-input": "required name=search_term_string"
         },
