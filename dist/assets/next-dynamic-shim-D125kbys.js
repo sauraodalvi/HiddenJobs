@@ -1,0 +1,1 @@
+import{r as a,j as t}from"./index-XL2PF4jy.js";function u(r,o={}){const s=a.lazy(async()=>{const n=await r();return n&&n.default?n:{default:n}}),e=o.loading||(()=>null);return function(c){return t.jsx(a.Suspense,{fallback:t.jsx(e,{}),children:t.jsx(s,{...c})})}}export{u as d};
